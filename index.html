@@ -1,0 +1,2093 @@
+<!doctype html>
+<html lang="en" data-mode="frequentist">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>Paradox — A Probability Sandbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1120;
+  --bg2:#0f172a;
+  --panel:rgba(17,26,46,.62);
+  --panel-solid:#0f1a30;
+  --hair:rgba(148,163,184,.16);
+  --hair-strong:rgba(148,163,184,.32);
+  --ink:#f8fafc;
+  --ink-dim:#94a3b8;
+  --ink-faint:#64748b;
+  /* canvas + surface fills (themeable; read by JS via cssv where needed) */
+  --canvas-bg:#0b1120;
+  --surface-deep:rgba(8,13,24,.55);
+  --surface-deep-2:rgba(8,13,24,.7);
+  --surface-deep-3:rgba(8,13,24,.4);
+  --on-accent-glyph:#0b1120;
+  --scrim-veil:rgba(10,14,24,.66);
+  --bg-grad-a:#0b1120;
+  --bg-grad-b:#0a0f1d;
+  --bg-grad-c:#080d18;
+  --bg-corner2:rgba(99,102,241,.10);
+  --dotgrid:rgba(148,163,184,.10);
+  --header-grad-a:rgba(13,21,40,.86);
+  --header-grad-b:rgba(11,17,32,.55);
+  --landing-grad-a:rgba(15,23,42,.2);
+  --landing-grad-b:#070b15;
+  --canvas-ink:#f8fafc;
+  --win:#34d399;
+  --lose:#fb7185;
+  --h1-grad-a:#fff;
+  --h1-grad-b:#cbd5e1;
+  --h1-grad-c:#7c8aa3;
+  --switch-thumb:#cbd5e1;
+  --scrim-bg:rgba(5,8,16,.74);
+  --canvas-label:rgba(226,232,240,.85);
+  --canvas-label-dim:rgba(148,163,184,.62);
+  --halo-rose:#fecdd3;
+  --rose-soft:#fda4af;
+  --canvas-gray:#64748b;
+  --canvas-gray-2:#94a3b8;
+  --role-fn:rgba(45,212,191,.28);
+  --role-tn:rgba(100,116,139,.30);
+  --role-fn-2:rgba(45,212,191,.5);
+  --role-tn-2:rgba(100,116,139,.6);
+  /* mode accents (overridden by [data-mode]) */
+  --accent:#f59e0b;
+  --accent2:#fbbf24;
+  --accent-ink:#0b1120;
+  --glow:rgba(245,158,11,.55);
+  --glow-soft:rgba(245,158,11,.18);
+  --sans:"Hanken Grotesk",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+/* ---- warm light theme (toggleable) ---- */
+[data-theme="light"]{
+  --bg:#f3eadd;
+  --bg2:#fbf6ee;
+  --panel:rgba(255,251,244,.86);
+  --panel-solid:#fbf6ee;
+  --hair:rgba(120,95,70,.18);
+  --hair-strong:rgba(120,95,70,.34);
+  --ink:#3a2e24;
+  --ink-dim:#6b5d4f;
+  --ink-faint:#9c8a78;
+  --canvas-bg:#fbf6ee;
+  --surface-deep:rgba(120,95,70,.08);
+  --surface-deep-2:rgba(120,95,70,.12);
+  --surface-deep-3:rgba(120,95,70,.06);
+  --on-accent-glyph:#fbf6ee;
+  --scrim-veil:rgba(251,246,238,.72);
+  --bg-grad-a:#f3eadd;
+  --bg-grad-b:#efe4d4;
+  --bg-grad-c:#ece0cd;
+  --bg-corner2:rgba(180,120,70,.10);
+  --dotgrid:rgba(120,95,70,.12);
+  --header-grad-a:rgba(251,246,238,.9);
+  --header-grad-b:rgba(243,234,221,.7);
+  --landing-grad-a:rgba(221,107,63,.08);
+  --landing-grad-b:#efe4d4;
+  --canvas-ink:#3a2e24;
+  --win:#0f9d6b;
+  --lose:#d6453f;
+  --h1-grad-a:#5a4632;
+  --h1-grad-b:#7a5f42;
+  --h1-grad-c:#a8835a;
+  --switch-thumb:#fbf6ee;
+  --scrim-bg:rgba(60,46,36,.42);
+  --canvas-label:rgba(90,72,56,.92);
+  --canvas-label-dim:rgba(120,95,70,.7);
+  --halo-rose:#e8836a;
+  --rose-soft:#d6453f;
+  --canvas-gray:#9c8a78;
+  --canvas-gray-2:#a8917a;
+  --role-fn:rgba(15,158,117,.26);
+  --role-tn:rgba(150,120,90,.28);
+  --role-fn-2:rgba(15,158,117,.5);
+  --role-tn-2:rgba(150,120,90,.55);
+  --accent:#dd6b3f;
+  --accent2:#c2562f;
+  --accent-ink:#fbf6ee;
+  --glow:rgba(221,107,63,.4);
+  --glow-soft:rgba(221,107,63,.14);
+}
+[data-mode="frequentist"]{--accent:#f59e0b;--accent2:#fcd34d;--glow:rgba(245,158,11,.55);--glow-soft:rgba(245,158,11,.16);}
+[data-mode="bayesian"]{--accent:#2dd4bf;--accent2:#5eead4;--glow:rgba(45,212,191,.5);--glow-soft:rgba(45,212,191,.16);}
+[data-mode="paradox"]{--accent:#a78bfa;--accent2:#c4b5fd;--glow:rgba(167,139,250,.55);--glow-soft:rgba(167,139,250,.18);}
+/* light-theme mode accents — warmed/darkened so they read on cream */
+[data-theme="light"][data-mode="frequentist"]{--accent:#c8791a;--accent2:#b8690f;--glow:rgba(200,121,26,.34);--glow-soft:rgba(200,121,26,.12);}
+[data-theme="light"][data-mode="bayesian"]{--accent:#0f9e75;--accent2:#0c8a64;--glow:rgba(15,158,117,.32);--glow-soft:rgba(15,158,117,.12);}
+[data-theme="light"][data-mode="paradox"]{--accent:#7f5fc4;--accent2:#6d4fb0;--glow:rgba(127,95,196,.34);--glow-soft:rgba(127,95,196,.12);}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+html,body{height:100%;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.5;overflow:hidden;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+/* atmospheric background */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 78% -8%, var(--glow-soft), transparent 60%),
+    radial-gradient(700px 700px at -6% 108%, var(--bg-corner2), transparent 55%),
+    linear-gradient(180deg,var(--bg-grad-a),var(--bg-grad-b) 55%,var(--bg-grad-c));
+  transition:background .8s ease;
+}
+body::after{
+  content:"";position:fixed;inset:-2px;z-index:0;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(var(--dotgrid) 1px, transparent 1.4px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(120% 120% at 50% 0%, #000 35%, transparent 78%);
+          mask-image:radial-gradient(120% 120% at 50% 0%, #000 35%, transparent 78%);
+  animation:drift 38s linear infinite;
+}
+@keyframes drift{from{background-position:0 0}to{background-position:26px 52px}}
+
+/* ---------- Landing ---------- */
+#landing{
+  position:fixed;inset:0;z-index:40;display:grid;place-items:center;
+  background:radial-gradient(1200px 800px at 50% 30%, var(--landing-grad-a), var(--landing-grad-b) 75%);
+  transition:opacity .7s ease, visibility .7s;
+}
+#landing.gone{opacity:0;visibility:hidden;}
+#landingCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5;}
+.landing-inner{position:relative;text-align:center;padding:0 24px;max-width:760px;}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:22px;}
+.landing-inner h1{
+  font-family:var(--serif);font-weight:400;font-size:clamp(46px,9vw,104px);line-height:.95;
+  letter-spacing:-.02em;margin:0 0 8px;
+  background:linear-gradient(180deg,var(--h1-grad-a),var(--h1-grad-b) 60%,var(--h1-grad-c));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.landing-inner h1 em{font-style:italic;color:var(--accent2);-webkit-text-fill-color:var(--accent2);text-shadow:0 0 38px var(--glow);}
+.tag{font-family:var(--serif);font-style:italic;font-size:clamp(16px,2.4vw,21px);color:var(--ink-dim);max-width:560px;margin:14px auto 40px;}
+.enter{
+  font-family:var(--sans);font-weight:600;font-size:16px;letter-spacing:.02em;
+  color:var(--accent-ink);background:linear-gradient(135deg,var(--accent2),var(--accent));
+  border:0;border-radius:999px;padding:15px 38px;cursor:pointer;position:relative;
+  box-shadow:0 12px 40px -8px var(--glow), inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .25s cubic-bezier(.2,.9,.3,1.2), box-shadow .25s;
+}
+.enter:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 20px 56px -10px var(--glow), inset 0 1px 0 rgba(255,255,255,.45);}
+.enter:active{transform:translateY(-1px) scale(.99);}
+.landing-meta{margin-top:30px;display:flex;gap:26px;justify-content:center;flex-wrap:wrap;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);}
+.landing-meta b{color:var(--ink-dim);font-weight:500;}
+
+/* ---------- App shell ---------- */
+#app{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;opacity:0;transition:opacity .6s ease .15s;}
+#app.live{opacity:1;}
+
+header.bar{
+  display:flex;align-items:center;gap:18px;padding:11px 20px;
+  border-bottom:1px solid var(--hair);
+  background:linear-gradient(180deg,var(--header-grad-a),var(--header-grad-b));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer;user-select:none;}
+.brand .glyph{width:26px;height:26px;border-radius:7px;position:relative;background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 0 18px var(--glow);}
+.brand .glyph::after{content:"∾";position:absolute;inset:0;display:grid;place-items:center;color:var(--accent-ink);font-weight:800;font-size:16px;}
+.brand b{font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:-.01em;}
+.brand span{font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.2em;text-transform:uppercase;margin-left:2px;}
+
+.chambers{display:flex;gap:5px;background:var(--surface-deep);border:1px solid var(--hair);border-radius:12px;padding:4px;}
+.chambers button{
+  font-family:var(--sans);font-weight:600;font-size:12.5px;color:var(--ink-dim);
+  background:transparent;border:0;border-radius:9px;padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.2s;white-space:nowrap;
+}
+.chambers button .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.5;}
+.chambers button[data-c="frequentist"]{--c:#f59e0b}
+.chambers button[data-c="bayesian"]{--c:#2dd4bf}
+.chambers button[data-c="paradox"]{--c:#a78bfa}
+.chambers button:hover{color:var(--ink);}
+.chambers button.on{color:#fff;background:rgba(148,163,184,.10);box-shadow:inset 0 0 0 1px var(--hair-strong);}
+.chambers button.on .dot{background:var(--c);opacity:1;box-shadow:0 0 10px var(--c);}
+
+.spacer{flex:1;}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.tbtn{
+  font-family:var(--sans);font-size:12.5px;font-weight:500;color:var(--ink-dim);
+  background:rgba(148,163,184,.06);border:1px solid var(--hair);border-radius:9px;
+  padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.18s;
+}
+.tbtn:hover{color:var(--ink);border-color:var(--hair-strong);background:rgba(148,163,184,.12);}
+.tbtn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.7;}
+.toggle{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink-dim);user-select:none;}
+.switch{width:38px;height:21px;border-radius:999px;background:rgba(148,163,184,.2);border:1px solid var(--hair);position:relative;cursor:pointer;transition:.25s;}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--switch-thumb);transition:.25s cubic-bezier(.2,.9,.3,1.2);}
+.switch.on{background:linear-gradient(135deg,var(--accent2),var(--accent));}
+.switch.on::after{transform:translateX(17px);background:#fff;}
+
+/* module tab strip */
+.modstrip{display:flex;gap:4px;padding:8px 20px 0;flex-wrap:wrap;}
+.modstrip button{
+  font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink-faint);
+  background:transparent;border:0;padding:8px 4px;margin-right:12px;cursor:pointer;position:relative;transition:.2s;
+}
+.modstrip button:hover{color:var(--ink-dim);}
+.modstrip button.on{color:var(--ink);}
+.modstrip button.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--accent2),var(--accent));box-shadow:0 0 10px var(--glow);}
+
+/* ---------- Workbench ---------- */
+.workbench{
+  flex:1;display:grid;grid-template-columns:300px minmax(0,1fr) 348px;gap:14px;
+  padding:14px 20px 18px;min-height:0;
+}
+.panel{
+  background:var(--panel);border:1px solid var(--hair);border-radius:16px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;min-height:0;overflow:hidden;position:relative;
+}
+.panel-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px 11px;border-bottom:1px solid var(--hair);}
+.panel-h h3{margin:0;font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;}
+.panel-h .badge{font-family:var(--mono);font-size:10px;color:var(--accent2);letter-spacing:.1em;}
+.panel-body{padding:16px;overflow:auto;flex:1;min-height:0;}
+.panel-body::-webkit-scrollbar{width:9px;height:9px;}
+.panel-body::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22);border-radius:9px;border:2px solid transparent;background-clip:content-box;}
+
+/* stage */
+.stage-wrap{padding:0;}
+#stageHead{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--hair);}
+#stageHead .title{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.01em;}
+#stageHead .sub{font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:.06em;}
+#stageStats{display:flex;gap:18px;}
+.stat{text-align:right;}
+.stat .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);}
+.stat .v{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;}
+.stat .v.acc{color:var(--accent2);text-shadow:0 0 16px var(--glow);}
+#stageCanvasWrap{position:relative;flex:1;min-height:0;}
+#stage{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:none;}
+#stageOverlay{position:absolute;inset:0;pointer-events:none;}
+.tip{
+  position:absolute;pointer-events:none;z-index:5;transform:translate(-50%,calc(-100% - 12px));
+  background:var(--panel-solid);border:1px solid var(--hair-strong);border-radius:10px;padding:9px 12px;
+  font-size:12px;color:var(--ink);box-shadow:0 14px 40px rgba(0,0,0,.5);min-width:150px;opacity:0;transition:opacity .15s;
+}
+.tip.show{opacity:1;}
+.tip b{color:var(--accent2);font-family:var(--mono);}
+.tip .post{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--accent2);margin-top:3px;display:block;}
+
+/* controls */
+.ctl{margin-bottom:20px;}
+.ctl:last-child{margin-bottom:4px;}
+.ctl > label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:9px;}
+.ctl > label .val{font-family:var(--mono);font-size:13px;color:var(--accent2);font-weight:500;}
+.ctl .hint{font-size:11.5px;color:var(--ink-faint);margin-top:7px;line-height:1.45;font-family:var(--serif);font-style:italic;}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:5px;background:rgba(148,163,184,.18);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 0 14px var(--glow),0 1px 4px rgba(0,0,0,.4);cursor:grab;border:2px solid var(--canvas-bg);transition:transform .12s;}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.18);cursor:grabbing;}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--glow);border:2px solid var(--canvas-bg);cursor:grab;}
+.segmented{display:flex;gap:4px;background:var(--surface-deep);border:1px solid var(--hair);border-radius:10px;padding:4px;}
+.ctl select,select.preset{width:100%;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink);background:var(--surface-deep);border:1px solid var(--hair-strong);border-radius:10px;padding:10px 34px 10px 12px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%2394a3b8' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:border-color .18s;}
+.ctl select:hover,select.preset:hover{border-color:var(--accent2);}
+.ctl select:focus,select.preset:focus{border-color:var(--accent);}
+select.preset option{background:var(--panel-solid);color:var(--ink);}
+.cite{margin-top:9px;font-size:11px;line-height:1.5;color:var(--ink-faint);font-family:var(--sans);display:flex;gap:6px;align-items:flex-start;}
+.cite .iglyph{flex:none;width:14px;height:14px;border-radius:50%;border:1px solid var(--accent2);color:var(--accent2);font-size:9.5px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;font-family:var(--serif);margin-top:1px;cursor:help;}
+.cite a{color:var(--accent2);text-decoration:none;border-bottom:1px dotted var(--accent2);}
+.cite a:hover{color:var(--accent);}
+.cite .src{font-style:italic;}
+.segmented button{flex:1;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--ink-dim);background:transparent;border:0;border-radius:7px;padding:8px 6px;cursor:pointer;transition:.18s;}
+.segmented button:hover{color:var(--ink);}
+.segmented button.on{color:var(--accent-ink);background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 2px 12px -2px var(--glow);}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;}
+.act{
+  flex:1;font-family:var(--sans);font-weight:600;font-size:13px;color:var(--ink);
+  background:rgba(148,163,184,.08);border:1px solid var(--hair-strong);border-radius:10px;padding:11px 12px;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.act:hover{background:rgba(148,163,184,.16);transform:translateY(-1px);}
+.act:active{transform:translateY(0);}
+.act.primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:var(--accent-ink);border-color:transparent;box-shadow:0 8px 24px -8px var(--glow);}
+.act.primary:hover{box-shadow:0 12px 30px -8px var(--glow);}
+.act.copied{background:linear-gradient(135deg,var(--win),var(--win))!important;color:#fff!important;box-shadow:0 8px 24px -8px var(--win)!important;}
+.act:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.divider{height:1px;background:var(--hair);margin:18px 0;}
+.note{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-dim);line-height:1.55;border-left:2px solid var(--accent);padding-left:12px;}
+
+/* ledger / formula */
+.formula{
+  font-family:var(--serif);font-size:17px;line-height:1.9;color:var(--ink);
+  background:var(--surface-deep-3);border:1px solid var(--hair);border-radius:12px;padding:16px 14px;text-align:center;margin-bottom:4px;
+  transition:opacity .2s ease, background .25s ease, border-color .25s ease;
+}
+.formula.swapping{opacity:0;}
+.formula .eq{display:block;margin:4px 0;}
+.formula .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px;}
+.formula .frac .num{border-bottom:1.5px solid var(--ink-dim);padding:0 6px 2px;}
+.formula .frac .den{padding:3px 6px 0;}
+.formula term, .formula .t{cursor:pointer;border-radius:5px;padding:1px 3px;transition:.15s;position:relative;}
+.formula .t:hover{background:var(--glow-soft);color:var(--accent2);}
+.formula .t.lit{background:var(--glow-soft);color:var(--accent2);box-shadow:0 0 0 1px var(--glow);}
+.formula .op{color:var(--ink-faint);margin:0 2px;}
+.formula .res{color:var(--accent2);font-weight:600;text-shadow:0 0 14px var(--glow);}
+.fcap{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink-faint);text-align:center;margin-top:10px;line-height:1.5;}
+.formula.plain{font-family:var(--sans);font-size:13.5px;line-height:1.72;color:var(--ink-dim);text-align:left;background:linear-gradient(160deg,rgba(22,32,54,.62),rgba(10,15,26,.5));border-color:var(--hair-strong);}
+.formula.plain .ptalk{margin:0 0 9px;}
+.formula.plain .ptalk:last-child{margin-bottom:0;}
+.formula.plain b{color:var(--accent2);font-weight:600;}
+.tutorbar{display:flex;align-items:center;gap:7px;font-family:var(--sans);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);margin-bottom:11px;font-weight:600;}
+.tutorbar .tdot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 10px var(--glow);animation:tpulse 2.4s ease-in-out infinite;}
+@keyframes tpulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+.tbtn.live{color:var(--accent-ink);background:linear-gradient(135deg,var(--accent2),var(--accent));border-color:transparent;box-shadow:0 2px 14px -3px var(--glow);}
+.tbtn.live svg{stroke:var(--accent-ink);}
+
+.subhead{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);margin:18px 0 8px;}
+#sparkWrap{position:relative;height:120px;border:1px solid var(--hair);border-radius:12px;background:var(--surface-deep-3);overflow:hidden;}
+#spark{position:absolute;inset:0;width:100%;height:100%;}
+.log{margin-top:6px;font-family:var(--mono);font-size:11.5px;line-height:1.65;}
+.log .row{display:flex;gap:8px;padding:5px 0;border-bottom:1px dashed var(--hair);color:var(--ink-dim);animation:fadein .3s;}
+.log .row .i{color:var(--ink-faint);min-width:34px;}
+.log .row .m{flex:1;}
+.log .row .r{color:var(--accent2);}
+.log .row.win .r{color:var(--win);}
+.log .row.lose .r{color:var(--lose);}
+@keyframes fadein{from{opacity:0;transform:translateY(-3px)}to{opacity:1}}
+.empty{font-family:var(--serif);font-style:italic;color:var(--ink-faint);font-size:13px;text-align:center;padding:24px 8px;line-height:1.6;}
+
+/* socratic + modal */
+.scrim{position:fixed;inset:0;z-index:50;background:var(--scrim-bg);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px;opacity:0;visibility:hidden;transition:.3s;}
+.scrim.show{opacity:1;visibility:visible;}
+.modal{background:var(--panel-solid);border:1px solid var(--hair-strong);border-radius:20px;max-width:520px;width:100%;padding:30px 30px 26px;box-shadow:0 40px 100px rgba(0,0,0,.6);position:relative;}
+.modal .ek{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;}
+.modal h2{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.25;margin:0 0 8px;letter-spacing:-.01em;}
+.modal p{color:var(--ink-dim);font-size:14.5px;margin:0 0 22px;font-family:var(--serif);}
+.guesses{display:flex;flex-direction:column;gap:9px;margin-bottom:8px;}
+.guess{text-align:left;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink);background:rgba(148,163,184,.06);border:1px solid var(--hair);border-radius:12px;padding:14px 16px;cursor:pointer;transition:.18s;}
+.guess:hover{border-color:var(--accent);background:var(--glow-soft);transform:translateX(3px);}
+.modal .skip{position:absolute;top:18px;right:18px;background:none;border:0;color:var(--ink-faint);font-size:22px;cursor:pointer;line-height:1;}
+.modal .skip:hover{color:var(--ink);}
+.modal pre{background:var(--surface-deep-2);border:1px solid var(--hair);border-radius:12px;padding:16px;font-family:var(--mono);font-size:11.5px;color:var(--ink-dim);max-height:46vh;overflow:auto;white-space:pre-wrap;line-height:1.6;}
+.modal .mrow{display:flex;gap:10px;margin-top:16px;}
+.kbd-table{width:100%;border-collapse:collapse;margin-top:6px;}
+.kbd-table td{padding:9px 6px;border-bottom:1px solid var(--hair);color:var(--ink-dim);font-size:14px;font-family:var(--sans);vertical-align:middle;}
+.kbd-table tr:last-child td{border-bottom:0;}
+.kbd-table td:first-child{width:96px;}
+kbd{display:inline-block;min-width:20px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--surface-deep-2);border:1px solid var(--hair-strong);border-bottom-width:2px;border-radius:6px;padding:4px 8px;box-shadow:0 1px 0 rgba(0,0,0,.4);}
+/* challenge button + count badge */
+.primary-tbtn{color:var(--accent-ink);background:linear-gradient(135deg,var(--accent2),var(--accent));border-color:transparent;}
+.primary-tbtn svg{stroke:var(--accent-ink);}
+.chcount{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;margin-left:2px;border-radius:8px;background:rgba(0,0,0,.28);color:var(--accent-ink);font-family:var(--mono);font-size:10px;font-weight:700;}
+/* challenge picker grid */
+.chgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;max-height:46vh;overflow:auto;padding:2px;}
+.chcard{text-align:left;background:var(--surface-deep);border:1px solid var(--hair);border-radius:13px;padding:13px 13px 12px;cursor:pointer;transition:.16s;color:var(--ink);display:flex;flex-direction:column;gap:6px;}
+.chcard:hover{border-color:var(--accent2);transform:translateY(-2px);background:rgba(16,24,42,.7);}
+.chcard-top{display:flex;justify-content:space-between;align-items:center;}
+.chcard-mode{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:6px;}
+.chcard-mode.frequentist{color:#fcd34d;background:rgba(245,158,11,.13);}
+.chcard-mode.bayesian{color:#5eead4;background:rgba(45,212,191,.13);}
+.chcard-mode.paradox{color:#c4b5fd;background:rgba(167,139,250,.14);}
+.chcard-badge{font-size:14px;}
+.chcard-score{font-family:var(--mono);font-size:11px;color:var(--accent2);font-weight:600;}
+.chcard-title{font-family:var(--serif);font-size:15.5px;font-weight:600;line-height:1.2;}
+.chcard-q{font-size:11.5px;color:var(--ink-faint);line-height:1.45;}
+/* challenge input + result */
+.chinput{margin-top:8px;}
+.chnum{font-family:var(--mono);font-size:22px;width:130px;background:var(--surface-deep-2);border:1px solid var(--hair-strong);border-radius:10px;padding:10px 12px;color:var(--ink);outline:none;text-align:center;-moz-appearance:textfield;appearance:textfield;}
+.chnum::-webkit-outer-spin-button,.chnum::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.chnum:focus{border-color:var(--accent);}
+.chunit{font-family:var(--mono);font-size:16px;color:var(--ink-dim);margin-left:8px;}
+.chchoices{display:flex;flex-direction:column;gap:8px;}
+.chchoice{text-align:left;}
+.chnote{font-size:13px;color:var(--ink-dim);font-family:var(--serif);line-height:1.55;background:var(--surface-deep);border:1px solid var(--hair);border-radius:10px;padding:12px;}
+.chscore{display:flex;flex-direction:column;align-items:center;justify-content:center;width:120px;height:120px;border-radius:50%;margin:6px auto 14px;border:3px solid var(--ring);box-shadow:0 0 26px -6px var(--ring);}
+.chscore-n{font-family:var(--mono);font-size:38px;font-weight:700;color:var(--ring);line-height:1;}
+.chscore-l{font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin-top:5px;}
+.chverdict{font-family:var(--serif);font-size:16px;color:var(--ink);text-align:center;margin:0 0 12px;}
+.chdetail{font-size:13px;color:var(--ink-dim);line-height:1.6;font-family:var(--sans);background:var(--surface-deep);border:1px solid var(--hair);border-radius:10px;padding:13px;}
+.chbadge{margin-top:14px;text-align:center;font-family:var(--sans);font-weight:600;color:#fcd34d;font-size:14px;}
+.chcode{width:100%;font-family:var(--mono);font-size:11px;color:var(--ink-dim);background:var(--surface-deep-2);border:1px solid var(--hair-strong);border-radius:10px;padding:10px 12px;resize:vertical;outline:none;}
+.chcode:focus{border-color:var(--accent);}
+.chweekrow{display:flex;gap:8px;margin-top:12px;}
+.chweekrow .chcode{flex:1;}
+@media (max-width:560px){ .chgrid{grid-template-columns:1fr;} }
+/* non-blocking prediction panel (stage stays visible behind it) */
+.chpanel{position:fixed;right:50%;top:50%;transform:translate(50%,-50%) scale(.97);width:min(540px,calc(100vw - 36px));background:var(--panel-solid);border:1px solid var(--accent2);border-radius:16px;padding:18px 20px;box-shadow:0 26px 70px rgba(0,0,0,.6),0 0 30px -10px var(--glow);z-index:60;opacity:0;transition:opacity .3s ease,transform .5s cubic-bezier(.55,.05,.2,1),width .5s cubic-bezier(.55,.05,.2,1),padding .4s ease,border-radius .4s ease;transform-origin:top right;}
+.chpanel.show{opacity:1;transform:translate(50%,-50%) scale(1);}
+/* docked pill state — slides to top-right via transform only (no left/right snap), graph stays clear */
+.chpanel.docked{transform:translate(0,0) scale(1);top:74px;right:18px;width:auto;max-width:min(320px,calc(100vw - 36px));padding:7px 13px;border-radius:999px;border-width:.5px;border-color:var(--accent2);background:rgba(16,24,42,.96);box-shadow:0 10px 30px -8px rgba(0,0,0,.6);}
+.chpanel .ek{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent2);margin-bottom:7px;}
+.chpanel h3{font-family:var(--serif);font-weight:600;font-size:18px;margin:0 0 6px;line-height:1.25;}
+.chpanel p{font-size:13.5px;color:var(--ink-dim);margin:0 0 13px;line-height:1.5;font-family:var(--serif);}
+.chpanel .chrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.chpanel .chnum{font-size:20px;width:116px;}
+.chpanel .chspacer{flex:1;}
+.chpanel .chhint{font-size:11px;color:var(--ink-faint);font-family:var(--sans);margin-top:10px;line-height:1.4;}
+/* the pill row */
+.chpill{display:flex;align-items:center;gap:7px;white-space:nowrap;}
+.chpill .pdot{width:7px;height:7px;border-radius:50%;background:var(--lose);flex:none;box-shadow:0 0 8px var(--lose);}
+.chpill b{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--ink);}
+.chpill .psep{color:var(--ink-faint);font-size:12px;}
+.chpill .pwatch{font-family:var(--sans);font-size:12px;color:var(--ink-dim);}
+@media (max-width:560px){ .chpanel{right:50%;} .chpanel.docked{right:50%;transform:translate(50%,0) scale(1);top:64px;} }
+
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);z-index:60;background:var(--panel-solid);border:1px solid var(--hair-strong);border-radius:12px;padding:12px 20px;font-size:13px;color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.5);opacity:0;transition:.3s;display:flex;align-items:center;gap:10px;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast b{color:var(--accent2);}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1080px){
+  body{overflow:auto;}
+  #app{height:auto;min-height:100vh;}
+  .workbench{grid-template-columns:1fr;}
+  #stageCanvasWrap{height:min(62vh,460px);}
+  .panel.stage-wrap{order:-1;}
+}
+@media (max-width:560px){
+  header.bar{padding:10px 12px;gap:10px;}
+  .brand span{display:none;}
+  .workbench{padding:12px;}
+  .chambers button{padding:7px 9px;font-size:11.5px;}
+  .chambers button .label{display:none;}
+}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+
+<!-- ===================== LANDING ===================== -->
+<div id="landing">
+  <canvas id="landingCanvas"></canvas>
+  <div class="landing-inner">
+    <div class="eyebrow">An Interactive Laboratory</div>
+    <h1>Para<em>dox</em></h1>
+    <div class="tag">Chance is not a number on a page. Pull the levers, run the trials, and watch probability assemble itself before your eyes.</div>
+    <button class="enter" id="enterBtn">Enter the Sandbox →</button>
+    <div class="landing-meta">
+      <span><b>3</b> Chambers</span>
+      <span><b>7</b> Live Experiments</span>
+      <span><b>∞</b> Trials</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== APP ===================== -->
+<div id="app" hidden>
+  <header class="bar">
+    <div class="brand" id="brand">
+      <div class="glyph"></div>
+      <b>Paradox</b><span>sandbox</span>
+    </div>
+    <div class="chambers" id="chambers"></div>
+    <div class="spacer"></div>
+    <div class="tools">
+      <label class="toggle"><span>Socratic</span><div class="switch" id="socraticSw"></div></label>
+      <button class="tbtn" id="plainBtn" title="Swap the math for plain-English explanations"><svg viewBox="0 0 24 24"><path d="M4 5h16v10H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>Plain English</button>
+      <button class="tbtn" id="writeBtn" title="Generate a Markdown lab write-up"><svg viewBox="0 0 24 24"><path d="M5 4h9l5 5v11H5z"/><path d="M14 4v5h5"/><path d="M8 13h7M8 16h7"/></svg>Write-Up</button>
+      <button class="tbtn primary-tbtn" id="challengeBtn" title="Challenge mode — predict, then prove it"><svg viewBox="0 0 24 24"><path d="M7 4h10v4a5 5 0 01-10 0z"/><path d="M9 13h6M8 20h8M10 13v3.5M14 13v3.5"/><path d="M17 5h2.5a2.5 2.5 0 01-2.5 2.5M7 5H4.5A2.5 2.5 0 007 7.5"/></svg>Challenge<span class="chcount" id="chCount" hidden>0</span></button>
+      <button class="tbtn" id="kbdBtn" title="Keyboard shortcuts (press ?)" aria-label="Keyboard shortcuts"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h0M11 10h0M15 10h0M7 14h10"/></svg></button>
+      <button class="tbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle light or dark mode" aria-pressed="false"><svg viewBox="0 0 24 24" id="themeIcon"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></svg></button>
+    </div>
+  </header>
+  <div class="modstrip" id="modstrip"></div>
+
+  <div class="workbench">
+    <!-- LEFT -->
+    <aside class="panel">
+      <div class="panel-h"><h3>Control Panel</h3><span class="badge" id="ctlBadge"></span></div>
+      <div class="panel-body" id="controls"></div>
+    </aside>
+
+    <!-- CENTER -->
+    <section class="panel stage-wrap">
+      <div id="stageHead">
+        <div><div class="title" id="stageTitle">—</div><div class="sub" id="stageSub"></div></div>
+        <div id="stageStats"></div>
+        <div id="srStats" class="sr-only" aria-live="polite" aria-atomic="true" role="status"></div>
+      </div>
+      <div id="stageCanvasWrap">
+        <canvas id="stage"></canvas>
+        <div id="stageOverlay"><div class="tip" id="tip"></div></div>
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <aside class="panel">
+      <div class="panel-h"><h3>The Ledger</h3><span class="badge" id="ledBadge">live</span></div>
+      <div class="panel-body">
+        <div class="formula" id="formula"></div>
+        <div class="fcap" id="fcap"></div>
+        <div class="subhead" id="sparkHead">Convergence History</div>
+        <div id="sparkWrap" role="img" aria-label="Convergence history graph: a line chart showing the experimental probability approaching the theoretical value as trials accumulate. The current numeric values are announced in the statistics above."><canvas id="spark" aria-hidden="true"></canvas></div>
+        <div class="subhead">Outcome Log</div>
+        <div class="log" id="log"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- socratic / writeup modal -->
+<div class="scrim" id="scrim">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" tabindex="-1"></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<div class="chpanel" id="chPanel" hidden></div>
+
+<script>
+"use strict";
+/* ============================================================
+   PARADOX — shared shell, math + animation helpers
+   ============================================================ */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const fmtPct=v=>(v*100).toFixed(1)+"%";
+const fmtN=(v,d=0)=>v.toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+const rand=(a=1)=>Math.random()*a;
+const randint=n=>Math.floor(Math.random()*n);
+// format a challenge prediction value with its unit ($ before, % / others after)
+const fmtPredVal=(v,ch)=>{ const u=(ch&&ch.unit)||""; if(u==="$")return "$"+v; if(u)return v+u; return ""+v; };
+
+/* ---- gamma / beta for Bayesian curves ---- */
+const G=[676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-0.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+function lgamma(z){
+  if(z<0.5) return Math.log(Math.PI/Math.sin(Math.PI*z))-lgamma(1-z);
+  z-=1;let x=0.99999999999980993;
+  for(let i=0;i<G.length;i++)x+=G[i]/(z+i+1);
+  const t=z+G.length-0.5;
+  return 0.5*Math.log(2*Math.PI)+(z+0.5)*Math.log(t)-t+Math.log(x);
+}
+const betaln=(a,b)=>lgamma(a)+lgamma(b)-lgamma(a+b);
+function betaPdf(x,a,b){ if(x<=0||x>=1) return (x===0&&a<1)||(x===1&&b<1)?40:0; return Math.exp((a-1)*Math.log(x)+(b-1)*Math.log(1-x)-betaln(a,b)); }
+
+/* ---- canvas helpers ---- */
+const CSS_FALLBACK={'--accent':'#f59e0b','--accent2':'#fcd34d','--ink':'#f8fafc','--ink-dim':'#cbd5e1','--ink-faint':'#94a3b8','--glow':'rgba(245,158,11,.4)','--canvas-bg':'#0b1120','--scrim-veil':'rgba(10,14,24,.66)','--canvas-ink':'#f8fafc','--win':'#34d399','--lose':'#fb7185','--canvas-label':'rgba(226,232,240,.85)','--canvas-label-dim':'rgba(148,163,184,.62)','--halo-rose':'#fecdd3','--rose-soft':'#fda4af','--canvas-gray':'#64748b','--canvas-gray-2':'#94a3b8','--role-fn':'rgba(45,212,191,.28)','--role-tn':'rgba(100,116,139,.30)','--role-fn-2':'rgba(45,212,191,.5)','--role-tn-2':'rgba(100,116,139,.6)'};
+// theme-color cache: getComputedStyle is expensive and was being called multiple times per
+// animation frame. We snapshot the CSS custom properties once whenever the theme or mode
+// changes (the only times they can change), and the draw loops read from this plain object.
+let _cssCache=Object.create(null);
+let _cssCacheReady=false;
+// every custom prop the canvas/draw code reads via cssv — kept in sync with usage
+const _CSS_KEYS=['--accent','--accent2','--glow','--glow-soft','--ink','--ink-dim','--ink-faint',
+  '--canvas-bg','--canvas-ink','--scrim-veil','--win','--lose','--canvas-label','--canvas-label-dim',
+  '--canvas-gray','--canvas-gray-2','--rose-soft','--halo-rose','--role-fn','--role-tn','--role-fn-2','--role-tn-2'];
+function rebuildCssCache(){
+  try{
+    const cs=getComputedStyle(document.documentElement);
+    const next=Object.create(null);
+    for(const k of _CSS_KEYS){ const v=cs.getPropertyValue(k).trim(); if(v)next[k]=v; }
+    _cssCache=next; _cssCacheReady=true;
+  }catch(e){ _cssCacheReady=false; } // leave cache empty -> cssv falls back to live reads
+}
+function cssv(n){
+  // fast path: served from the cache (no getComputedStyle during the 60fps draw loop)
+  if(_cssCacheReady){ const c=_cssCache[n]; if(c)return c; }
+  // miss or cache not built yet -> live read, then fall back to the static default
+  let v=''; try{ v=getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }catch(e){}
+  return v||CSS_FALLBACK[n]||'#94a3b8';
+}
+function roundRect(c,x,y,w,h,r){ r=Math.max(0,Math.min(r,w/2,h/2)); c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+function withGlow(c,col,blur,fn){ c.save(); c.shadowColor=col; c.shadowBlur=blur; fn(); c.restore(); }
+// guard canvas gradient APIs against non-finite coords (NaN/Infinity from transient bad sizes),
+// which otherwise throw "The provided double value is non-finite." and crash the frame.
+const _fin=(v,d=0)=> (typeof v==="number" && isFinite(v)) ? v : d;
+const _hardenedCtxs=new WeakSet();
+function hardenCtx(ctx){ if(!ctx||_hardenedCtxs.has(ctx))return ctx;
+  try{
+    const lg=ctx.createLinearGradient.bind(ctx);
+    ctx.createLinearGradient=(x0,y0,x1,y1)=> lg(_fin(x0),_fin(y0),_fin(x1,1),_fin(y1,1));
+    const rg=ctx.createRadialGradient.bind(ctx);
+    ctx.createRadialGradient=(x0,y0,r0,x1,y1,r1)=> rg(_fin(x0),_fin(y0),Math.max(0,_fin(r0)),_fin(x1),_fin(y1),Math.max(0,_fin(r1,1)));
+    _hardenedCtxs.add(ctx);
+  }catch(e){}
+  return ctx;
+}
+
+/* =================== App core =================== */
+const App={
+  modules:[], current:null, byId:{},
+  socratic:false, asked:{}, plain:false,
+  stage:null, sctx:null, dpr:1,
+  sparkCv:null, spctx:null,
+  raf:0, anim:null,
+
+  log:[], _logSeq:0,
+  size:{w:0,h:0}, sparkSize:{w:0,h:0},
+
+  setMode(m){ document.documentElement.setAttribute("data-mode",m); rebuildCssCache(); },
+
+  /* canvas sizing (DPR aware) */
+  fit(){
+    this.dpr=Math.min(2,window.devicePixelRatio||1);
+    let ok=true;
+    const wrap=$("#stageCanvasWrap");
+    if(wrap){ const r=wrap.getBoundingClientRect();
+      if(r.width>=2&&r.height>=2){ this.size={w:r.width,h:r.height}; this.stage.width=Math.round(r.width*this.dpr); this.stage.height=Math.round(r.height*this.dpr); this.sctx.setTransform(this.dpr,0,0,this.dpr,0,0); }
+      else ok=false;
+    } else ok=false;
+    const swrap=$("#sparkWrap");
+    if(swrap){ const sw=swrap.getBoundingClientRect();
+      if(sw.width>=2&&sw.height>=2){ this.sparkCv.width=Math.max(1,Math.round(sw.width*this.dpr)); this.sparkCv.height=Math.max(1,Math.round(sw.height*this.dpr)); this.spctx.setTransform(this.dpr,0,0,this.dpr,0,0); this.sparkSize={w:sw.width,h:sw.height}; }
+      else ok=false;
+    } else ok=false;
+    if(this.current&&this.current.resize)this.current.resize();
+    return ok;
+  },
+  // keep retrying fit() until both canvases have real dimensions (handles landing→app transition)
+  fitUntilReady(tries=0){
+    const ok=this.fit();
+    if(!ok && tries<60){ requestAnimationFrame(()=>this.fitUntilReady(tries+1)); }
+    else if(ok && this.current){ if(this.current.resize)this.current.resize(); this.refreshSpark(); }
+  },
+
+  loop(fn){ // module-friendly rAF; auto-cancelled on unmount
+    cancelAnimationFrame(this.raf);
+    const step=(t)=>{ fn(t); this.raf=requestAnimationFrame(step); };
+    this.raf=requestAnimationFrame(step);
+  },
+  stop(){ cancelAnimationFrame(this.raf); this.raf=0; },
+
+  /* ledger */
+  clearLog(){ this.log=[]; this._logSeq=0; this.renderLog(); },
+  push(msg,result,cls=""){ this.log.unshift({i:++this._logSeq,msg,result,cls}); if(this.log.length>120)this.log.pop(); this.renderLog(); },
+  renderLog(){
+    const el=$("#log");
+    if(!this.log.length){ el.innerHTML='<div class="empty">No trials yet. The ledger fills as you run the experiment.</div>'; return; }
+    el.innerHTML=this.log.slice(0,80).map(r=>`<div class="row ${r.cls}"><span class="i">#${r.i}</span><span class="m">${r.msg}</span>${r.result!=null?`<span class="r">${r.result}</span>`:""}</div>`).join("");
+  },
+
+  setStat(arr){
+    $("#stageStats").innerHTML=arr.map(s=>`<div class="stat"><div class="k">${s.k}</div><div class="v ${s.acc?'acc':''}">${s.v}</div></div>`).join("");
+    this.announceStats(arr);
+  },
+  // announce stats to screen readers, throttled so the 60fps loop doesn't flood the live region
+  announceStats(arr){
+    if(!arr||!arr.length)return;
+    const now=Date.now();
+    const text=arr.map(s=>`${s.k}: ${s.v}`).join(", ");
+    this._srPendingText=text;
+    if(this._srLast && now-this._srLast<1500){
+      // within throttle window: schedule a trailing announce so the final value still lands
+      if(!this._srTimer){ this._srTimer=setTimeout(()=>{ this._srTimer=null; this._srLast=Date.now(); const el=$("#srStats"); if(el&&this._srPendingText)el.textContent=this._srPendingText; },1500-(now-this._srLast)); }
+      return;
+    }
+    this._srLast=now; const el=$("#srStats"); if(el)el.textContent=text;
+  },
+  setFormula(html,cap=""){ $("#formula").innerHTML=html; $("#fcap").textContent=cap; this.wireFormula(); },
+  setText(id,val){ const el=$("#"+id); if(el)el.textContent=val; },
+  wireFormula(){
+    $$("#formula .t").forEach(t=>{
+      t.onmouseenter=()=>{ if(this.current&&this.current.highlight)this.current.highlight(t.dataset.hl,true); };
+      t.onmouseleave=()=>{ if(this.current&&this.current.highlight)this.current.highlight(t.dataset.hl,false); };
+      t.onclick=()=>{ $$("#formula .t").forEach(x=>x.classList.remove("lit")); t.classList.add("lit"); if(this.current&&this.current.highlight)this.current.highlight(t.dataset.hl,"pin"); };
+    });
+  },
+
+  /* render the ledger formula panel: math, or plain-English tutor text */
+  renderExplain(m){
+    const f=$("#formula");
+    if(this.plain && m.plainText){
+      const paras=m.plainText.split(/\n\s*\n/).map(p=>`<p class="ptalk">${this.escHtml(p.trim())}</p>`).join("");
+      f.classList.add("plain");
+      f.innerHTML=`<div class="tutorbar"><span class="tdot"></span>In plain English</div>${paras}`;
+      $("#fcap").textContent="Tap “Plain English” again for the formula.";
+    } else {
+      f.classList.remove("plain");
+      this.setFormula(m.formula||"",m.fcap||"");
+      if(m.refreshFormula && m.s)m.refreshFormula();
+    }
+  },
+  escHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); },
+  togglePlain(){
+    this.plain=!this.plain;
+    $("#plainBtn").classList.toggle("live",this.plain);
+    $("#plainBtn").setAttribute("aria-pressed",this.plain?"true":"false");
+    const f=$("#formula"), m=this.current;
+    const reduce=typeof matchMedia!=="undefined"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(m&&f&&!reduce){
+      f.classList.add("swapping");
+      setTimeout(()=>{ this.renderExplain(m); requestAnimationFrame(()=>f.classList.remove("swapping")); },200);
+    } else if(m){
+      this.renderExplain(m);
+    }
+    this.toast(this.plain?"Plain English on — the math panel now explains in words.":"Back to the formulas.");
+  },
+
+  setTheme(theme,announce){
+    const light = theme==="light";
+    if(light)document.documentElement.setAttribute("data-theme","light");
+    else document.documentElement.removeAttribute("data-theme");
+    const btn=$("#themeBtn"); if(btn)btn.setAttribute("aria-pressed",light?"true":"false");
+    // swap the header icon between sun (light active) and moon (dark active)
+    const ic=$("#themeIcon");
+    if(ic){ ic.innerHTML = light
+      ? '<path d="M20 14.5A7.5 7.5 0 019.5 4a7.5 7.5 0 100 16 7.5 7.5 0 0010.5-5.5z"/>'   /* moon: click to go dark */
+      : '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>'; /* sun: click to go light */
+    }
+    try{ localStorage.setItem("paradox.theme",light?"light":"dark"); }catch(e){ console.warn("theme save failed:",e); }
+    // theme changed -> refresh the cached colors BEFORE repainting so the canvas reads new values
+    rebuildCssCache();
+    // CSS variables drive the canvas via cssv(); repaint so the stage/spark/graph pick up new colors now
+    const m=this.current; if(m){ if(m.resize)m.resize(); if(m.recompute)m.recompute(true); }
+    this.refreshSpark();
+    if(announce)this.toast(light?"Light mode on.":"Dark mode on.");
+  },
+  toggleTheme(){
+    const isLight=document.documentElement.getAttribute("data-theme")==="light";
+    this.setTheme(isLight?"dark":"light",true);
+  },
+
+  /* keyboard helpers — click the current module's declared run/reset buttons */
+  kbRun(){ const m=this.current; if(!m||!m.keys||!m.keys.run)return; const b=$("#"+m.keys.run); if(b)b.click(); },
+  kbReset(){ const m=this.current; if(!m||!m.keys||!m.keys.reset)return; const b=$("#"+m.keys.reset); if(b)b.click(); },
+  showShortcuts(){
+    const rows=[["Space","Run / pause the current experiment"],["R","Reset the current experiment"],["?","Show this cheat sheet"],["Esc","Close dialogs"]];
+    const body=`<h2>Keyboard shortcuts</h2><table class="kbd-table">${rows.map(r=>`<tr><td><kbd>${r[0]}</kbd></td><td>${r[1]}</td></tr>`).join("")}</table><div class="btnrow" style="margin-top:18px;justify-content:flex-end"><button class="act primary" id="kbClose">Got it</button></div>`;
+    $("#modal").innerHTML=body; this.openScrim();
+    const c=$("#kbClose"); if(c)c.onclick=()=>this.closeModal();
+  },
+
+  /* ============ CHALLENGE MODE + WEEKLY DROP + PROGRESS ============ */
+  progress:{scores:{},badges:{}},
+  prediction:null, activeChallenge:null, challengeLocked:false,
+  _resultTimer:null, _resultPending:false,
+  clearPrediction(){ this.prediction=null; },
+  loadProgress(){
+    try{ const raw=localStorage.getItem("paradox.progress"); if(!raw)return;
+      const p=JSON.parse(raw);
+      const validId=id=>this.challenges.some(c=>c.id===id);
+      const scores={}, badges={};
+      if(p&&p.scores&&typeof p.scores==="object")for(const k of Object.keys(p.scores)){ if(!validId(k))continue; const n=Number(p.scores[k]); if(isFinite(n))scores[k]=Math.max(0,Math.min(100,Math.round(n))); }
+      if(p&&p.badges&&typeof p.badges==="object")for(const k of Object.keys(p.badges)){ if(!validId(k))continue; badges[k]=!!p.badges[k]; }
+      this.progress={scores,badges};
+    }catch(e){ console.warn("loadProgress failed (storage may be blocked):",e); }
+  },
+  saveProgress(){ try{ localStorage.setItem("paradox.progress",JSON.stringify(this.progress)); }catch(e){ console.warn("saveProgress failed (storage may be blocked):",e); } },
+  progressCode(){ try{ return btoa(unescape(encodeURIComponent(JSON.stringify(this.progress)))); }catch(e){ console.warn("progressCode failed:",e); return ""; } },
+  importProgress(code){
+    try{
+      const p=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+      if(!p||typeof p!=="object")return false;
+      // sanitize: scores must be finite numbers, badges booleans, keyed only by known challenge ids.
+      // (prevents any injected string from a pasted code reaching innerHTML downstream.)
+      const validId=id=>this.challenges.some(c=>c.id===id);
+      const scores={}, badges={};
+      if(p.scores&&typeof p.scores==="object")for(const k of Object.keys(p.scores)){ if(!validId(k))continue; const n=Number(p.scores[k]); if(isFinite(n))scores[k]=Math.max(0,Math.min(100,Math.round(n))); }
+      if(p.badges&&typeof p.badges==="object")for(const k of Object.keys(p.badges)){ if(!validId(k))continue; badges[k]=!!p.badges[k]; }
+      this.progress={scores,badges}; this.saveProgress(); return true;
+    }catch(e){ console.warn("importProgress failed:",e); }
+    return false;
+  },
+
+  // apply a control-state object {sliderId:value,...} and segmented {groupId:index}, select {id:value}
+  applyChallengeSetup(setup){
+    if(!setup)return;
+    if(setup.ranges)for(const[id,v] of Object.entries(setup.ranges)){ const el=$("#"+id); if(el&&el.type==="range"){ el.value=v; el.dispatchEvent(new Event("input",{bubbles:true})); } }
+    if(setup.selects)for(const[id,v] of Object.entries(setup.selects)){ const el=$("#"+id); if(el){ el.value=v; el.dispatchEvent(new Event("change",{bubbles:true})); } }
+    if(setup.segments)for(const[id,idx] of Object.entries(setup.segments)){ const g=$("#"+id); if(g){ const b=[...g.querySelectorAll("button")][idx]; if(b)b.click(); } }
+  },
+
+  startChallenge(ch){
+    if(!ch)return;
+    if(this._resultTimer){ clearTimeout(this._resultTimer); this._resultTimer=null; this._resultPending=false; } // cancel any in-flight result from a prior challenge
+    this.activeChallenge=ch; this.challengeLocked=true; this.clearPrediction();
+    this.closeModal();
+    // switch module without socratic, then apply setup after mount
+    this.select(ch.module,{ask:false});
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      this.applyChallengeSetup(ch.setup);
+      // setup may have triggered an auto-reveal (e.g. medical preset) — hide the answer until they predict
+      const m=this.current; if(m&&m.s){ if("revealing" in m.s)m.s.revealing=false; if("reveal" in m.s)m.s.reveal=0; }
+      this.lockRunForChallenge(ch);
+      this.showChallengePrompt(ch);
+    }));
+  },
+  // disable every run-style button until a prediction is logged (not just the primary)
+  lockRunForChallenge(ch){
+    const m=this.byId[ch.module]; if(!m)return;
+    const ids=m.runLock||(m.keys&&m.keys.run?[m.keys.run]:[]);
+    ids.forEach(id=>{ const b=$("#"+id); if(b){ b.disabled=true; b.dataset.locked="1"; b.title="Make your prediction first"; } });
+  },
+  unlockRun(ch){
+    const m=this.byId[ch.module]; if(!m)return;
+    const ids=m.runLock||(m.keys&&m.keys.run?[m.keys.run]:[]);
+    ids.forEach(id=>{ const b=$("#"+id); if(b){ b.disabled=false; delete b.dataset.locked; b.title=""; } });
+  },
+  showChallengePrompt(ch){
+    const panel=$("#chPanel"); if(!panel)return;
+    if(this._chPanelTimer){ clearTimeout(this._chPanelTimer); this._chPanelTimer=null; } // cancel a prior close so it can't blank this panel
+    const inputHtml = ch.input==="number"
+      ? `<div class="chrow"><input type="number" id="chPred" class="chnum" placeholder="${ch.placeholder||"?"}" step="${ch.step||1}" min="${ch.min!=null?ch.min:0}" max="${ch.max!=null?ch.max:100}"> <span class="chunit">${ch.unit||""}</span><div class="chspacer"></div><button class="act" id="chCancel">Cancel</button><button class="act primary" id="chSubmit">Lock it in</button></div><div class="chhint">Type a guess — watch your line appear on the graph. Lock it in to run the experiment and see the curve race toward the truth.</div>`
+      : ch.input==="action"
+        ? `<div class="chnote">${ch.actionHint||"Adjust the controls on the left, then check your setup."}</div><div class="chrow" style="margin-top:12px"><div class="chspacer"></div><button class="act" id="chCancel">Cancel</button><button class="act primary" id="chCheck">Check my setup</button></div>`
+        : `<div class="chchoices">${(ch.choices||[]).map((c,i)=>`<button class="act chchoice" data-i="${i}">${c}</button>`).join("")}</div><div class="chrow" style="margin-top:10px"><div class="chspacer"></div><button class="act" id="chCancel">Cancel</button></div>`;
+    panel.innerHTML=`<div class="ek">Challenge${ch.week?` · Week ${ch.week}`:""}</div><h3>${ch.title}</h3><p>${ch.question}</p>${inputHtml}`;
+    panel.hidden=false; panel.classList.remove("docked"); requestAnimationFrame(()=>panel.classList.add("show"));
+    const close=()=>{ panel.classList.remove("show"); if(this._chPanelTimer)clearTimeout(this._chPanelTimer); this._chPanelTimer=setTimeout(()=>{panel.hidden=true;panel.innerHTML="";panel.classList.remove("docked");this._chPanelTimer=null;},300); };
+    this._closeChPanel=close;
+    $("#chCancel").onclick=()=>{ this.activeChallenge=null; this.challengeLocked=false; this.clearPrediction(); this.unlockRun(ch); this.refreshSpark(); close(); };
+    if(ch.input==="number"){
+      const inp=$("#chPred"); if(inp){ inp.focus();
+        // live marker: as they type, draw the guess line (does NOT run the sim)
+        inp.oninput=()=>{ const v=parseFloat(inp.value); if(!isNaN(v)&&ch.predToSpark){ this.prediction=ch.predToSpark(v); this.refreshSpark(); } else { this.clearPrediction(); this.refreshSpark(); } };
+        inp.onkeydown=e=>{ if(e.key==="Enter"){ const sb=$("#chSubmit"); if(sb)sb.click(); } };
+      }
+      const sb=$("#chSubmit"); if(sb)sb.onclick=()=>{ const v=parseFloat($("#chPred").value); if(isNaN(v)){ this.toast("Enter a number first."); return; } this.dockChallengePanel(ch,v); this.gradeChallenge(ch,{predicted:v}); };
+    }
+    else if(ch.input==="choice"){ $$("#chPanel .chchoice").forEach(b=>b.onclick=()=>{ this.dockChallengePanel(ch,ch.choices?ch.choices[+b.dataset.i]:null); this.gradeChallenge(ch,{predicted:+b.dataset.i}); }); }
+    else if(ch.input==="action"){ const cb=$("#chCheck"); if(cb)cb.onclick=()=>{ close(); this.gradeChallenge(ch,{}); }; }
+  },
+  // shrink the centered panel into a single-line pill in the corner, graph stays clear
+  dockChallengePanel(ch,predicted){
+    const panel=$("#chPanel"); if(!panel||panel.hidden)return;
+    const valTxt = (ch.input==="number") ? `${fmtPredVal(predicted,ch)}` : (predicted!=null?`${predicted}`:"locked in");
+    panel.innerHTML=`<div class="chpill"><span class="pdot"></span><b>You guessed ${valTxt}</b><span class="psep">·</span><span class="pwatch">watching…</span></div>`;
+    // ensure the panel is in its shown/centered state, force a reflow, THEN dock so the transition animates
+    panel.classList.add("show"); panel.classList.remove("docked");
+    void panel.offsetWidth; // reflow: lock in the centered geometry before transitioning
+    requestAnimationFrame(()=>{ panel.classList.add("docked"); });
+    // bring the user straight to the convergence graph (esp. on mobile where it sits below the stage)
+    this.scrollToGraph();
+  },
+  scrollToGraph(){
+    const g=$("#sparkWrap"); if(!g||!g.scrollIntoView)return;
+    try{ g.scrollIntoView({behavior:"smooth",block:"center",inline:"nearest"}); }
+    catch(e){ try{ g.scrollIntoView(); }catch(_){} }
+  },
+  // re-paint the convergence graph so the prediction marker updates immediately (even when paused)
+  refreshSpark(){
+    const m=this.current;
+    // custom-spark modules (medical, simpson) redraw their own way; others use App.spark
+    if(m&&m.drawSpark && (m.id==="medical"||m.id==="simpson")){ m.drawSpark(); return; }
+    if(this._lastSpark){ this.spark(this._lastSpark.vals,this._lastSpark.opts); }
+  },
+  gradeChallenge(ch,pred){
+    const m=this.byId[ch.module];
+    // ensure the marker reflects the locked-in prediction during the run
+    if(ch.input==="number" && ch.predToSpark && pred && typeof pred.predicted==="number"){ this.prediction=ch.predToSpark(pred.predicted); this.refreshSpark(); }
+    const actual=ch.answer(m); // computed live from the module state/theory
+    const res=ch.grade(pred,actual,m); // {score 0-100, verdict, detail}
+    // unlock + run the experiment so they see it play out
+    this.challengeLocked=false; this.unlockRun(ch);
+    if(ch.input!=="action"){ const runId=ch.runVia||(this.byId[ch.module].keys&&this.byId[ch.module].keys.run); const b=runId?$("#"+runId):null; if(b&&!ch.noAutoRun)b.click(); }
+    // persist best score + badge
+    const prev=this.progress.scores[ch.id]||0; if(res.score>prev)this.progress.scores[ch.id]=res.score;
+    if(res.score>=ch.passScore){ this.progress.badges[ch.id]=true; }
+    this.saveProgress(); this.renderChallengeBadge();
+    // let the curve race the guess line before revealing the result (action challenges resolve instantly)
+    const delay = ch.input==="action" ? 0 : (ch.resultDelay!=null?ch.resultDelay:3200);
+    if(this._resultTimer)clearTimeout(this._resultTimer);
+    this._resultPending=true;
+    this._resultTimer=setTimeout(()=>{ this._resultPending=false; this.showChallengeResult(ch,res); }, delay);
+  },
+  showChallengeResult(ch,res){
+    if(this._closeChPanel)this._closeChPanel(); // dismiss the corner pill
+    const tier=res.score>=90?"gold":res.score>=ch.passScore?"pass":"miss";
+    const ring=tier==="gold"?cssv("--accent2"):tier==="pass"?cssv("--win"):cssv("--lose");
+    const label=tier==="gold"?"Nailed it":tier==="pass"?"Got it":"Not quite";
+    const badgeLine=res.score>=ch.passScore?`<div class="chbadge">🏅 Badge unlocked${ch.week?` · Week ${ch.week}`:""}</div>`:"";
+    const body=`<div class="ek">Result</div>
+      <div class="chscore" style="--ring:${ring}"><div class="chscore-n">${Math.round(res.score)}</div><div class="chscore-l">${label}</div></div>
+      <p class="chverdict">${res.verdict}</p>
+      <div class="chdetail">${res.detail}</div>
+      ${badgeLine}
+      <div class="btnrow" style="margin-top:20px;justify-content:flex-end;gap:10px"><button class="act" id="chMore">More challenges</button><button class="act primary" id="chDone">Done</button></div>`;
+    $("#modal").innerHTML=body; this.openScrim();
+    $("#chDone").onclick=()=>{ this.activeChallenge=null; this.clearPrediction(); this.refreshSpark(); this.closeModal(); };
+    $("#chMore").onclick=()=>{ this.clearPrediction(); this.refreshSpark(); this.showChallengeMenu(); };
+  },
+  showChallengeMenu(){
+    const done=id=>this.progress.badges[id];
+    const best=id=>this.progress.scores[id]||0;
+    const card=ch=>`<button class="chcard" data-id="${ch.id}">
+        <div class="chcard-top"><span class="chcard-mode ${ch.mode}">${ch.modeLabel}</span>${done(ch.id)?'<span class="chcard-badge">🏅</span>':best(ch.id)?`<span class="chcard-score">${best(ch.id)}</span>`:""}</div>
+        <div class="chcard-title">${ch.title}</div>
+        <div class="chcard-q">${ch.short}</div>
+      </button>`;
+    const list=this.challenges.map(card).join("");
+    const earned=Object.keys(this.progress.badges).length, total=this.challenges.length;
+    const body=`<div class="ek">Challenge Mode</div><h2>Predict, then prove it</h2>
+      <p>Lock in a prediction before the experiment runs. Score is based on how close you get. ${earned?`<b>${earned}/${total} badges earned.</b>`:""}</p>
+      <div class="chgrid">${list}</div>
+      <div class="btnrow" style="margin-top:18px;justify-content:space-between;gap:10px">
+        <button class="act" id="chProgress">Progress &amp; backup</button>
+        <button class="act" id="chCloseMenu">Close</button>
+      </div>`;
+    $("#modal").innerHTML=body; this.openScrim();
+    $$("#modal .chcard").forEach(b=>b.onclick=()=>{ const ch=this.challenges.find(c=>c.id===b.dataset.id); if(ch)this.startChallenge(ch); });
+    $("#chCloseMenu").onclick=()=>this.closeModal();
+    $("#chProgress").onclick=()=>this.showProgressBackup();
+  },
+  showProgressBackup(){
+    const code=this.progressCode();
+    const earned=Object.keys(this.progress.badges).length;
+    const body=`<div class="ek">Progress</div><h2>Backup &amp; restore</h2>
+      <p>Your ${earned} badge${earned===1?"":"s"} and scores live in this browser. Copy this code to move them to another device, or paste one to restore.</p>
+      <textarea id="chCode" class="chcode" rows="3">${code}</textarea>
+      <div class="btnrow" style="margin-top:14px;justify-content:flex-end;gap:10px">
+        <button class="act" id="chCopyCode">Copy code</button>
+        <button class="act" id="chPasteCode">Restore from code</button>
+      </div>
+      <div class="btnrow" style="margin-top:10px;justify-content:flex-end"><button class="act primary" id="chBackMenu">Back</button></div>`;
+    $("#modal").innerHTML=body; this.openScrim();
+    $("#chCopyCode").onclick=()=>{ const t=$("#chCode"); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t.value).then(()=>this.toast("Progress code copied.")).catch(()=>this.toast("Select the text and copy manually.")); } else this.toast("Select the text and copy manually."); };
+    $("#chPasteCode").onclick=()=>{ const v=$("#chCode").value; if(this.importProgress(v)){ this.renderChallengeBadge(); this.toast("Progress restored."); this.showChallengeMenu(); } else this.toast("That code didn't parse — check it and try again."); };
+    $("#chBackMenu").onclick=()=>this.showChallengeMenu();
+  },
+  renderChallengeBadge(){
+    const n=Object.keys(this.progress.badges).length; const el=$("#chCount");
+    if(el){ if(n>0){ el.textContent=n; el.hidden=false; } else el.hidden=true; }
+  },
+
+  /* generic convergence sparkline. vals in [0,1] unless autoRange. target optional */
+  spark(vals,opts={}){
+    this._lastSpark={vals,opts}; // remember for marker repaints
+    const c=this.spctx; if(!c||!this.sparkSize||!this.sparkSize.w)return;
+    const W=this.sparkSize.w,H=this.sparkSize.h;
+    c.clearRect(0,0,W,H);
+    const pad={l:6,r:8,t:10,b:6};
+    const ax=cssv('--accent');
+    const ax2=cssv('--accent2');
+    let lo=0,hi=1;
+    if(opts.autoRange){ const m=Math.max(1e-9,...vals,opts.target||0); hi=m*1.12; lo=0; }
+    const X=i=>pad.l+(vals.length<=1?0:i/(vals.length-1))*(W-pad.l-pad.r);
+    const Y=v=>pad.t+(1-(v-lo)/(hi-lo))*(H-pad.t-pad.b);
+    // grid
+    c.strokeStyle="rgba(148,163,184,.12)";c.lineWidth=1;
+    for(let g=0;g<=4;g++){const y=pad.t+g/4*(H-pad.t-pad.b);c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();}
+    // target line
+    if(opts.target!=null){
+      const ty=Y(opts.target);
+      c.setLineDash([4,4]);c.strokeStyle=ax2;c.globalAlpha=.85;c.lineWidth=1.3;
+      c.beginPath();c.moveTo(pad.l,ty);c.lineTo(W-pad.r,ty);c.stroke();
+      c.setLineDash([]);c.globalAlpha=1;
+      c.fillStyle=ax2;c.font="10px "+'"IBM Plex Mono",monospace';c.textAlign="right";
+      c.fillText(opts.targetLabel||(opts.autoRange?fmtN(opts.target,2):fmtPct(opts.target)),W-pad.r,Math.max(11,ty-4));
+    }
+    // student prediction marker (challenge mode) — a line the real curve races toward
+    if(this.prediction!=null && isFinite(this.prediction)){
+      const py=Y(this.prediction);
+      if(py>=pad.t-1 && py<=H-pad.b+1){
+        c.setLineDash([2,3]);c.strokeStyle=cssv("--lose");c.globalAlpha=.9;c.lineWidth=1.3;
+        c.beginPath();c.moveTo(pad.l,py);c.lineTo(W-pad.r,py);c.stroke();
+        c.setLineDash([]);c.globalAlpha=1;
+        c.fillStyle=cssv("--lose");c.font="700 10px "+'"IBM Plex Mono",monospace';c.textAlign="left";
+        c.fillText("your guess",pad.l+2,py-4>pad.t?py-4:py+12);
+      }
+    }
+    if(vals.length>1){
+      // area
+      const grd=c.createLinearGradient(0,pad.t,0,H);
+      grd.addColorStop(0,ax+"55");grd.addColorStop(1,ax+"00");
+      c.beginPath();c.moveTo(X(0),Y(vals[0]));
+      for(let i=1;i<vals.length;i++)c.lineTo(X(i),Y(vals[i]));
+      c.lineTo(X(vals.length-1),H-pad.b);c.lineTo(X(0),H-pad.b);c.closePath();c.fillStyle=grd;c.fill();
+      // line
+      c.beginPath();c.moveTo(X(0),Y(vals[0]));
+      for(let i=1;i<vals.length;i++)c.lineTo(X(i),Y(vals[i]));
+      c.strokeStyle=ax;c.lineWidth=1.8;c.shadowColor=ax;c.shadowBlur=8;c.stroke();c.shadowBlur=0;
+      // head dot
+      const hx=X(vals.length-1),hy=Y(vals[vals.length-1]);
+      c.beginPath();c.arc(hx,hy,3.2,0,7);c.fillStyle=ax2;c.shadowColor=ax2;c.shadowBlur=12;c.fill();c.shadowBlur=0;
+    } else if(vals.length===1){
+      // single sample: just the head dot, no line yet
+      const hx=X(0),hy=Y(vals[0]);
+      c.beginPath();c.arc(hx,hy,3.2,0,7);c.fillStyle=ax2;c.shadowColor=ax2;c.shadowBlur=12;c.fill();c.shadowBlur=0;
+    } else {
+      c.fillStyle="rgba(148,163,184,.4)";c.font="11px "+'"IBM Plex Mono",monospace';c.textAlign="center";
+      c.fillText("awaiting data…",W/2,H/2);
+    }
+  },
+
+  /* mount / switch */
+  select(id,{ask=true}={}){
+    const m=this.byId[id]; if(!m)return;
+    // ALWAYS kill any pending challenge-result timer before switching modules, so a stale
+    // timer can't fire a "ghost" result over a different experiment (even if activeChallenge
+    // was already cleared by an intervening modal close).
+    if(this._resultTimer){ clearTimeout(this._resultTimer); this._resultTimer=null; this._resultPending=false; }
+    // if user navigates away mid-challenge (not via startChallenge), tear down the challenge UI
+    if(this.activeChallenge && this.activeChallenge.module!==id){ this.activeChallenge=null; this.challengeLocked=false; this.clearPrediction(); if(this._closeChPanel)this._closeChPanel(); }
+    if(this.current){ this.stop(); if(this.current.unmount)this.current.unmount(); }
+    this.current=m; this.setMode(m.mode);
+    // nav state
+    $$("#chambers button").forEach(b=>b.classList.toggle("on",b.dataset.c===m.mode));
+    this.renderModStrip(m.mode); $$("#modstrip button").forEach(b=>b.classList.toggle("on",b.dataset.id===id));
+    $("#stageTitle").textContent=m.name; $("#stageSub").textContent=m.sub||"";
+    $("#ctlBadge").textContent=m.mode;
+    $("#controls").innerHTML=m.controls||""; 
+    this.renderExplain(m);
+    $("#sparkHead").textContent=m.sparkLabel||"Convergence History";
+    this.clearLog(); this.setStat(m.stats0||[]);
+    $("#tip").classList.remove("show");
+    location.hash=id;
+    requestAnimationFrame(()=>{ this.fit(); if(m.mount)m.mount(); this.fitUntilReady(); });
+    if(ask && this.socratic && m.socratic && !this.asked[id]){ this.askSocratic(m); }
+  },
+
+  renderChambers(){
+    const groups=[["frequentist","Simulation Arena"],["bayesian","Bayesian Studio"],["paradox","Paradox Hall"]];
+    $("#chambers").innerHTML=groups.map(([c,label],i)=>`<button data-c="${c}" data-first="${this.modules.find(m=>m.mode===c).id}"><span class="dot"></span><span class="label">${["I","II","III"][i]} · ${label}</span></button>`).join("");
+    $$("#chambers button").forEach(b=>b.onclick=()=>this.select(b.dataset.first));
+  },
+  renderModStrip(mode){
+    $("#modstrip").innerHTML=this.modules.filter(m=>m.mode===mode).map(m=>`<button data-id="${m.id}">${m.name}</button>`).join("");
+    $$("#modstrip button").forEach(b=>b.onclick=()=>this.select(b.dataset.id));
+  },
+
+  askSocratic(m){
+    this.asked[m.id]=true;
+    const s=m.socratic;
+    $("#modal").innerHTML=`<button class="skip" id="skipS">×</button>
+      <div class="ek">Guided Discovery</div>
+      <h2>${s.q}</h2>
+      <p>Form a hypothesis before you run a single trial. Intuition is worth testing — that's the whole point.</p>
+      <div class="guesses">${s.options.map((o,i)=>`<button class="guess" data-i="${i}">${o}</button>`).join("")}</div>`;
+    this.openScrim();
+    $("#skipS").onclick=()=>this.closeModal();
+    $$("#modal .guess").forEach(g=>g.onclick=()=>{
+      this.closeModal();
+      this.toast(`Hypothesis logged: <b>${s.options[+g.dataset.i]}</b>. Now run it and see.`);
+    });
+  },
+  openScrim(){
+    const scrim=$("#scrim"), modal=$("#modal"); if(!scrim)return;
+    // remember what was focused so we can restore it when the dialog closes
+    try{ this._lastFocus=document.activeElement; }catch(e){ this._lastFocus=null; }
+    scrim.classList.add("show");
+    // move focus into the dialog (first focusable, else the dialog itself)
+    requestAnimationFrame(()=>{
+      if(!modal)return;
+      const f=modal.querySelector('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+      try{ (f||modal).focus(); }catch(e){}
+    });
+    // trap Tab within the dialog while it's open
+    if(!this._trapBound){
+      this._trapHandler=e=>{
+        if(e.key!=="Tab")return;
+        const sc=$("#scrim"); if(!sc||!sc.classList.contains("show"))return;
+        const m=$("#modal"); if(!m)return;
+        const items=[...m.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(el=>!el.disabled&&el.offsetParent!==null);
+        if(!items.length){ e.preventDefault(); try{m.focus();}catch(_){}; return; }
+        const first=items[0], last=items[items.length-1];
+        if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); try{last.focus();}catch(_){} }
+        else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); try{first.focus();}catch(_){} }
+      };
+      document.addEventListener("keydown",this._trapHandler,true);
+      this._trapBound=true;
+    }
+  },
+  closeModal(){
+    $("#scrim").classList.remove("show");
+    // restore focus to whatever opened the dialog
+    try{ if(this._lastFocus&&this._lastFocus.focus)this._lastFocus.focus(); }catch(e){}
+    this._lastFocus=null;
+    // if the result is still pending (pill window), closing some OTHER modal shouldn't touch the challenge —
+    // leave activeChallenge + the timer intact so the race finishes normally.
+    if(this._resultPending)return;
+    // if a challenge result was dismissed via Esc/scrim (not Done/More), clean up its marker + state
+    if(this.activeChallenge && !this.challengeLocked){ this.activeChallenge=null; this.clearPrediction(); this.refreshSpark(); }
+  },
+
+  toast(html,ms=3200){ const t=$("#toast"); t.innerHTML=html; t.classList.add("show"); clearTimeout(this._tt); this._tt=setTimeout(()=>t.classList.remove("show"),ms); },
+
+  writeReport(){
+    const m=this.current; const wu=m.writeup?m.writeup():{params:{},results:{}};
+    const date=new Date().toISOString().slice(0,16).replace("T"," ");
+    let md=`# Paradox — Lab Write-Up\n\n**Experiment:** ${m.name}  \n**Chamber:** ${({frequentist:"I · Simulation Arena",bayesian:"II · Bayesian Studio",paradox:"III · Paradox Hall"})[m.mode]}  \n**Recorded:** ${date}\n\n## Question\n${m.about||m.sub||""}\n\n## Parameters\n`;
+    md+=Object.entries(wu.params).map(([k,v])=>`- **${k}:** ${v}`).join("\n")||"- (none)";
+    md+=`\n\n## Results\n`+ (Object.entries(wu.results).map(([k,v])=>`- **${k}:** ${v}`).join("\n")||"- (run the experiment first)");
+    if(wu.takeaway)md+=`\n\n## Takeaway\n${wu.takeaway}`;
+    md+=`\n\n---\n*Generated in Paradox, an interactive probability sandbox.*\n`;
+    $("#modal").innerHTML=`<button class="skip" id="skipW">×</button><div class="ek">Lab Write-Up · Markdown</div><h2>${m.name}</h2><pre id="mdpre">${md.replace(/</g,"&lt;")}</pre><div class="mrow"><button class="act primary" id="cpMd"><svg viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-2px;margin-right:7px"><rect x="9" y="9" width="11" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 012-2h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span id="cpMdLabel">Copy write-up</span></button><button class="act" id="dlMd">Download .md</button></div>`;
+    this.openScrim();
+    $("#skipW").onclick=()=>this.closeModal();
+    $("#dlMd").onclick=()=>{ const a=document.createElement("a");a.download=`paradox-${m.id}.md`;const u=URL.createObjectURL(new Blob([md],{type:"text/markdown"}));a.href=u;a.click();setTimeout(()=>URL.revokeObjectURL(u),4000); this.toast("Write-up downloaded."); };
+    const cpBtn=$("#cpMd"), cpLabel=$("#cpMdLabel");
+    const flashCopied=()=>{ if(cpLabel)cpLabel.textContent="Copied!"; if(cpBtn)cpBtn.classList.add("copied"); if(this._cpFlash)clearTimeout(this._cpFlash); this._cpFlash=setTimeout(()=>{ if(cpLabel)cpLabel.textContent="Copy write-up"; if(cpBtn)cpBtn.classList.remove("copied"); },1800); };
+    $("#cpMd").onclick=()=>{
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(md).then(()=>{ flashCopied(); this.toast("Write-up copied to clipboard."); }).catch(()=>this.fallbackCopy(md));
+      } else this.fallbackCopy(md);
+    };
+  },
+  // last-resort copy for non-secure origins / old browsers: select the <pre> text and execCommand
+  fallbackCopy(text){
+    try{
+      const pre=$("#mdpre");
+      if(pre){ const r=document.createRange(); r.selectNodeContents(pre); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); const ok=document.execCommand&&document.execCommand("copy"); sel.removeAllRanges(); if(ok){ this.toast("Write-up copied to clipboard."); return; } }
+    }catch(e){}
+    this.toast("Couldn't copy automatically — the text is selected, press Ctrl/Cmd+C.");
+    try{ const pre=$("#mdpre"); if(pre){ const r=document.createRange(); r.selectNodeContents(pre); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } }catch(e){}
+  },
+
+  init(){
+    this.stage=$("#stage"); this.sctx=hardenCtx(this.stage.getContext("2d"));
+    this.sparkCv=$("#spark"); this.spctx=hardenCtx(this.sparkCv.getContext("2d"));
+    this.byId={}; this.modules.forEach(m=>this.byId[m.id]=m);
+    this.renderChambers();
+    // tools
+    const sw=$("#socraticSw");
+    sw.onclick=()=>{ this.socratic=!this.socratic; sw.classList.toggle("on",this.socratic);
+      if(this.socratic){ this.toast("Socratic mode on — the sandbox will ask before it answers."); if(this.current&&this.current.socratic&&!this.asked[this.current.id])this.askSocratic(this.current); }
+    };
+    $("#writeBtn").onclick=()=>this.writeReport();
+    $("#plainBtn").onclick=()=>this.togglePlain();
+    $("#kbdBtn").onclick=()=>this.showShortcuts();
+    $("#themeBtn").onclick=()=>this.toggleTheme();
+    try{ const savedTheme=localStorage.getItem("paradox.theme"); if(savedTheme==="light")this.setTheme("light",false); else this.setTheme("dark",false); }catch(e){ this.setTheme("dark",false); }
+    $("#challengeBtn").onclick=()=>this.showChallengeMenu();
+    this.loadProgress(); this.renderChallengeBadge();
+    $("#brand").onclick=()=>$("#chambers button").click();
+    $("#scrim").onclick=e=>{ if(e.target===$("#scrim"))this.closeModal(); };
+    window.addEventListener("resize",()=>this.fit());
+    window.addEventListener("keydown",e=>{
+      if(e.key==="Escape"){ this.closeModal(); return; }
+      // while a modal/dialog is open, don't let Space/R/etc. drive the background experiment
+      const scrim=$("#scrim"); if(scrim&&scrim.classList.contains("show"))return;
+      // ignore when typing in a field or using modifier combos
+      const tag=(e.target&&e.target.tagName)||""; if(/^(INPUT|TEXTAREA|SELECT)$/.test(tag)||e.metaKey||e.ctrlKey||e.altKey)return;
+      const k=e.key;
+      if(k===" "||k==="Spacebar"){ e.preventDefault(); this.kbRun(); }
+      else if(k==="r"||k==="R"){ this.kbReset(); }
+      else if(k==="?"||(k==="/"&&e.shiftKey)){ e.preventDefault(); this.showShortcuts(); }
+    });
+    window.addEventListener("hashchange",()=>{ const id=location.hash.slice(1); if(id&&this.byId[id]&&(!this.current||this.current.id!==id))this.select(id,{ask:false}); });
+    // launch — honor ?m=<id> (or #hash) to open a specific experiment, else first module
+    const sp=new URLSearchParams(location.search);
+    const shareM=sp.get("m");
+    const start=(shareM&&this.byId[shareM])?shareM:(this.byId[location.hash.slice(1)]?location.hash.slice(1):this.modules[0].id);
+    this.select(start,{ask:false});
+  }
+};
+
+/* pointer helper: returns {x,y} in CSS px relative to stage */
+function stagePos(e){
+  const r=App.stage.getBoundingClientRect();
+  return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+
+/* ============================================================
+   CHAMBER I — BIRTHDAY PROBLEM
+   ============================================================ */
+function birthdayTheory(n){ let p=1; for(let k=0;k<n;k++)p*=(1-k/365); return 1-p; }
+App.modules.push({
+  id:"birthday", name:"Birthday Problem", mode:"frequentist", keys:{run:"bRun",reset:"bReset"}, runLock:["bRun","bTurbo"],
+  sub:"Frequentist · collisions in a finite calendar",
+  about:"In a room of n people, how likely is it that two share a birthday? Run rooms over and over and watch the experimental rate climb toward the theory.",
+  plainText:`Did you know if you have just 23 people in a room, there's over a 50% chance two of them share a birthday? Most people think you'd need way more, like 180, because they picture someone matching their own birthday, not any two people in the room matching each other.`,
+  stats0:[{k:"Trials",v:"0"},{k:"Collisions",v:"0"},{k:"Experimental",v:"—",acc:1}],
+  socratic:{q:"How many people must share a room before a birthday collision is more likely than not?",options:["About 180 (half of 365)","Around 90","Just 23","It's never more likely than not"]},
+  controls:`
+    <div class="ctl">
+      <label>People in the room <span class="val" id="bNv">23</span></label>
+      <input type="range" id="bN" min="2" max="100" value="23">
+      <div class="hint">Each person is a circle, tinted by the birthday they draw. Matches flash red.</div>
+    </div>
+    <div class="divider"></div>
+    <div class="btnrow">
+      <button class="act primary" id="bRun">▶ Run rooms</button>
+      <button class="act" id="bTurbo">⚡ Turbo ×2000</button>
+    </div>
+    <div class="btnrow" style="margin-top:8px"><button class="act" id="bReset">Reset trials</button></div>
+    <div class="divider"></div>
+    <div class="note">With just <b>23</b> people the odds of a shared birthday already cross 50%. By 70 people it's 99.9%. The intuition that you'd need ~183 confuses "someone matches <em>me</em>" with "<em>any</em> two match."</div>`,
+  formula:`<span class="eq">P(match) <span class="op">=</span> 1 <span class="op">−</span>
+      <span class="t" data-hl="prod">∏</span><sub style="font-size:.6em">k=0</sub><sup style="font-size:.6em"><span class="t" data-hl="n">n</span>−1</sup>
+      <span class="frac"><span class="num">365 − k</span><span class="den">365</span></span></span>
+      <span class="eq"><span class="op">≈</span> <span class="res" id="bThy">50.7%</span></span>`,
+  fcap:"the complement of 'all birthdays distinct'",
+  mount(){
+    const s=this.s={n:23,trials:0,hits:0,run:false,pos:[],r:8,bd:[],flash:[],hist:[],hl:0,acc:0};
+    const setN=v=>{ s.n=+v; $("#bNv").textContent=v; this.resetTrials(); this.layout(); App.setText("bThy",fmtPct(birthdayTheory(s.n))); };
+    $("#bN").oninput=e=>setN(e.target.value);
+    $("#bRun").onclick=()=>{ s.run=!s.run; $("#bRun").innerHTML=s.run?"⏸ Pause":"▶ Run rooms"; $("#bRun").classList.toggle("primary",!s.run); };
+    $("#bTurbo").onclick=()=>this.turbo();
+    $("#bReset").onclick=()=>{ this.resetTrials(); };
+    this.layout(); App.setText("bThy",fmtPct(birthdayTheory(s.n)));
+    let frame=0;
+    App.loop((t)=>{
+      if(s.run){ frame++; if(frame%5===0)this.trial(); }
+      this.draw(t);
+    });
+  },
+  resetTrials(){ const s=this.s; s.trials=0;s.hits=0;s.hist=[];s.acc=0; App.clearLog(); this.stats(); App.spark([],{target:birthdayTheory(s.n)}); },
+  layout(){ const s=this.s,{w,h}=App.size,n=s.n; const cols=Math.max(1,Math.round(Math.sqrt(n*w/Math.max(1,h)))); const rows=Math.ceil(n/cols);
+    const cw=w/cols,ch=h/rows,offy=(h-rows*ch)/2; s.r=Math.max(4,Math.min(cw,ch)*0.30); s.pos=[];
+    for(let i=0;i<n;i++){const c=i%cols,r=(i/cols)|0; s.pos.push({x:c*cw+cw/2,y:r*ch+ch/2+offy});} s.bd=new Array(n).fill(-1); s.flash=new Array(n).fill(0); },
+  resize(){ if(this.s)this.layout(); },
+  trial(){ const s=this.s,n=s.n; const seen={}; let coll=null;
+    for(let i=0;i<n;i++){ const d=randint(365); s.bd[i]=d; if(seen[d]!==undefined&&!coll)coll=[seen[d],i]; seen[d]=i; }
+    s.trials++; if(coll){ s.hits++; s.flash[coll[0]]=1;s.flash[coll[1]]=1; }
+    s.acc=s.hits/s.trials;
+    if(s.trials%2===0||s.trials<20){ s.hist.push(s.acc); if(s.hist.length>240)s.hist.shift(); }
+    App.push(`room of ${n}`, coll?"collision":"all unique", coll?"win":"");
+    this.stats(); App.spark(s.hist,{target:birthdayTheory(n)});
+  },
+  turbo(){ const s=this.s,n=s.n,B=2000; for(let b=0;b<B;b++){ const seen=new Uint8Array(365); let c=false; for(let i=0;i<n;i++){const d=randint(365);if(seen[d]){c=true;}seen[d]=1;} s.trials++; if(c)s.hits++; if(b%50===0){s.acc=s.hits/s.trials;s.hist.push(s.acc);if(s.hist.length>240)s.hist.shift();} }
+    s.acc=s.hits/s.trials; if(s.hist[s.hist.length-1]!==s.acc)s.hist.push(s.acc); App.push(`+${B} rooms (turbo)`,fmtPct(s.acc)); this.stats(); App.spark(s.hist,{target:birthdayTheory(n)}); },
+  stats(){ const s=this.s; App.setStat([{k:"Trials",v:fmtN(s.trials)},{k:"Collisions",v:fmtN(s.hits)},{k:"Experimental",v:s.trials?fmtPct(s.acc):"—",acc:1}]); },
+  draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; c.clearRect(0,0,w,h);
+    for(let i=0;i<s.n;i++){ const p=s.pos[i]; if(!p)continue; const d=s.bd[i];
+      const hue=d<0?220:(d/365*300+20); let fl=s.flash[i]; if(fl>0){ s.flash[i]=Math.max(0,fl-0.012); }
+      const pulse=fl>0?(Math.sin(t/90)*.5+.5):0;
+      c.beginPath();c.arc(p.x,p.y,s.r*(1+pulse*.18),0,7);
+      if(fl>0){ c.fillStyle=`rgba(248,113,113,${.55+pulse*.35})`; c.shadowColor="#f87171";c.shadowBlur=16+pulse*14; }
+      else { c.fillStyle=d<0?"rgba(148,163,184,.22)":`hsla(${hue},70%,60%,.85)`; c.shadowColor=d<0?"transparent":`hsla(${hue},80%,60%,.5)`; c.shadowBlur=d<0?0:8; }
+      c.fill();c.shadowBlur=0;
+      c.lineWidth=1;c.strokeStyle="rgba(255,255,255,.08)";c.stroke();
+    }
+  },
+  highlight(k,on){ /* visual: brief shimmer of all circles when hovering n */ },
+  unmount(){ $("#bN").oninput=null; },
+  refreshFormula(){ if(!this.s)return; App.setText("bThy",fmtPct(birthdayTheory(this.s.n))); },
+  writeup(){ const s=this.s; return {params:{"People (n)":s.n,"Trials":fmtN(s.trials)},results:{"Experimental P(match)":s.trials?fmtPct(s.acc):"—","Theoretical P(match)":fmtPct(birthdayTheory(s.n))},takeaway:`The match probability grows far faster than linear intuition suggests, crossing 50% at just 23 people.`}; }
+});
+
+/* ============================================================
+   CHAMBER I — MONTY HALL  (generalized to N doors)
+   ============================================================ */
+App.modules.push({
+  id:"monty", name:"Monty Hall", mode:"frequentist", keys:{run:"mRun",reset:"mReset"}, runLock:["mRun","mPlay"],
+  sub:"Frequentist · the door, the host, and the switch",
+  about:"You pick a door; the host (who knows where the prize is) opens losing doors and offers a switch. Does switching help? Crank the door count to feel why it must.",
+  plainText:`Suppose you're on a game show, and you're given the choice of three doors: Behind one door is a car; behind the others, goats. You pick a door, say No. 1, and the host, who knows what's behind the doors, opens another door, say No. 3, which has a goat. He then says to you, "Do you want to pick door No. 2?" Is it to your advantage to switch your choice?
+
+Did you know you're actually twice as likely to win if you switch doors? When you first pick, you have a 2 in 3 chance of being wrong. The host always opens a losing door, so switching basically means trading your probably-wrong pick for the probably-right remaining door.`,
+  stats0:[{k:"Trials",v:"0"},{k:"Switch win",v:"—",acc:1},{k:"Stay win",v:"—"}],
+  socratic:{q:"With 100 doors — you pick one, the host opens 98 losers — does switching matter more or less than with 3 doors?",options:["Less — more doors dilute the effect","Exactly the same, 50/50","Much more — switching wins 99% of the time","Switching never helps"]},
+  controls:`
+    <div class="ctl">
+      <label>Number of doors <span class="val" id="mNv">3</span></label>
+      <input type="range" id="mN" min="3" max="100" value="3">
+      <div class="hint">The host always opens every door except your pick and one other.</div>
+    </div>
+    <div class="divider"></div>
+    <div class="btnrow">
+      <button class="act primary" id="mPlay">▶ Watch one play</button>
+    </div>
+    <div class="btnrow" style="margin-top:8px">
+      <button class="act" id="mRun">⚡ Run ×1000</button>
+      <button class="act" id="mReset">Reset</button>
+    </div>
+    <div class="divider"></div>
+    <div class="note">Your first pick is right with probability <b>1/N</b>. The host's reveal pours <em>all</em> the remaining probability onto the single other door — so switching wins with probability <b>(N−1)/N</b>. At N=100 that's a 99% door.</div>`,
+  formula:`<span class="eq">P(win │ <span class="t" data-hl="sw">switch</span>) <span class="op">=</span> <span class="frac"><span class="num"><span class="t" data-hl="n">N</span> − 1</span><span class="den"><span class="t" data-hl="n">N</span></span></span> <span class="op">=</span> <span class="res" id="mSwT">66.7%</span></span>
+    <span class="eq" style="font-size:.9em;color:var(--ink-dim)">P(win │ <span class="t" data-hl="st">stay</span>) <span class="op">=</span> <span class="frac"><span class="num">1</span><span class="den">N</span></span> <span class="op">=</span> <span id="mStT">33.3%</span></span>`,
+  fcap:"the host's knowledge is the hidden ingredient",
+  mount(){
+    const s=this.s={N:3,trials:0,sw:0,st:0,hist:[],doors:[],playing:false,timers:[],barS:0,barT:0,reveal:null,dlay:null};
+    const setN=v=>{ s.N=+v; $("#mNv").textContent=v; this.reset(); this.layout(); const sw=(s.N-1)/s.N; App.setText("mSwT",fmtPct(sw)); App.setText("mStT",fmtPct(1/s.N)); };
+    $("#mN").oninput=e=>setN(e.target.value);
+    $("#mPlay").onclick=()=>this.play();
+    $("#mRun").onclick=()=>this.batch(1000);
+    $("#mReset").onclick=()=>{ this.reset(); this.layout(); };
+    this.layout();
+    App.loop((t)=>this.draw(t));
+  },
+  reset(){ const s=this.s; s.trials=0;s.sw=0;s.st=0;s.hist=[]; this.clearTimers(); s.playing=false; s.reveal=null; App.clearLog(); this.stats(); App.spark([],{target:(s.N-1)/s.N}); },
+  clearTimers(){ this.s.timers.forEach(clearTimeout); this.s.timers=[]; },
+  later(fn,ms){ this.s.timers.push(setTimeout(fn,ms)); },
+  layout(){ const s=this.s,{w,h}=App.size,N=s.N; const top=h*0.6, pad=14;
+    const cols=Math.min(N,Math.max(1,Math.round(Math.sqrt(N*(w-2*pad)/Math.max(1,top))))); const rows=Math.ceil(N/cols);
+    const cw=(w-2*pad)/cols, ch=(top-2*pad)/rows; const dw=Math.min(cw*0.82,160), dh=Math.min(ch*0.86,260);
+    s.doorBox={top,pad}; s.doors=[];
+    for(let i=0;i<N;i++){ const c=i%cols,r=(i/cols)|0; s.doors.push({x:pad+c*cw+(cw-dw)/2,y:pad+r*ch+(ch-dh)/2,w:dw,h:dh,state:"closed",op:0}); }
+  },
+  resize(){ if(this.s)this.layout(); },
+  play(){ const s=this.s; if(s.playing)return; this.clearTimers(); s.playing=true; s.reveal=null;
+    const N=s.N, prize=randint(N), pick=randint(N);
+    s.doors.forEach(d=>{d.state="closed";d.op=0;}); s.prize=prize; s.pick=pick;
+    const other=(pick===prize)?(()=>{let o;do{o=randint(N);}while(o===pick);return o;})():prize;
+    s.other=other;
+    this.later(()=>{ s.doors[pick].state="picked"; App.push(`picked door ${pick+1} of ${N}`,null); },350);
+    // open all but pick & other
+    const toOpen=[]; for(let i=0;i<N;i++) if(i!==pick&&i!==other) toOpen.push(i);
+    const step=Math.max(8,Math.min(120,900/Math.max(1,toOpen.length)));
+    toOpen.forEach((i,k)=>this.later(()=>{ s.doors[i].state="goat"; },650+k*step));
+    const after=650+toOpen.length*step+250;
+    this.later(()=>{ // reveal both candidates
+      s.doors[other].state= other===prize?"prizeShow":"goatShow";
+      s.doors[pick].state = pick===prize?"prizeShow":"pickGoat";
+      const swWin=pick!==prize;
+      s.trials++; if(swWin)s.sw++; if(pick===prize)s.st++;
+      s.hist.push(s.sw/s.trials); if(s.hist.length>240)s.hist.shift();
+      s.reveal={swWin}; this.stats(); App.spark(s.hist,{target:(s.N-1)/s.N});
+      App.push(`switch → ${swWin?"WIN":"loss"}`,swWin?"win":"loss",swWin?"win":"lose");
+      s.playing=false;
+    },after);
+  },
+  batch(B){ const s=this.s,N=s.N; s.reveal=null; this.clearTimers(); s.playing=false; for(let b=0;b<B;b++){ const pr=randint(N),pk=randint(N); s.trials++; if(pk!==pr)s.sw++; if(pk===pr)s.st++; if(b%25===0){s.hist.push(s.sw/s.trials);if(s.hist.length>240)s.hist.shift();} }
+    s.hist.push(s.sw/s.trials); this.stats(); App.spark(s.hist,{target:(N-1)/N}); App.push(`+${B} simulated plays`,fmtPct(s.sw/s.trials)); },
+  stats(){ const s=this.s; App.setStat([{k:"Trials",v:fmtN(s.trials)},{k:"Switch win",v:s.trials?fmtPct(s.sw/s.trials):"—",acc:1},{k:"Stay win",v:s.trials?fmtPct(s.st/s.trials):"—"}]); },
+  draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; if(!s.doors.length)return; c.clearRect(0,0,w,h);
+    const ax=cssv('--accent'),ax2=cssv('--accent2');
+    // doors
+    for(let i=0;i<s.doors.length;i++){ const d=s.doors[i]; const big=d.w>56;
+      const open=(d.state==="goat"||d.state==="goatShow"||d.state==="pickGoat"); d.op+=((open?1:0)-d.op)*0.18;
+      roundRect(c,d.x,d.y,d.w,d.h,Math.min(10,d.w*0.12));
+      if(d.state==="prizeShow"){ const g=c.createLinearGradient(d.x,d.y,d.x,d.y+d.h); g.addColorStop(0,ax2);g.addColorStop(1,ax); c.fillStyle=g; c.shadowColor=ax2;c.shadowBlur=24; c.fill(); c.shadowBlur=0; }
+      else { const lift=1-d.op*0.7; const g=c.createLinearGradient(d.x,d.y,d.x,d.y+d.h);
+        if(d.state==="picked"){ g.addColorStop(0,"rgba(245,158,11,.32)");g.addColorStop(1,"rgba(245,158,11,.12)"); }
+        else { g.addColorStop(0,`rgba(100,116,139,${.22*lift+.05})`); g.addColorStop(1,`rgba(51,65,85,${.18*lift+.03})`); }
+        c.fillStyle=g; c.fill();
+      }
+      c.lineWidth=d.state==="picked"?2:1; c.strokeStyle=d.state==="picked"?ax2:(d.state==="prizeShow"?ax2:"rgba(148,163,184,.25)"); c.stroke();
+      // glyph
+      c.textAlign="center";c.textBaseline="middle"; const cx=d.x+d.w/2,cy=d.y+d.h/2;
+      if(d.state==="prizeShow"){ c.fillStyle=cssv("--canvas-bg");c.font=`${Math.min(34,d.w*0.5)}px serif`; c.fillText("★",cx,cy); }
+      else if(open){ if(big){c.fillStyle="rgba(148,163,184,.5)";c.font=`${Math.min(26,d.w*0.4)}px serif`;c.fillText("🐐",cx,cy);} }
+      else if(big){ c.fillStyle=d.state==="picked"?ax2:"rgba(148,163,184,.45)"; c.font=`${Math.min(30,d.w*0.42)}px serif`; c.fillText("?",cx,cy); }
+      // door number for small counts
+      if(s.N<=12){ c.fillStyle="rgba(148,163,184,.55)";c.font='11px "IBM Plex Mono",monospace'; c.fillText((i+1)+"",cx,d.y+d.h-12); }
+    }
+    if(s.reveal){ c.fillStyle=s.reveal.swWin?ax2:cssv("--lose"); c.font='600 15px "Source Serif 4",serif'; c.textAlign="center";c.textBaseline="alphabetic";
+      c.fillText(s.reveal.swWin?"★ behind the OTHER door — switching wins":"★ was your pick — staying wins this time",w/2,s.doorBox.top-10); }
+    // histogram
+    const hy=s.doorBox.top+6, hh=h-hy-18, base=h-18, gw=Math.min(120,w*0.22), gap=w*0.10, cx=w/2;
+    const targS=(s.N-1)/s.N, targT=1/s.N;
+    s.barS+=((s.trials?s.sw/s.trials:0)-s.barS)*0.12; s.barT+=((s.trials?s.st/s.trials:0)-s.barT)*0.12;
+    const bar=(x,val,targ,col,label)=>{ const bh=val*hh; 
+      roundRect(c,x-gw/2,base-bh,gw,bh,6); const g=c.createLinearGradient(0,base-bh,0,base); g.addColorStop(0,col);g.addColorStop(1,col+"40"); c.fillStyle=g; c.shadowColor=col;c.shadowBlur=14;c.fill();c.shadowBlur=0;
+      // baseline track
+      c.strokeStyle="rgba(148,163,184,.16)";c.lineWidth=1;c.strokeRect(x-gw/2,base-hh,gw,hh);
+      // target tick
+      const ty=base-targ*hh; c.setLineDash([4,3]);c.strokeStyle=cssv("--canvas-ink");c.globalAlpha=.7;c.beginPath();c.moveTo(x-gw/2-4,ty);c.lineTo(x+gw/2+4,ty);c.stroke();c.setLineDash([]);c.globalAlpha=1;
+      c.fillStyle=cssv("--canvas-ink");c.font='600 15px "IBM Plex Mono",monospace';c.textAlign="center";c.fillText(fmtPct(val),x,base-bh-9>hy?base-bh-9:base-bh+18);
+      c.fillStyle="rgba(148,163,184,.7)";c.font='11px "Hanken Grotesk",sans-serif';c.fillText(label,x,base+13>h-3?h-3:base+13);
+    };
+    if(base-hh>hy){ bar(cx-gw/2-gap/2,s.barS,targS,ax,"SWITCH"); bar(cx+gw/2+gap/2,s.barT,targT,cssv("--canvas-gray"),"STAY"); }
+  },
+  highlight(k,on){},
+  unmount(){ this.clearTimers(); $("#mN").oninput=null; },
+  refreshFormula(){ const s=this.s; if(!s)return; App.setText("mSwT",fmtPct((s.N-1)/s.N)); App.setText("mStT",fmtPct(1/s.N)); },
+  writeup(){ const s=this.s; return {params:{"Doors (N)":s.N,"Trials":fmtN(s.trials)},results:{"Switch win rate":s.trials?fmtPct(s.sw/s.trials):"—","Stay win rate":s.trials?fmtPct(s.st/s.trials):"—","Theory (switch)":fmtPct((s.N-1)/s.N)},takeaway:`Switching wins (N−1)/N of the time. The effect grows with door count — at N=100 switching is a near-certainty.`}; }
+});
+
+/* ============================================================
+   CHAMBER I — GAMBLER'S RUIN
+   ============================================================ */
+function ruinProb(a,b,p){ const N=a+b; if(Math.abs(p-0.5)<1e-9) return b/N; const r=(1-p)/p;
+  if(r>1){ const A=Math.pow(r,a-N),B=Math.pow(r,-N); return (A-1)/(B-1); }
+  const rN=Math.pow(r,N),ra=Math.pow(r,a); return (ra-rN)/(1-rN); }
+App.modules.push({
+  id:"ruin", name:"Gambler's Ruin", mode:"frequentist", keys:{run:"rRun",reset:"rReset"},
+  sub:"Frequentist · the random walk toward zero",
+  about:"Bet one chip per round until you own everything or nothing. Even a tiny house edge bends the walk toward ruin. Watch the path drift and the experimental ruin rate find the theory.",
+  plainText:`Did you know that even in a perfectly fair game, you can still go broke? With a 50% chance to win each round and equal money on both sides, it's a coin flip who gets wiped out first. And the moment the odds tip even slightly against you, going broke becomes almost certain. It doesn't feel unfair in one round, but it adds up.`,
+  stats0:[{k:"Games",v:"0"},{k:"Ruined",v:"0"},{k:"Ruin rate",v:"—",acc:1}],
+  socratic:{q:"You start with 10 chips against a house with 10, but each round you win only 48% of the time. Over many games, how often do you go broke?",options:["About 50% — nearly fair","About 58%","About 70%","Over 95%"]},
+  controls:`
+    <div class="ctl"><label>Your chips <span class="val" id="rAv">10</span></label><input type="range" id="rA" min="1" max="40" value="10"></div>
+    <div class="ctl"><label>House chips <span class="val" id="rBv">10</span></label><input type="range" id="rB" min="1" max="40" value="10"></div>
+    <div class="ctl"><label>Win probability / round <span class="val" id="rPv">0.50</span></label><input type="range" id="rP" min="30" max="70" value="50">
+      <div class="hint">Bet is one chip each round. The walk ends at 0 (ruin) or the full pot.</div></div>
+    <div class="divider"></div>
+    <div class="btnrow"><button class="act primary" id="rRun">▶ Play games</button><button class="act" id="rReset">Reset</button></div>
+    <div class="divider"></div>
+    <div class="note">A fair game (p=0.50) still ruins you with probability <b>b/(a+b)</b>. Below 0.50 the odds of ending broke rush toward certainty — the mathematics of why "the house always wins."</div>`,
+  formula:`<span class="eq" style="font-size:.95em">P(ruin) <span class="op">=</span> <span class="frac"><span class="num">r<sup>a</sup> − r<sup>N</sup></span><span class="den">1 − r<sup>N</sup></span></span>, r = <span class="frac"><span class="num">1−<span class="t" data-hl="p">p</span></span><span class="den"><span class="t" data-hl="p">p</span></span></span></span>
+    <span class="eq"><span class="op">=</span> <span class="res" id="rThy">50.0%</span></span>
+    <span class="fcap" style="margin-top:6px">with <span class="t" data-hl="a">a</span> = your chips, N = a + b</span>`,
+  fcap:"fair game ⇒ P(ruin) = b/(a+b)",
+  mount(){
+    const s=this.s={a:10,b:10,p:0.5,w:10,N:20,seq:[],games:0,ruins:0,hist:[],run:false,end:null,wait:0,barP:0,barH:0};
+    const recompute=()=>{ s.a=+$("#rA").value; s.b=+$("#rB").value; s.p=+$("#rP").value/100; s.N=s.a+s.b; App.setText("rThy",fmtPct(ruinProb(s.a,s.b,s.p))); };
+    ["rA","rB","rP"].forEach(id=>$("#"+id).oninput=()=>{ $("#rAv").textContent=$("#rA").value; $("#rBv").textContent=$("#rB").value; $("#rPv").textContent=(+$("#rP").value/100).toFixed(2); recompute(); this.reset(); });
+    $("#rRun").onclick=()=>{ s.run=!s.run; $("#rRun").innerHTML=s.run?"⏸ Pause":"▶ Play games"; $("#rRun").classList.toggle("primary",!s.run); };
+    $("#rReset").onclick=()=>{ this.reset(); };
+    App.setText("rThy",fmtPct(ruinProb(s.a,s.b,s.p))); this.newGame();
+    App.loop(t=>{ this.tick(); this.draw(t); });
+  },
+  reset(){ const s=this.s; s.games=0;s.ruins=0;s.hist=[]; App.clearLog(); this.newGame(); this.stats(); App.spark([],{target:ruinProb(s.a,s.b,s.p)}); },
+  newGame(){ const s=this.s; s.w=s.a; s.seq=[s.a]; s.end=null; s.wait=0; },
+  tick(){ const s=this.s; if(!s.run)return;
+    if(s.end){ s.wait++; if(s.wait>26){ s.games++; if(s.end==="ruin")s.ruins++; s.hist.push(s.ruins/s.games); if(s.hist.length>240)s.hist.shift(); App.push(`game ${s.games}: ${s.end==="ruin"?"BROKE":"cleaned out the house"}`, s.end==="ruin"?"ruin":"win", s.end==="ruin"?"lose":"win"); this.stats(); App.spark(s.hist,{target:ruinProb(s.a,s.b,s.p)}); this.newGame(); } return; }
+    let K=2; if(s.seq.length>300)K=10; if(s.seq.length>1200)K=40;
+    for(let i=0;i<K&&!s.end;i++){ s.w += Math.random()<s.p?1:-1; s.seq.push(s.w); if(s.w<=0)s.end="ruin"; else if(s.w>=s.N)s.end="win"; }
+  },
+  resize(){},
+  stats(){ const s=this.s; App.setStat([{k:"Games",v:fmtN(s.games)},{k:"Ruined",v:fmtN(s.ruins)},{k:"Ruin rate",v:s.games?fmtPct(s.ruins/s.games):"—",acc:1}]); },
+  draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; c.clearRect(0,0,w,h);
+    const ax=cssv('--accent'),ax2=cssv('--accent2'),mL=84,mR=84,pT=18,pB=22;
+    const plotX=mL,plotW=w-mL-mR,plotY=pT,plotH=h-pT-pB;
+    const Y=val=>plotY+(1-val/s.N)*plotH;
+    // barriers
+    c.strokeStyle="rgba(148,163,184,.18)";c.lineWidth=1;c.setLineDash([5,5]);
+    [0,s.N].forEach(v=>{const y=Y(v);c.beginPath();c.moveTo(plotX,y);c.lineTo(plotX+plotW,y);c.stroke();});
+    c.setLineDash([]); c.fillStyle="rgba(148,163,184,.5)";c.font='10px "IBM Plex Mono",monospace';c.textAlign="left";
+    c.fillText("RUIN · 0",plotX+4,Y(0)-5); c.fillText("WIN · "+s.N,plotX+4,Y(s.N)+13);
+    // path
+    const L=s.seq.length; if(L>1){ const X=i=>plotX+(L<=1?0:i/(L-1))*plotW;
+      const grd=c.createLinearGradient(0,plotY,0,plotY+plotH); grd.addColorStop(0,ax2);grd.addColorStop(1,ax);
+      c.beginPath();c.moveTo(X(0),Y(s.seq[0])); const stepDraw=Math.max(1,Math.floor(L/1400)); for(let i=stepDraw;i<L;i+=stepDraw)c.lineTo(X(i),Y(s.seq[i])); c.lineTo(X(L-1),Y(s.seq[L-1]));
+      c.strokeStyle=grd;c.lineWidth=1.8;c.shadowColor=ax;c.shadowBlur=6;c.stroke();c.shadowBlur=0;
+      const ex=X(L-1),ey=Y(s.seq[L-1]); const col=s.end==="ruin"?cssv("--lose"):s.end==="win"?cssv("--win"):ax2;
+      c.beginPath();c.arc(ex,ey,s.end?6:4,0,7);c.fillStyle=col;c.shadowColor=col;c.shadowBlur=16;c.fill();c.shadowBlur=0;
+      if(s.end){ c.fillStyle=col;c.font='600 14px "Source Serif 4",serif';c.textAlign="right"; c.fillText(s.end==="ruin"?"ruined":"won",ex-10,ey-8>plotY?ey-8:ey+18); }
+    }
+    // chip stacks
+    const drawStack=(cx,count,col,label)=>{ const disc=Math.min(13,Math.max(6,plotH/(s.N+1))*0.9), gap=disc*0.42, maxD=Math.min(count,Math.floor(plotH/(disc*0.7)));
+      for(let i=0;i<maxD;i++){ const y=plotY+plotH-i*(disc*0.62)-disc/2; c.beginPath();c.ellipse(cx,y,disc,disc*0.42,0,0,7); c.fillStyle=col;c.globalAlpha=.85;c.fill();c.globalAlpha=1; c.strokeStyle="rgba(0,0,0,.3)";c.lineWidth=1;c.stroke(); }
+      c.fillStyle=cssv("--canvas-ink");c.font='600 16px "IBM Plex Mono",monospace';c.textAlign="center";c.fillText(count,cx,plotY-2); c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';c.fillText(label,cx,plotY+plotH+16); };
+    drawStack(mL/2,Math.max(0,s.w),ax,"YOU"); drawStack(w-mR/2,Math.max(0,s.N-s.w),cssv("--canvas-gray"),"HOUSE");
+  },
+  highlight(){},
+  unmount(){ ["rA","rB","rP"].forEach(id=>{const e=$("#"+id);if(e)e.oninput=null;}); },
+  refreshFormula(){ const s=this.s; if(!s)return; App.setText("rThy",fmtPct(ruinProb(s.a,s.b,s.p))); },
+  writeup(){ const s=this.s; return {params:{"Your chips (a)":s.a,"House chips (b)":s.b,"Win prob (p)":s.p.toFixed(2),"Games":fmtN(s.games)},results:{"Experimental ruin rate":s.games?fmtPct(s.ruins/s.games):"—","Theoretical ruin prob":fmtPct(ruinProb(s.a,s.b,s.p))},takeaway:`Even a fair game ruins you with probability b/(a+b); a sub-50% edge makes ruin nearly certain over time.`}; }
+});
+
+/* ============================================================
+   CHAMBER II — MEDICAL TESTING  (10,000 dots, baked layers)
+   ============================================================ */
+function medCounts(prev,sens,spec,N){
+  const diseased=Math.round(prev*N), healthy=N-diseased;
+  const TP=Math.round(sens*diseased), FN=diseased-TP;
+  const FP=Math.round((1-spec)*healthy), TN=healthy-FP;
+  const post=(TP+FP)>0?TP/(TP+FP):0;
+  return {diseased,healthy,TP,FN,FP,TN,post};
+}
+App.modules.push({
+  id:"medical", name:"Medical Testing", mode:"bayesian", keys:{run:"mdRun",reset:"mdReset"},
+  sparkLabel:"Among Positive Tests",
+  sub:"Bayesian · the base-rate trap",
+  about:"Ten thousand people. A rare disease, a near-perfect test. Run it and watch who lights up — the rose dots are healthy people the test flagged by mistake. The famous lesson: a positive result can still mean you're probably fine.",
+  plainText:`Suppose a disease affects about 1 in 100 people. There's a test that correctly flags 99% of people who have it and correctly clears 95% of people who don't. You take the test, and it comes back positive.
+
+Despite that positive result, there's still about an 83% chance you're healthy. Because the disease is uncommon, the small number of true cases, roughly 99 out of 10,000, gets swamped by false alarms from the huge healthy majority, around 500 of them. Most positive results therefore come from healthy people the test got wrong, leaving your real chance of being sick closer to 1 in 6.`,
+  stats0:[{k:"Positives",v:"0"},{k:"True / False",v:"—"},{k:"P(disease │ +)",v:"—",acc:1}],
+  socratic:{q:"A disease affects 1% of people. A test catches 99% of real cases and is 95% specific. You just tested positive. What's the chance you actually have the disease?",options:["About 99%","About 95%","About 80%","Under 20%"]},
+  controls:`
+    <div class="ctl"><label>Real-world scenario</label>
+      <select class="preset" id="mdPreset">
+        <option value="custom">Custom (set sliders yourself)</option>
+        <option value="covid" data-p="20" data-se="800" data-sp="980">COVID rapid antigen test</option>
+        <option value="mammo" data-p="5" data-se="870" data-sp="890">Breast cancer mammogram</option>
+        <option value="hiv" data-p="100" data-se="990" data-sp="990">HIV test, high-risk clinic</option>
+      </select>
+      <div class="hint" id="mdPresetNote">Pick a real screening test, or set the sliders yourself.</div>
+      <div class="cite" id="mdCite" hidden><span class="iglyph">i</span><span id="mdCiteText"></span></div></div>
+    <div class="ctl"><label>Prevalence <span class="val" id="mdPv">1.0%</span></label><input type="range" id="mdP" min="1" max="300" value="10">
+      <div class="hint">How common the disease is in the population.</div></div>
+    <div class="ctl"><label>Sensitivity <span class="val" id="mdSeV">99.0%</span></label><input type="range" id="mdSe" min="800" max="999" value="990">
+      <div class="hint">P(test positive │ actually sick) — true-positive rate.</div></div>
+    <div class="ctl"><label>Specificity <span class="val" id="mdSpV">95.0%</span></label><input type="range" id="mdSp" min="800" max="999" value="950">
+      <div class="hint">P(test negative │ actually healthy) — true-negative rate.</div></div>
+    <div class="divider"></div>
+    <div class="btnrow"><button class="act primary" id="mdRun">▶ Run the test</button><button class="act" id="mdReset">Reset view</button></div>
+    <div class="divider"></div>
+    <div class="note">Population fixed at <b>10,000</b>. The grid is the whole population; each dot is one person. Hover over any dot to interrogate it. Teal = caught correctly, <span style="color:var(--lose)">rose</span> = false alarm.</div>`,
+  formula:`<span class="eq" style="font-size:.92em">P(D│+) <span class="op">=</span> <span class="frac"><span class="num"><span class="t" data-hl="sens">s</span>·<span class="t" data-hl="prev">p</span></span><span class="den"><span class="t" data-hl="sens">s</span>·<span class="t" data-hl="prev">p</span> + (1−<span class="t" data-hl="spec">q</span>)(1−<span class="t" data-hl="prev">p</span>)</span></span></span>
+    <span class="eq"><span class="op">=</span> <span class="res" id="mdPost">16.7%</span></span>
+    <span class="fcap" style="margin-top:6px"><span class="t" data-hl="prev">p</span> prevalence · <span class="t" data-hl="sens">s</span> sensitivity · <span class="t" data-hl="spec">q</span> specificity</span>`,
+  fcap:"the rarer the disease, the more a positive lies",
+  mount(){
+    const s=this.s={prev:0.01,sens:0.99,spec:0.95,N:10000,reveal:0,revealing:false,hl:null,ord:null,cols:0,rows:0,cell:0,px:0,py:0,pw:0,ph:0,dim:null,lit:null,bakeKey:"",cts:null,hover:-1};
+    // persistent shuffle so identities scatter across the grid
+    s.ord=new Int32Array(s.N); for(let i=0;i<s.N;i++)s.ord[i]=i;
+    for(let i=s.N-1;i>0;i--){ const j=randint(i+1); const t=s.ord[i];s.ord[i]=s.ord[j];s.ord[j]=t; }
+    s.inv=new Int32Array(s.N); for(let i=0;i<s.N;i++)s.inv[s.ord[i]]=i; // cell-id -> rank
+    const read=()=>{ s.prev=(+$("#mdP").value)/1000; s.sens=(+$("#mdSe").value)/1000; s.spec=(+$("#mdSp").value)/1000;
+      $("#mdPv").textContent=(s.prev*100).toFixed(1)+"%"; $("#mdSeV").textContent=(s.sens*100).toFixed(1)+"%"; $("#mdSpV").textContent=(s.spec*100).toFixed(1)+"%";
+      this.recompute(); };
+    const presetNotes={
+      custom:"Pick a real screening test, or set the sliders yourself.",
+      covid:"Symptomatic rapid antigen test: ~80% sensitivity, ~98% specificity (pooled meta-analysis). At 2% prevalence, even a positive is roughly a coin flip.",
+      mammo:"US screening benchmark (1.7M exams): ~87% sensitivity, ~89% specificity, ~5 cancers per 1,000. A positive screen is usually a false alarm — that's why recalls need follow-up imaging.",
+      hiv:"Established infection in a high-risk clinic: ~99% sensitivity and specificity, ~10% prevalence. Here a positive genuinely is meaningful — high prevalence flips the base-rate intuition."
+    };
+    const presetCites={
+      custom:"",
+      covid:`<span class="src">Brümmer et al., pooled rapid-antigen meta-analysis;</span> symptomatic sensitivity ≈80%, specificity ≈98%. See <a href="https://www.cochrane.org/evidence/CD013705_how-accurate-are-rapid-antigen-tests-diagnosing-covid-19" target="_blank" rel="noopener">Cochrane review CD013705</a>.`,
+      mammo:`<span class="src">Breast Cancer Surveillance Consortium</span> national benchmarks (1.68M digital screens): sensitivity 86.9%, specificity 88.9%, ~5 cancers per 1,000. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5375631/" target="_blank" rel="noopener">Lehman et al., Radiology 2017</a>.`,
+      hiv:`<span class="src">WHO / point-of-care HIV test data:</span> established-infection sensitivity ≈99%, specificity ≈99%. <a href="https://www.aidsmap.com/about-hiv/how-accurate-are-rapid-point-care-tests-hiv" target="_blank" rel="noopener">aidsmap; WHO prequalification</a>.`
+    };
+    const setCite=key=>{ const box=$("#mdCite"),txt=$("#mdCiteText"); if(!box||!txt)return; if(presetCites[key]){ txt.innerHTML=presetCites[key]; box.hidden=false; } else { box.hidden=true; } };
+    ["mdP","mdSe","mdSp"].forEach(id=>$("#"+id).oninput=()=>{ const sel=$("#mdPreset"); if(sel)sel.value="custom"; const nn=$("#mdPresetNote"); if(nn)nn.textContent=presetNotes.custom; setCite("custom"); read(); });
+    const applyPreset=()=>{ const sel=$("#mdPreset"); if(!sel)return; const opt=sel.options[sel.selectedIndex]; if(!opt)return;
+      if(opt.dataset.p){ $("#mdP").value=opt.dataset.p; $("#mdSe").value=opt.dataset.se; $("#mdSp").value=opt.dataset.sp; }
+      const nn=$("#mdPresetNote"); if(nn)nn.textContent=presetNotes[sel.value]||presetNotes.custom;
+      setCite(sel.value);
+      read(); s.reveal=0; s.revealing=true;
+      if(sel.value!=="custom")App.push("scenario: "+opt.textContent.trim(),null); };
+    $("#mdPreset").onchange=applyPreset;
+    $("#mdRun").onclick=()=>{ s.reveal=0; s.revealing=true; };
+    $("#mdReset").onclick=()=>{ s.reveal=0; s.revealing=false; $("#tip").classList.remove("show"); s.hover=-1; };
+    this.onMove=e=>this.pick(e); this.onLeave=()=>{ $("#tip").classList.remove("show"); s.hover=-1; };
+    App.stage.addEventListener("pointermove",this.onMove);
+    App.stage.addEventListener("pointerdown",this.onMove);
+    App.stage.addEventListener("pointerleave",this.onLeave);
+    this.recompute(true);
+    App.loop(t=>this.draw(t));
+  },
+  recompute(force){ const s=this.s; s.cts=medCounts(s.prev,s.sens,s.spec,s.N);
+    App.setText("mdPost",(s.cts.post*100).toFixed(1)+"%");
+    App.setStat([{k:"Positives",v:fmtN(s.cts.TP+s.cts.FP)},{k:"True / False",v:fmtN(s.cts.TP)+" / "+fmtN(s.cts.FP)},{k:"P(disease │ +)",v:(s.cts.post*100).toFixed(1)+"%",acc:1}]);
+    this.bake(force); this.drawSpark();
+  },
+  role(i){ const c=this.s.cts; if(i<c.TP)return 0; if(i<c.diseased)return 1; if(i<c.diseased+c.FP)return 2; return 3; }, // 0 TP,1 FN,2 FP,3 TN
+  layout(){ const s=this.s,{w,h}=App.size; const legendH=60; s.px=8; s.py=6; s.pw=w-16; s.ph=h-6-legendH;
+    const cols=Math.max(1,Math.ceil(Math.sqrt(s.N*s.pw/Math.max(1,s.ph)))); const rows=Math.ceil(s.N/cols);
+    s.cols=cols; s.rows=rows; s.cell=Math.min(s.pw/cols,s.ph/rows);
+  },
+  bake(force){ const s=this.s; if(!App.size||App.size.w<2||App.size.h<80)return; this.layout();
+    if(!(s.cols>0)||!(s.rows>0)||!(s.cell>0))return; // geometry not valid yet (transition) — skip bake
+    const key=[s.cols,s.rows,Math.round(s.cell*4),s.cts.TP,s.cts.FP,s.cts.diseased].join("|");
+    if(!force&&key===s.bakeKey&&s.dim&&s.lit)return; s.bakeKey=key;
+    const dpr=App.dpr||1, W=s.cols*s.cell, H=s.rows*s.cell;
+    if(!(W>0)||!(H>0))return; // non-positive size -> would create a 0-size canvas
+    const mk=()=>{ const o=document.createElement("canvas"); o.width=Math.max(1,Math.round(W*dpr)); o.height=Math.max(1,Math.round(H*dpr)); const x=hardenCtx(o.getContext("2d")); x.scale(dpr,dpr); return [o,x]; };
+    const [dim,dx]=mk(); const [lit,lx]=mk();
+    const teal=cssv("--accent"), tealL=cssv("--accent2"), rose=cssv("--lose");
+    const r=Math.max(1.1,s.cell*0.34);
+    for(let i=0;i<s.N;i++){ const id=s.ord[i]; const col=id%s.cols, row=(id/s.cols)|0; const cx=col*s.cell+s.cell/2, cy=row*s.cell+s.cell/2;
+      // dim layer: uniform unknown population
+      dx.beginPath();dx.arc(cx,cy,r,0,7);dx.fillStyle="rgba(148,163,184,.22)";dx.fill();
+      // lit layer by role
+      const ro=this.role(i); let fill,halo=null;
+      if(ro===0){fill=teal;halo=tealL;} else if(ro===2){fill=rose;halo=cssv("--halo-rose");} else if(ro===1){fill=cssv("--role-fn");} else {fill=cssv("--role-tn");}
+      lx.beginPath();lx.arc(cx,cy,r,0,7);lx.fillStyle=fill;lx.fill();
+      if(halo){ lx.beginPath();lx.arc(cx,cy,r*0.55,0,7);lx.fillStyle=halo;lx.globalAlpha=.9;lx.fill();lx.globalAlpha=1; }
+    }
+    s.dim=dim; s.lit=lit;
+  },
+  draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; if(!s.dim||!s.lit){return;}
+    if(!s.dim.width||!s.dim.height||!s.lit.width||!s.lit.height){return;} // baked canvas not valid yet
+    c.clearRect(0,0,w,h);
+    const W=s.cols*s.cell, H=s.rows*s.cell, ox=s.px+(s.pw-W)/2, oy=s.py+(s.ph-H)/2;
+    if(!(W>0)||!(H>0)){return;} // geometry not ready
+    if(s.revealing){ s.reveal=Math.min(1,s.reveal+0.02); if(s.reveal>=1)s.revealing=false; }
+    const e=s.reveal<1?1-Math.pow(1-s.reveal,3):1;
+    // dim base
+    c.drawImage(s.dim,ox,oy,W,H);
+    // lit revealed under growing circular clip
+    if(s.reveal>0){ const cx=ox+W/2, cy=oy+H/2, maxR=Math.hypot(W,H)/2+8;
+      c.save();c.beginPath();c.arc(cx,cy,e*maxR,0,7);c.clip(); c.drawImage(s.lit,ox,oy,W,H); c.restore();
+      if(s.reveal<1){ c.beginPath();c.arc(cx,cy,e*maxR,0,7);c.strokeStyle=cssv('--accent2');c.globalAlpha=.5;c.lineWidth=2;c.stroke();c.globalAlpha=1; }
+    }
+    // formula-driven highlight veil
+    if(s.hl&&s.reveal>=1){ c.fillStyle=cssv("--scrim-veil");c.fillRect(0,0,w,h);
+      const want=this.hlSet(s.hl); const teal=cssv('--accent2'),rose=cssv("--rose-soft"); const r=Math.max(1.4,s.cell*0.4);
+      for(let i=0;i<s.N;i++){ const ro=this.role(i); if(!want.has(ro))continue; const id=s.ord[i]; const col=id%s.cols,row=(id/s.cols)|0; const cx=ox+col*s.cell+s.cell/2,cy=oy+row*s.cell+s.cell/2;
+        c.beginPath();c.arc(cx,cy,r,0,7);c.fillStyle=(ro===2)?rose:teal;c.fill(); }
+    }
+    // hovered dot ring
+    if(s.hover>=0){ const id=s.ord[s.hover]; const col=id%s.cols,row=(id/s.cols)|0; const cx=ox+col*s.cell+s.cell/2,cy=oy+row*s.cell+s.cell/2;
+      c.beginPath();c.arc(cx,cy,Math.max(4,s.cell*0.7),0,7);c.strokeStyle=cssv("--canvas-ink");c.lineWidth=1.6;c.shadowColor=cssv("--canvas-ink");c.shadowBlur=8;c.stroke();c.shadowBlur=0; }
+    // legend
+    this.legend(c,w,h);
+  },
+  legend(c,w,h){ const s=this.s,ct=s.cts,y=h-44; const items=[["True positive",cssv('--accent'),ct.TP],["False positive",cssv("--lose"),ct.FP],["False negative",cssv("--role-fn-2"),ct.FN],["True negative",cssv("--role-tn-2"),ct.TN]];
+    let x=10; c.textAlign="left";
+    items.forEach(([lab,col,n])=>{ roundRect(c,x,y,11,11,3);c.fillStyle=col;c.fill(); c.fillStyle=cssv("--canvas-label");c.font='600 11px "IBM Plex Mono",monospace';c.fillText(fmtN(n),x+17,y+6); c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';c.fillText(lab,x+17,y+19); x+=Math.max(118,c.measureText(lab).width+60); });
+    c.textAlign="right";c.fillStyle="rgba(148,163,184,.55)";c.font='11px "Source Serif 4",serif';
+    if(s.reveal>=1){ c.fillStyle=cssv('--accent2');c.font='600 13px "Source Serif 4",serif'; c.fillText("of every positive test, only "+(ct.post*100).toFixed(1)+"% is real disease",w-12,y+13); }
+    else { c.fillText("press Run the test to reveal results",w-12,y+13); }
+  },
+  hlSet(k){ if(k==="sens")return new Set([0]); if(k==="spec")return new Set([3]); if(k==="prev")return new Set([0,1]); return new Set([0,1,2,3]); },
+  pick(e){ const s=this.s; if(!s.cell){return;} const p=stagePos(e); const W=s.cols*s.cell,H=s.rows*s.cell,ox=s.px+(s.pw-W)/2,oy=s.py+(s.ph-H)/2;
+    const col=Math.floor((p.x-ox)/s.cell), row=Math.floor((p.y-oy)/s.cell);
+    if(col<0||row<0||col>=s.cols||row>=s.rows){ this.onLeave();return; } const id=row*s.cols+col; if(id>=s.N){ this.onLeave();return; }
+    const rank=s.inv[id]; s.hover=rank;
+    const ro=s.reveal>=1?this.role(rank):-1; const tip=$("#tip");
+    const names=["caught (true positive)","missed (false negative)","false alarm (false positive)","cleared (true negative)"];
+    const status=rank<s.cts.diseased?"actually has the disease":"is actually healthy";
+    let html=`<div>This person <b>${status}</b>.</div>`;
+    if(ro>=0)html+=`<div style="margin-top:3px;color:var(--ink-dim)">Test result: ${names[ro]}</div>`;
+    if(ro===0||ro===2)html+=`<span class="post">P(disease │ +) = ${(s.cts.post*100).toFixed(1)}%</span>`;
+    else if(ro<0)html+=`<div style="margin-top:3px;color:var(--ink-dim)">Run the test to see this person's result.</div>`;
+    tip.innerHTML=html; tip.style.left=p.x+"px"; tip.style.top=p.y+"px"; tip.classList.add("show");
+  },
+  drawSpark(){ const c=App.spctx,s=this.s; if(!c||!App.sparkSize)return; const {w:W,h:H}=App.sparkSize; c.clearRect(0,0,W,H);
+    const ct=s.cts, tot=ct.TP+ct.FP; const teal=cssv("--accent"),rose=cssv("--lose");
+    const pad=14, bx=pad, bw=W-pad*2, by=H*0.36, bh=22;
+    c.fillStyle="rgba(148,163,184,.7)";c.font='11px "Hanken Grotesk",sans-serif';c.textAlign="left";
+    c.fillText(tot>0?fmtN(tot)+" positive tests":"no positives yet",bx,by-10);
+    roundRect(c,bx,by,bw,bh,6);c.fillStyle="rgba(148,163,184,.12)";c.fill();
+    if(tot>0){ const fpw=bw*ct.FP/tot, tpw=bw*ct.TP/tot;
+      c.save();roundRect(c,bx,by,bw,bh,6);c.clip();
+      c.fillStyle=rose;c.fillRect(bx,by,fpw,bh); c.fillStyle=teal;c.fillRect(bx+fpw,by,tpw,bh); c.restore();
+      c.fillStyle=teal;c.font='600 22px "Source Serif 4",serif';c.textAlign="center";
+      c.fillText((ct.post*100).toFixed(1)+"%",W/2,by+bh+34);
+      c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';
+      c.fillText("really have the disease",W/2,by+bh+50);
+      c.textAlign="left";c.fillStyle=teal;c.fillText("■ true",bx,by+bh+16); c.textAlign="right";c.fillStyle=rose;c.fillText("false ■",bx+bw,by+bh+16);
+    } else { c.fillStyle="rgba(148,163,184,.4)";c.font='11px "IBM Plex Mono",monospace';c.textAlign="center";c.fillText("awaiting test…",W/2,H/2+18); }
+  },
+  resize(){ if(this.s&&this.s.cts){ this.bake(true); this.drawSpark(); } },
+  highlight(k,on){ const s=this.s; if(on==="pin"){ s.hl=(s.hl===k?null:k); } else { s.hl=on?k:null; } },
+  unmount(){ ["mdP","mdSe","mdSp"].forEach(id=>{const e=$("#"+id);if(e)e.oninput=null;}); const ps=$("#mdPreset");if(ps)ps.onchange=null; if(this.onMove){App.stage.removeEventListener("pointermove",this.onMove);App.stage.removeEventListener("pointerdown",this.onMove);App.stage.removeEventListener("pointerleave",this.onLeave);} },
+  refreshFormula(){ if(this.s&&this.s.cts)App.setText("mdPost",(this.s.cts.post*100).toFixed(1)+"%"); },
+  writeup(){ const s=this.s,ct=s.cts; return {params:{"Prevalence":(s.prev*100).toFixed(1)+"%","Sensitivity":(s.sens*100).toFixed(1)+"%","Specificity":(s.spec*100).toFixed(1)+"%","Population":fmtN(s.N)},results:{"True positives":fmtN(ct.TP),"False positives":fmtN(ct.FP),"P(disease │ positive)":(ct.post*100).toFixed(1)+"%"},takeaway:`With a rare disease, false positives from the large healthy majority can swamp true positives — so a positive test often means P(disease) is far below intuition. This is the base-rate fallacy.`}; }
+});
+
+/* ============================================================
+   CHAMBER II — COIN BIAS INFERENCE  (morphing Beta posterior)
+   ============================================================ */
+App.modules.push({
+  id:"coin", name:"Coin Bias Inference", mode:"bayesian", keys:{run:"coAuto",reset:"coReset"}, runLock:["coAuto","coFlip"],
+  sparkLabel:"Estimate vs. Truth",
+  sub:"Bayesian · learning a hidden bias",
+  about:"This coin is loaded — but you don't know which way. Flip it and your belief, a Beta distribution, sharpens from a vague hump into a confident spike. The coin's rim glows brighter as your posterior tightens.",
+  plainText:`Did you know 7 heads out of 10 flips isn't "just luck"? The math shifts its best guess to about 70% heads.`,
+  stats0:[{k:"Flips",v:"0"},{k:"Heads / Tails",v:"0 / 0"},{k:"Best estimate",v:"—",acc:1}],
+  socratic:{q:"You start believing a coin is probably fair. After flipping it 8 times you get 7 heads. Roughly where does your belief about its bias settle?",options:["Still ≈ 0.50","Around 0.60","Around 0.70","Around 0.88 (just 7/8)"]},
+  controls:`
+    <div class="ctl"><label>Prior belief</label>
+      <div class="segmented" id="coPrior">
+        <button data-a="1" data-b="1" class="on">Uniform</button>
+        <button data-a="20" data-b="20">Skeptical</button>
+        <button data-a="5" data-b="2">Heads-leaning</button>
+      </div>
+      <div class="hint">Uniform = no idea · Skeptical = "surely it's fair" · Heads-leaning = a hunch.</div></div>
+    <div class="divider"></div>
+    <div class="btnrow"><button class="act primary" id="coFlip">Flip once</button><button class="act" id="coAuto">⚡ Flip ×500</button></div>
+    <div class="btnrow" style="margin-top:8px"><button class="act" id="coReset">New hidden coin</button></div>
+    <div class="divider"></div>
+    <div class="note">Posterior = prior × likelihood. For a coin that's a <b>Beta(α₀+heads, β₀+tails)</b> — the data simply adds to the prior's counts. Watch a stubborn (skeptical) prior resist, then yield to evidence.</div>`,
+  formula:`<span class="eq" style="font-size:.9em">P(θ│data) <span class="op">∝</span> θ<sup>α−1</sup>(1−θ)<sup>β−1</sup></span>
+    <span class="eq" style="font-size:.92em">α = α₀ + <span class="t" data-hl="h">h</span>,&nbsp; β = β₀ + <span class="t" data-hl="t">t</span></span>
+    <span class="eq">E[θ] <span class="op">=</span> <span class="frac"><span class="num">α</span><span class="den">α+β</span></span> <span class="op">=</span> <span class="res" id="coMean">—</span></span>
+    <span class="fcap" style="margin-top:6px"><span class="t" data-hl="h">h</span> heads · <span class="t" data-hl="t">t</span> tails observed</span>`,
+  fcap:"the conjugate prior: data just updates the counts",
+  mount(){
+    const s=this.s={a0:1,b0:1,a:1,b:1,ta:1,tb:1,h:0,t:0,truth:0,pending:0,last:null,spin:0,hist:[],hl:null,flash:0};
+    this.newCoin();
+    $$("#coPrior button").forEach(btn=>btn.onclick=()=>{ $$("#coPrior button").forEach(x=>x.classList.remove("on")); btn.classList.add("on"); s.a0=+btn.dataset.a; s.b0=+btn.dataset.b; this.resetBelief(); });
+    $("#coFlip").onclick=()=>{ s.pending+=1; };
+    $("#coAuto").onclick=()=>{ s.pending+=500; App.push("queued 500 flips",null); };
+    $("#coReset").onclick=()=>{ this.newCoin(); this.resetBelief(); App.toast("A fresh coin was loaded with a new secret bias."); };
+    this.resetBelief();
+    App.loop(t=>{ this.tick(); this.draw(t); });
+  },
+  newCoin(){ this.s.truth=clamp(0.18+Math.random()*0.64,0.05,0.95); },
+  resetBelief(){ const s=this.s; s.h=0;s.t=0;s.pending=0;s.last=null;s.hist=[]; s.a=s.a0;s.b=s.b0;s.ta=s.a0;s.tb=s.b0; App.clearLog(); this.stats(); App.spark([],{target:s.truth,targetLabel:"true "+s.truth.toFixed(2),autoRange:false}); },
+  tick(){ const s=this.s;
+    if(s.pending>0){ let K=1; if(s.pending>40)K=6; if(s.pending>200)K=18;
+      for(let i=0;i<K&&s.pending>0;i++){ const heads=Math.random()<s.truth; if(heads)s.h++;else s.t++; s.pending--; s.last=heads?"H":"T"; s.spin=1;
+        if((s.h+s.t)%Math.max(1,Math.round((s.h+s.t)/120)||1)===0){ s.hist.push((s.a0+s.h)/(s.a0+s.b0+s.h+s.t)); if(s.hist.length>240)s.hist.shift(); }
+      }
+      s.ta=s.a0+s.h; s.tb=s.b0+s.t;
+      const n=s.h+s.t;
+      if(n<=12||s.pending===0){ App.push(`${s.last==="H"?"heads":"tails"} — now ${s.h}H / ${s.t}T`, s.last, s.last==="H"?"win":""); }
+      if(s.pending===0){ this.stats(); App.spark(s.hist,{target:s.truth,targetLabel:"true "+s.truth.toFixed(2)}); }
+      else if(n%25===0){ this.stats(); App.spark(s.hist,{target:s.truth,targetLabel:"true "+s.truth.toFixed(2)}); }
+    }
+    // ease displayed Beta toward target + decay spin
+    s.a=lerp(s.a,s.ta,0.14); s.b=lerp(s.b,s.tb,0.14); s.spin*=0.9; if(s.flash>0)s.flash*=0.92;
+    const mean=(s.a0+s.h)/(s.a0+s.b0+s.h+s.t); App.setText("coMean",mean.toFixed(3));
+  },
+  stats(){ const s=this.s; const mean=(s.a0+s.h)/(s.a0+s.b0+s.h+s.t); App.setStat([{k:"Flips",v:fmtN(s.h+s.t)},{k:"Heads / Tails",v:s.h+" / "+s.t},{k:"Best estimate",v:mean.toFixed(3),acc:1}]); },
+  draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; c.clearRect(0,0,w,h);
+    const ax=cssv('--accent'),ax2=cssv('--accent2');
+    const topH=Math.min(150,h*0.34);
+    // ---- coin ----
+    const cr=Math.min(46,topH*0.36), ccx=70, ccy=topH/2+4;
+    const conc=s.a+s.b; const tight=clamp((conc-2)/120,0,1); // 0 vague → 1 confident
+    const sq=Math.abs(Math.cos(s.spin*Math.PI*2)); const rx=cr*(s.spin>0.02?lerp(1,0.15,1-sq):1);
+    withGlow(c,ax,8+tight*26,()=>{ c.beginPath();c.ellipse(ccx,ccy,Math.max(3,rx),cr,0,0,7); const g=c.createLinearGradient(ccx-cr,ccy-cr,ccx+cr,ccy+cr); g.addColorStop(0,ax2);g.addColorStop(1,ax); c.fillStyle=g;c.fill(); });
+    c.lineWidth=2;c.strokeStyle="rgba(255,255,255,"+(0.25+tight*0.6)+")";c.beginPath();c.ellipse(ccx,ccy,Math.max(3,rx),cr,0,0,7);c.stroke();
+    if(rx>cr*0.5&&s.last){ c.fillStyle=cssv("--canvas-bg");c.font='700 '+Math.round(cr*0.9)+'px "Source Serif 4",serif';c.textAlign="center";c.textBaseline="middle";c.fillText(s.last,ccx,ccy+1);c.textBaseline="alphabetic"; }
+    c.textAlign="center";c.fillStyle="rgba(148,163,184,.7)";c.font='10px "Hanken Grotesk",sans-serif';c.fillText("hidden bias",ccx,ccy+cr+16);
+    // tallies
+    const tx=ccx+cr+40; c.textAlign="left";
+    const heads=`${s.h}`, tails=`${s.t}`;
+    c.fillStyle=(s.hl==="h")?ax2:cssv("--canvas-label");c.font='600 26px "IBM Plex Mono",monospace';c.fillText(heads,tx,ccy-6);
+    c.fillStyle=cssv("--canvas-label-dim");c.font='11px "Hanken Grotesk",sans-serif';c.fillText("heads",tx+2,ccy+10);
+    const tx2=tx+96;
+    c.fillStyle=(s.hl==="t")?cssv("--rose-soft"):cssv("--canvas-label");c.font='600 26px "IBM Plex Mono",monospace';c.fillText(tails,tx2,ccy-6);
+    c.fillStyle=cssv("--canvas-label-dim");c.font='11px "Hanken Grotesk",sans-serif';c.fillText("tails",tx2+2,ccy+10);
+    if(s.pending>0){ c.fillStyle=ax;c.font='11px "IBM Plex Mono",monospace';c.fillText("flipping… "+s.pending+" left",tx,ccy+30); }
+    // ---- Beta density plot ----
+    const pX=18,pW=w-36,pY=topH+8,pH=h-topH-30;
+    c.strokeStyle="rgba(148,163,184,.14)";c.lineWidth=1; c.beginPath();c.moveTo(pX,pY+pH);c.lineTo(pX+pW,pY+pH);c.stroke();
+    c.fillStyle="rgba(148,163,184,.5)";c.font='10px "IBM Plex Mono",monospace';c.textAlign="center";
+    [0,0.25,0.5,0.75,1].forEach(v=>{ const x=pX+v*pW; c.fillText(v.toFixed(2),x,pY+pH+15); c.strokeStyle="rgba(148,163,184,.08)";c.beginPath();c.moveTo(x,pY);c.lineTo(x,pY+pH);c.stroke(); });
+    // sample pdf
+    const Npts=220; let maxv=0; const ys=new Array(Npts+1);
+    for(let i=0;i<=Npts;i++){ const x=i/Npts; const v=betaPdf(clamp(x,1e-4,1-1e-4),s.a,s.b); ys[i]=v; if(v>maxv)maxv=v; }
+    maxv=Math.max(maxv,1e-6); const topPad=14;
+    const PX=i=>pX+(i/Npts)*pW, PY=v=>pY+pH-(v/maxv)*(pH-topPad);
+    // area + line
+    const grd=c.createLinearGradient(0,pY,0,pY+pH); grd.addColorStop(0,ax+"66");grd.addColorStop(1,ax+"05");
+    c.beginPath();c.moveTo(PX(0),pY+pH); for(let i=0;i<=Npts;i++)c.lineTo(PX(i),PY(ys[i])); c.lineTo(PX(Npts),pY+pH);c.closePath();c.fillStyle=grd;c.fill();
+    c.beginPath();c.moveTo(PX(0),PY(ys[0])); for(let i=1;i<=Npts;i++)c.lineTo(PX(i),PY(ys[i])); c.strokeStyle=ax;c.lineWidth=2.2;c.shadowColor=ax;c.shadowBlur=12;c.stroke();c.shadowBlur=0;
+    // posterior mean line
+    const mean=(s.a0+s.h)/(s.a0+s.b0+s.h+s.t); const mx=pX+mean*pW;
+    c.setLineDash([]);c.strokeStyle=ax2;c.lineWidth=(s.hl==="mean")?2.6:1.6;c.beginPath();c.moveTo(mx,pY+2);c.lineTo(mx,pY+pH);c.stroke();
+    c.fillStyle=ax2;c.font='600 11px "IBM Plex Mono",monospace';c.textAlign="center";c.fillText("E[θ]="+mean.toFixed(3),mx,pY-1);
+    // true bias (faint)
+    const tbx=pX+s.truth*pW; c.setLineDash([3,4]);c.strokeStyle=cssv("--canvas-label-dim");c.lineWidth=1;c.beginPath();c.moveTo(tbx,pY+2);c.lineTo(tbx,pY+pH);c.stroke();c.setLineDash([]);
+    c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';c.fillText("truth",tbx,pY+pH-4);
+    c.textAlign="left";c.fillStyle="rgba(148,163,184,.55)";c.font='12px "Source Serif 4",serif';c.fillText("belief about P(heads) — Beta("+s.ta.toFixed(0)+", "+s.tb.toFixed(0)+")",pX,pY+10);
+  },
+  highlight(k,on){ const s=this.s; if(on==="pin")s.hl=(s.hl===k?null:k); else s.hl=on?k:null; },
+  resize(){},
+  unmount(){ },
+  refreshFormula(){ const s=this.s; if(!s)return; App.setText("coMean",((s.a0+s.h)/(s.a0+s.b0+s.h+s.t)).toFixed(3)); },
+  writeup(){ const s=this.s; const mean=(s.a0+s.h)/(s.a0+s.b0+s.h+s.t); return {params:{"Prior":`Beta(${s.a0}, ${s.b0})`,"Flips":fmtN(s.h+s.t),"Heads":s.h,"Tails":s.t},results:{"Posterior":`Beta(${s.ta.toFixed(0)}, ${s.tb.toFixed(0)})`,"Posterior mean E[θ]":mean.toFixed(3),"Hidden true bias":s.truth.toFixed(3)},takeaway:`Each flip nudges the Beta posterior; with enough data the prior's influence fades and the estimate converges to the coin's true bias. A strong (skeptical) prior just needs more evidence to move.`}; }
+});
+
+/* ============================================================
+   CHAMBER III — SIMPSON'S PARADOX
+   ============================================================ */
+App.modules.push({
+  id:"simpson", name:"Simpson's Paradox", mode:"paradox", keys:{run:"spWtf",reset:"spDemo"},
+  sparkLabel:"Overall rate vs. case-mix",
+  sub:"Paradox · winning every battle, losing the war",
+  about:"Treatment A beats Treatment B for mild cases AND for severe cases. Yet pool the patients together and B can come out ahead. The trick is the hidden case-mix: A was given the hard cases. Drag the mix and watch the overall rate flip.",
+  plainText:`Suppose two treatments, A and B, are compared on the same illness. Patients are split into mild cases and severe cases. Treatment A has a higher cure rate than B among the mild cases, and also a higher cure rate than B among the severe cases.
+
+Even though A wins in both groups, B comes out ahead overall — about 83% versus 78%. The reason is that A was given to far more of the hard severe cases, so combining the groups lets that lopsided mix outweigh A's per-group advantage. A weighted average can land below every one of one group's individual rates, which means the overall number can crown the opposite winner.`,
+  stats0:[{k:"Overall A",v:"—"},{k:"Overall B",v:"—"},{k:"Paradox?",v:"—",acc:1}],
+  socratic:{q:"Treatment A cures more mild cases than B, and more severe cases than B. When you combine all patients, which treatment looks better overall?",options:["A, obviously","Still a tie","It depends — B can win","Impossible for B to win"]},
+  controls:`
+    <div class="ctl"><label>A's share of severe cases <span class="val" id="spAv">77%</span></label><input type="range" id="spA" min="0" max="100" value="77">
+      <div class="hint">What fraction of Treatment A's patients had the hard (severe) cases.</div></div>
+    <div class="ctl"><label>B's share of severe cases <span class="val" id="spBv">23%</span></label><input type="range" id="spB" min="0" max="100" value="23">
+      <div class="hint">Same, for Treatment B. Push these apart to summon the paradox.</div></div>
+    <div class="divider"></div>
+    <div class="btnrow"><button class="act primary" id="spWtf">WTF? Explain the trick</button><button class="act" id="spDemo">Reset to classic</button></div>
+    <div class="divider"></div>
+    <div class="note">Within-group cure rates are <b>fixed</b>: A scores 93% mild / 73% severe, B scores 87% / 69%. A is better in <em>every</em> subgroup. Only the case-mix changes — and that alone can reverse the overall winner.</div>`,
+  formula:`<span class="eq" style="font-size:.9em">rate <span class="op">=</span> w<sub><span class="t" data-hl="mild">mild</span></sub>·r<sub>mild</sub> + w<sub><span class="t" data-hl="severe">severe</span></sub>·r<sub>severe</sub></span>
+    <span class="eq" style="font-size:.85em;color:var(--ink-dim)">the <span class="t" data-hl="mix">weights</span> differ between A and B</span>
+    <span class="eq">A <span class="op">=</span> <span class="res" id="spOA">—</span> &nbsp;·&nbsp; B <span class="op">=</span> <span id="spOB" style="color:var(--ink)">—</span></span>
+    <span class="fcap" style="margin-top:6px">a weighted average can sit below all of one group's parts</span>`,
+  fcap:"the confounder is who got which treatment",
+  RA:{mild:0.93,severe:0.73}, RB:{mild:0.87,severe:0.69}, NA:700, NB:700,
+  mount(){
+    const s=this.s={sevA:0.77,sevB:0.23,bars:{},explain:false,ex:0};
+    ["am","as","bm","bs","oa","ob"].forEach(k=>s.bars[k]=0);
+    const read=()=>{ s.sevA=(+$("#spA").value)/100; s.sevB=(+$("#spB").value)/100; $("#spAv").textContent=Math.round(s.sevA*100)+"%"; $("#spBv").textContent=Math.round(s.sevB*100)+"%"; this.recompute(); };
+    ["spA","spB"].forEach(id=>$("#"+id).oninput=read);
+    $("#spWtf").onclick=()=>{ s.explain=!s.explain; $("#spWtf").classList.toggle("primary",!s.explain); $("#spWtf").textContent=s.explain?"Hide the trick":"WTF? Explain the trick"; if(s.explain)App.toast("Look at the mix bars: Treatment A carried the severe cases — that's what drags its overall rate down."); };
+    $("#spDemo").onclick=()=>{ $("#spA").value=77;$("#spB").value=23; read(); };
+    this.recompute();
+    App.loop(t=>this.draw(t));
+  },
+  overall(sev,R){ return (1-sev)*R.mild + sev*R.severe; },
+  recompute(){ const s=this.s; const oa=this.overall(s.sevA,this.RA), ob=this.overall(s.sevB,this.RB);
+    const flip=ob>oa+1e-9;
+    const eoa=$("#spOA"), eob=$("#spOB");
+    if(eoa)eoa.textContent=(oa*100).toFixed(1)+"%";
+    if(eob){ eob.textContent=(ob*100).toFixed(1)+"%"; eob.style.color=flip?"var(--accent2)":"var(--ink)"; }
+    App.setStat([{k:"Overall A",v:(oa*100).toFixed(1)+"%"},{k:"Overall B",v:(ob*100).toFixed(1)+"%"},{k:"Paradox?",v:flip?"YES — B wins!":"no (A leads)",acc:1}]);
+    App.push(`mix A:${Math.round(s.sevA*100)}% / B:${Math.round(s.sevB*100)}% severe`, flip?"flip":"normal", flip?"win":"");
+    this.drawSpark();
+  },
+  draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; c.clearRect(0,0,w,h);
+    const violet=cssv('--accent'),violetL=cssv('--accent2'),gray=cssv("--canvas-gray"),grayL=cssv("--canvas-gray-2");
+    s.ex=lerp(s.ex,s.explain?1:0,0.16);
+    const oa=this.overall(s.sevA,this.RA), ob=this.overall(s.sevB,this.RB), flip=ob>oa;
+    // targets
+    const tg={am:this.RA.mild,as:this.RA.severe,bm:this.RB.mild,bs:this.RB.severe,oa,ob};
+    for(const k in tg)s.bars[k]=lerp(s.bars[k],tg[k],0.18);
+    // layout: chart area top, mix bars bottom
+    const mixH=64, pX=24, pW=w-44, pY=14, pH=h-mixH-pY-26;
+    const baseY=pY+pH;
+    // clusters: Mild, Severe, Overall
+    const groups=[["Mild cases",["am","bm"]],["Severe cases",["as","bs"]],["Overall",["oa","ob"]]];
+    const gw=pW/3, bw=Math.min(46,gw*0.27), gap=14;
+    c.textAlign="center"; c.textBaseline="alphabetic";
+    groups.forEach(([label,keys],gi)=>{ const gx=pX+gi*gw+gw/2; const overall=gi===2;
+      keys.forEach((k,bi)=>{ const v=s.bars[k]; const bh=v*pH; const isA=bi===0;
+        const x=gx-(bw+gap/2)+bi*(bw+gap); const y=baseY-bh;
+        const dim=(s.ex>0.05&&overall)?1-0.0:1; // keep overall visible
+        const col=isA?violet:gray, colL=isA?violetL:grayL;
+        const g=c.createLinearGradient(0,y,0,baseY); g.addColorStop(0,colL);g.addColorStop(1,col);
+        const glow=overall?(isA?(flip?6:16):(flip?16:6)):8;
+        withGlow(c,col,glow,()=>{ roundRect(c,x,y,bw,bh,5);c.fillStyle=g;c.globalAlpha=overall?1:0.96;c.fill();c.globalAlpha=1; });
+        c.fillStyle=cssv("--canvas-ink");c.font='600 12px "IBM Plex Mono",monospace';c.fillText((v*100).toFixed(0)+"%",x+bw/2,y-6);
+        c.fillStyle="rgba(148,163,184,.7)";c.font='10px "Hanken Grotesk",sans-serif';c.fillText(isA?"A":"B",x+bw/2,baseY+13);
+      });
+      c.fillStyle=overall&&flip?violetL:cssv("--canvas-label");c.font=(overall?'600 ':'')+'12px "Source Serif 4",serif';c.fillText(label,gx,baseY+28);
+      if(overall&&flip){ c.fillStyle=violetL;c.font='11px "Hanken Grotesk",sans-serif';c.fillText("↯ B overtakes A",gx,pY+10); }
+    });
+    // dashed line: A's better-in-subgroups reminder
+    // ---- case-mix bars ----
+    const my=h-mixH+14, mw=pW; c.textAlign="left";
+    c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';c.fillText("CASE-MIX (who got each treatment)",pX,my-4);
+    const drawMix=(yy,sev,label,col)=>{ const bh=15; roundRect(c,pX,yy,mw,bh,4);c.fillStyle="rgba(148,163,184,.12)";c.fill();
+      c.save();roundRect(c,pX,yy,mw,bh,4);c.clip();
+      const sw=mw*sev; c.fillStyle="rgba(244,114,182,.55)";c.fillRect(pX+mw-sw,yy,sw,bh); // severe portion (warm)
+      c.fillStyle="rgba(148,163,184,.28)";c.fillRect(pX,yy,mw-sw,bh); c.restore();
+      c.fillStyle=cssv("--canvas-label");c.font='10px "IBM Plex Mono",monospace';c.textAlign="left";c.fillText(label,pX+6,yy+11);
+      c.textAlign="right";c.fillStyle="rgba(254,205,211,.9)";c.fillText(Math.round(sev*100)+"% severe",pX+mw-6,yy+11);
+      if(s.ex>0.05){ c.globalAlpha=s.ex; c.strokeStyle=col;c.lineWidth=1.5;roundRect(c,pX-1,yy-1,mw+2,bh+2,5);c.stroke(); c.globalAlpha=1; }
+    };
+    drawMix(my,s.sevA,"Treatment A",cssv('--accent')); drawMix(my+20,s.sevB,"Treatment B",cssv("--canvas-gray-2"));
+  },
+  highlight(k,on){ /* visual emphasis handled via formula lit state */ },
+  resize(){},
+  drawSpark(){ const c=App.spctx,s=this.s; if(!c||!App.sparkSize)return; const {w:W,h:H}=App.sparkSize; c.clearRect(0,0,W,H);
+    const violet=cssv('--accent'),violetL=cssv('--accent2'),gray=cssv("--canvas-gray-2");
+    const pad={l:30,r:10,t:14,b:22}; const x0=pad.l,y0=pad.t,pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+    // y range over plausible rates
+    const lo=0.6,hi=0.96; const Y=v=>y0+(1-(v-lo)/(hi-lo))*ph; const X=sev=>x0+sev*pw;
+    // grid + y labels
+    c.strokeStyle="rgba(148,163,184,.1)";c.lineWidth=1;c.fillStyle="rgba(148,163,184,.5)";c.font='9px "IBM Plex Mono",monospace';c.textAlign="right";
+    [0.6,0.7,0.8,0.9].forEach(v=>{ const y=Y(v);c.beginPath();c.moveTo(x0,y);c.lineTo(x0+pw,y);c.stroke(); c.fillText((v*100).toFixed(0),x0-3,y+3); });
+    // B overall as function of B's mix — but we vary A's mix on x; show A line varying, B as its current constant
+    const ob=this.overall(s.sevB,this.RB);
+    c.setLineDash([4,3]);c.strokeStyle=gray;c.lineWidth=1.4;c.beginPath();c.moveTo(X(0),Y(ob));c.lineTo(X(1),Y(ob));c.stroke();c.setLineDash([]);
+    c.fillStyle=gray;c.font='9px "IBM Plex Mono",monospace';c.textAlign="left";c.fillText("B "+(ob*100).toFixed(0)+"%",X(0)+2,Y(ob)-3);
+    // A overall as its severe-share sweeps 0..1
+    c.beginPath(); for(let i=0;i<=60;i++){ const sv=i/60; const oa=this.overall(sv,this.RA); const x=X(sv),y=Y(oa); i?c.lineTo(x,y):c.moveTo(x,y); }
+    c.strokeStyle=violet;c.lineWidth=2;c.shadowColor=violet;c.shadowBlur=8;c.stroke();c.shadowBlur=0;
+    // crossing point (where A == B)  -> sev where overall A = ob
+    const denom=(this.RA.mild-this.RA.severe); if(Math.abs(denom)>1e-6){ const svX=(this.RA.mild-ob)/denom; if(svX>=0&&svX<=1){ const cxp=X(svX),cyp=Y(ob); c.beginPath();c.arc(cxp,cyp,3,0,7);c.fillStyle=violetL;c.fill(); c.fillStyle=violetL;c.font='9px "Hanken Grotesk",sans-serif';c.textAlign="center";c.fillText("flip",cxp,cyp-6); } }
+    // current A marker
+    const cx=X(s.sevA),cy=Y(this.overall(s.sevA,this.RA)); c.beginPath();c.arc(cx,cy,4,0,7);c.fillStyle=violetL;c.shadowColor=violetL;c.shadowBlur=12;c.fill();c.shadowBlur=0;
+    c.strokeStyle="rgba(167,139,250,.4)";c.setLineDash([2,3]);c.beginPath();c.moveTo(cx,cy);c.lineTo(cx,y0+ph);c.stroke();c.setLineDash([]);
+    c.fillStyle=cssv("--canvas-label-dim");c.font='9px "Hanken Grotesk",sans-serif';c.textAlign="center";c.fillText("A's severe share →",x0+pw/2,H-5);
+  },
+  unmount(){ ["spA","spB"].forEach(id=>{const e=$("#"+id);if(e)e.oninput=null;}); },
+  refreshFormula(){ if(this.s)this.recompute(); },
+  writeup(){ const s=this.s; const oa=this.overall(s.sevA,this.RA),ob=this.overall(s.sevB,this.RB); return {params:{"A severe share":Math.round(s.sevA*100)+"%","B severe share":Math.round(s.sevB*100)+"%","A rates":"93% mild / 73% severe","B rates":"87% mild / 69% severe"},results:{"Overall A":(oa*100).toFixed(1)+"%","Overall B":(ob*100).toFixed(1)+"%","Paradox present":ob>oa?"YES — B wins overall despite losing both subgroups":"no"},takeaway:`Aggregating over a confounder (case severity) can reverse a comparison: A is superior within every subgroup, yet because A treated more severe cases, its pooled rate can fall below B's. Always check whether a lurking variable explains an aggregate.`}; }
+});
+
+/* ============================================================
+   CHAMBER III — ST. PETERSBURG PARADOX
+   ============================================================ */
+App.modules.push({
+  id:"petersburg", name:"St. Petersburg Paradox", mode:"paradox", keys:{run:"pgPlay",reset:null}, runLock:["pgPlay","pgRun"],
+  sparkLabel:"Average payout per game",
+  sub:"Paradox · infinite value, finite courage",
+  about:"A coin doubles the pot on every head and pays out on the first tails. The mathematical expected value is literally infinite — yet almost nobody would pay even $20 to play. Watch the running average refuse to settle while a rational price stays modest.",
+  plainText:`Suppose a casino offers this game: a coin is flipped until it lands tails. If tails comes on the first flip you win $2, on the second flip $4, on the third $8, and so on, the prize doubles with every flip.
+
+The mathematical expected payout is literally infinite, which suggests no price would be too high, yet almost no one would pay even $20. The average is dragged upward by enormous jackpots so rare they likely won't occur in a lifetime, while in practice you almost always win just $2 or $4. This is why "expected value" and a sensible price can diverge completely: switch to a logarithmic view of money's worth and a rational price drops to about $4; cap the casino's bankroll and it settles near $21.`,
+  stats0:[{k:"Games",v:"0"},{k:"Mean payout",v:"—",acc:1},{k:"Biggest win",v:"—"}],
+  socratic:{q:"A coin doubles the pot each flip and pays out on the first tails. The expected payout is infinite. How much would you actually pay for one game?",options:["Infinite — it's a fair price","Hundreds of dollars","About $4–$20","A couple of dollars"]},
+  controls:`
+    <div class="ctl"><label>How you value money</label>
+      <div class="segmented" id="pgU">
+        <button data-u="lin" class="on">Linear ($=$)</button>
+        <button data-u="log">Logarithmic</button>
+        <button data-u="cap">Casino cap</button>
+      </div>
+      <div class="hint">Linear → value is infinite · Log utility → a rational price of $4 · Real casino with a finite bankroll → about $21.</div></div>
+    <div class="divider"></div>
+    <div class="btnrow"><button class="act primary" id="pgPlay">▶ Play one game</button><button class="act" id="pgRun">⚡ Run ×200</button></div>
+    <div class="btnrow" style="margin-top:8px"><button class="act" id="pgReset">Reset</button></div>
+    <div class="divider"></div>
+    <div class="note">Payout is <b>$2<sup>k</sup></b> when the first tails lands on flip <b>k</b>, which happens with probability <b>(½)<sup>k</sup></b>. Every term of the expected value equals exactly 1 — and there are infinitely many of them.</div>`,
+  formula:`<span class="eq" style="font-size:.92em">E[X] <span class="op">=</span> Σ <span class="t" data-hl="prob">(½)<sup>k</sup></span>·<span class="t" data-hl="payout">2<sup>k</sup></span> <span class="op">=</span> Σ 1 <span class="op">=</span> <span class="res" id="pgEV">∞</span></span>
+    <span class="eq" style="font-size:.86em;color:var(--ink-dim)" id="pgUtilLine">a linear valuer should pay any price</span>
+    <span class="fcap" style="margin-top:6px">rational price <span class="op">=</span> <span class="res" id="pgCE" style="font-size:1em">∞</span></span>`,
+  fcap:"expectation and reasonable behaviour part ways",
+  EVCAP:(()=>{ const cap=Math.pow(2,20); let ev=0; for(let k=1;k<=60;k++)ev+=Math.pow(0.5,k)*Math.min(Math.pow(2,k),cap); return ev; })(),
+  mount(){
+    const s=this.s={u:"lin",games:0,sum:0,max:0,hist:[],game:null,frame:0,idle:0};
+    $$("#pgU button").forEach(b=>b.onclick=()=>{ $$("#pgU button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); s.u=b.dataset.u; this.refreshUtil(); this.spark(); });
+    $("#pgPlay").onclick=()=>{ if(!s.game)this.startGame(); };
+    $("#pgRun").onclick=()=>this.batch(200);
+    $("#pgReset").onclick=()=>{ s.games=0;s.sum=0;s.max=0;s.hist=[];s.game=null; App.clearLog(); this.stats(); this.spark(); };
+    this.refreshUtil(); this.stats(); this.spark();
+    App.loop(t=>{ this.tick(); this.draw(t); });
+  },
+  ce(){ const s=this.s; if(s.u==="lin")return Infinity; if(s.u==="log")return 4; return this.EVCAP; },
+  refreshUtil(){ const s=this.s; const lines={lin:"a linear valuer should pay any price",log:"E[log₂ X] = Σ k·(½)ᵏ = 2 utils ⇒ price 2² = $4",cap:"with a $2²⁰ bankroll the sum is finite"};
+    App.setText("pgUtilLine",lines[s.u]);
+    App.setText("pgEV", s.u==="cap" ? "$"+fmtN(Math.round(this.EVCAP)) : "∞");
+    const ce=this.ce(); App.setText("pgCE", ce===Infinity?"∞":"$"+fmtN(Math.round(ce*100)/100, ce<10?0:0));
+  },
+  drawPayout(){ let pot=2; while(Math.random()<0.5 && pot<0x4000000000000)pot*=2; return pot; }, // 2^k with prob (1/2)^k, k>=1; capped at 2^50 so a runaway streak can't break float-int precision
+  record(payout){ const s=this.s; const eff=s.u==="cap"?Math.min(payout,Math.pow(2,20)):payout; s.games++; s.sum+=eff; if(payout>s.max)s.max=payout;
+    if(s.games<=60||s.games%5===0){ s.hist.push(s.sum/s.games); if(s.hist.length>240)s.hist.shift(); } },
+  startGame(){ const s=this.s; const seq=[]; let pot=2; // build flip sequence: heads... then tails
+    while(Math.random()<0.5){ seq.push("H"); pot*=2; } seq.push("T");
+    s.game={seq,idx:0,pot:2,payout:pot,reveal:0,phase:"flipping",hold:0}; s.frame=0;
+  },
+  tick(){ const s=this.s,g=s.game; if(!g)return;
+    s.frame++;
+    if(g.phase==="flipping"){ if(s.frame%9===0){ g.idx++;
+        // pot doubles with each head revealed; stake starts at $2
+        let heads=0; for(let i=0;i<Math.min(g.idx,g.seq.length);i++) if(g.seq[i]==="H")heads++;
+        g.pot=2*Math.pow(2,heads);
+        if(g.idx>=g.seq.length){ g.pot=g.payout; g.phase="pay"; g.hold=0; this.record(g.payout); const k=g.seq.length; App.push(`tails on flip ${k} → win`, "$"+fmtN(g.payout), g.payout>=64?"win":""); this.stats(); this.spark(); }
+      }
+    }
+    else if(g.phase==="pay"){ g.hold++; if(g.hold>40){ s.game=null; } }
+  },
+  batch(B){ const s=this.s; for(let i=0;i<B;i++)this.record(this.drawPayout()); this.stats(); this.spark(); App.push(`+${B} games simulated`, "$"+fmtN(Math.round(s.sum/s.games))); },
+  stats(){ const s=this.s; App.setStat([{k:"Games",v:fmtN(s.games)},{k:"Mean payout",v:s.games?"$"+fmtN(Math.round((s.sum/s.games)*100)/100, (s.sum/s.games)<100?2:0):"—",acc:1},{k:"Biggest win",v:s.max?this.money(s.max):"—"}]); },
+  money(v){ return v>=1e7 ? "$"+v.toExponential(1) : "$"+fmtN(Math.round(v)); },
+  spark(){ const s=this.s; const ce=this.ce(); const opts={autoRange:true}; if(ce!==Infinity){ opts.target=ce; opts.targetLabel="price $"+fmtN(Math.round(ce*100)/100,ce<10?0:0); } App.spark(s.hist,opts); },
+  draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; c.clearRect(0,0,w,h);
+    const violet=cssv('--accent'),violetL=cssv('--accent2'),g=s.game;
+    // ---- banner: the gap ----
+    const meanV=s.games?s.sum/s.games:0; const ce=this.ce();
+    const bx=20,bw=w-40,by=12,bh=52;
+    roundRect(c,bx,by,bw,bh,12);c.fillStyle="rgba(167,139,250,.07)";c.fill();c.strokeStyle="rgba(167,139,250,.18)";c.lineWidth=1;c.stroke();
+    c.textAlign="left";c.textBaseline="alphabetic";
+    c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';c.fillText("THEORETICAL EXPECTED VALUE",bx+16,by+18);
+    c.fillStyle=violetL;c.font='700 22px "Source Serif 4",serif';c.fillText(s.u==="cap"?"$"+fmtN(Math.round(this.EVCAP)):"∞",bx+16,by+42);
+    c.textAlign="right";
+    c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';c.fillText("WHAT A RATIONAL PLAYER PAYS",bx+bw-16,by+18);
+    c.fillStyle=cssv("--canvas-ink");c.font='700 22px "Source Serif 4",serif';c.fillText(ce===Infinity?"any amount":("$"+fmtN(Math.round(ce*100)/100,ce<10?0:0)),bx+bw-16,by+42);
+    // ---- casino machine ----
+    const mx=w/2, top=by+bh+22; const potY=top+30;
+    c.textAlign="center";c.fillStyle=cssv("--canvas-label-dim");c.font='11px "Hanken Grotesk",sans-serif';c.fillText("THE POT",mx,top+6);
+    const potVal=g?g.pot:2; const potColor=(g&&g.phase==="pay")?violetL:cssv("--canvas-ink");
+    withGlow(c,violet,g&&g.phase==="pay"?24:8,()=>{ c.fillStyle=potColor;c.font='700 40px "IBM Plex Mono",monospace';c.fillText(this.money(potVal),mx,potY+14); });
+    // flip coins row
+    const coinsY=potY+58; if(g){ const n=g.seq.length; const shown=Math.min(g.idx,n); const cr=12, gap=8, totalW=Math.min(w-60,n*(cr*2+gap)); const startX=mx-totalW/2+cr;
+      const step=totalW/Math.max(1,n);
+      for(let i=0;i<shown;i++){ const cxp=startX+i*step; const isT=g.seq[i]==="T"; const col=isT?cssv("--canvas-gray-2"):violet, colL=isT?cssv("--canvas-label"):violetL;
+        withGlow(c,col,isT?6:10,()=>{ c.beginPath();c.arc(cxp,coinsY,cr,0,7); const gr=c.createRadialGradient(cxp-3,coinsY-3,2,cxp,coinsY,cr); gr.addColorStop(0,colL);gr.addColorStop(1,col); c.fillStyle=gr;c.fill(); });
+        c.fillStyle=cssv("--canvas-bg");c.font='700 12px "Source Serif 4",serif';c.textBaseline="middle";c.fillText(g.seq[i],cxp,coinsY+1);c.textBaseline="alphabetic";
+      }
+      c.fillStyle=cssv("--canvas-label-dim");c.font='10px "IBM Plex Mono",monospace';
+      if(g.phase==="pay")c.fillText("tails! payout "+this.money(g.payout),mx,coinsY+cr+18);
+      else c.fillText("flipping…",mx,coinsY+cr+18);
+    } else {
+      c.fillStyle="rgba(148,163,184,.45)";c.font='12px "Hanken Grotesk",sans-serif';c.fillText(s.games?"press Play for another round":"press Play — the coin doubles the pot until it lands tails",mx,coinsY+4);
+    }
+    // mean readout
+    if(s.games){ c.textAlign="center";c.fillStyle=cssv("--canvas-label-dim");c.font='11px "Hanken Grotesk",sans-serif';
+      c.fillText("average payout over "+fmtN(s.games)+" games",mx,h-34);
+      c.fillStyle=violetL;c.font='600 20px "IBM Plex Mono",monospace';c.fillText("$"+fmtN(Math.round(meanV*100)/100,meanV<100?2:0)+(s.games>4?"  ↑ still climbing":""),mx,h-12);
+    }
+  },
+  highlight(k,on){},
+  resize(){},
+  unmount(){},
+  refreshFormula(){ if(this.s)this.refreshUtil(); },
+  writeup(){ const s=this.s; const ce=this.ce(); return {params:{"Valuation":s.u==="lin"?"Linear":s.u==="log"?"Logarithmic":"Casino bankroll cap ($2²⁰)","Games played":fmtN(s.games)},results:{"Theoretical EV":s.u==="cap"?"$"+fmtN(Math.round(this.EVCAP)):"∞ (divergent)","Empirical mean payout":s.games?"$"+fmtN(Math.round((s.sum/s.games)*100)/100,2):"—","Rational price":ce===Infinity?"unbounded":"$"+fmtN(Math.round(ce*100)/100,2),"Biggest single win":s.max?this.money(s.max):"—"},takeaway:`The expected payout is the sum of infinitely many terms each equal to 1, so it diverges. But the empirical average never stabilises (it is driven by ever-rarer jackpots), and bounded utility or a finite bankroll yields a modest fair price — explaining why no one pays infinity to play.`}; }
+});
+
+/* ===================== CHALLENGE DEFINITIONS ===================== */
+/* answers are COMPUTED from the same theory the sims use, so the
+   'correct' value can never drift from what the experiment shows. */
+App.challenges=[
+  {
+    id:"bday30", module:"birthday", mode:"frequentist", modeLabel:"Frequentist", week:1,
+    title:"Birthday icebreaker",
+    short:"Predict the collision chance for 30 people.",
+    question:"You set a room to <b>30 people</b>. To the nearest 5%, what's the probability that at least two share a birthday?",
+    input:"number", unit:"%", placeholder:"e.g. 60", step:5, min:0, max:100,
+    setup:{ranges:{bN:30}},
+    passScore:70,
+    predToSpark:p=>p/100,
+    answer:()=> birthdayTheory(30)*100, // ≈70.6%
+    grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*4);
+      return {score, verdict: err<=5?"Spot on — within 5 points.":err<=12?"Close, but the curve is steeper than it feels.":"Way off — this is the famous birthday surprise.",
+        detail:`The true probability is <b>${actual.toFixed(1)}%</b>. With 30 people there are 435 possible pairs, so a shared birthday is already very likely. You guessed ${pred.predicted}%.`}; }
+  },
+  {
+    id:"montyswitch", module:"monty", mode:"frequentist", modeLabel:"Frequentist",
+    title:"100 doors",
+    short:"Should you switch with 100 doors?",
+    question:"The host sets up <b>100 doors</b>, you pick one, and the host opens 98 losing doors. What's your win probability if you <b>switch</b>?",
+    input:"number", unit:"%", placeholder:"e.g. 50", step:1, min:0, max:100,
+    setup:{ranges:{mN:100}},
+    passScore:75,
+    predToSpark:p=>p/100,
+    answer:()=> 99, // (N-1)/N at N=100
+    grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*3);
+      return {score, verdict: err<=3?"Exactly — switching is almost a sure thing.":err<=15?"Right direction, but switching is even stronger than that.":"Switching is far better than staying here.",
+        detail:`Switching wins <b>${actual}%</b> of the time: your first pick had a 1-in-100 chance, and the host sweeps the other 99% onto the one remaining door. You guessed ${pred.predicted}%.`}; }
+  },
+  {
+    id:"ruin47", module:"ruin", mode:"frequentist", modeLabel:"Frequentist",
+    title:"A 47% game",
+    short:"Predict your eventual ruin chance at p = 0.47.",
+    // FIXED: ask for eventual ruin probability (what the model computes), not a bogus 'games until 90% broke'
+    question:"You and the house each start with <b>20 chips</b>, but you only win <b>47%</b> of rounds. If you keep playing until someone is wiped out, what's the probability <b>you</b> go broke?",
+    input:"number", unit:"%", placeholder:"e.g. 80", step:1, min:0, max:100,
+    setup:{ranges:{rA:20,rB:20,rP:47}},
+    passScore:75,
+    predToSpark:p=>p/100,
+    answer:()=> ruinProb(20,20,0.47)*100, // ≈ 92.4%
+    grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*2.5);
+      return {score, verdict: err<=5?"Sharp — a tiny edge is brutal over a full game.":err<=15?"Close. The compounding is stronger than intuition.":"A 3-point disadvantage is far deadlier than it looks.",
+        detail:`Your eventual ruin probability is <b>${actual.toFixed(1)}%</b>. A 47% per-round chance with equal stacks compounds into near-certain ruin. You guessed ${pred.predicted}%. (Note: this is the probability of <i>eventual</i> ruin, not a per-game countdown.)`}; }
+  },
+  {
+    id:"mammopanic", module:"medical", mode:"bayesian", modeLabel:"Bayesian", week:2,
+    title:"Should she panic?",
+    short:"A positive mammogram — what's the real risk?",
+    question:"Your aunt gets a <b>positive screening mammogram</b>. Using realistic numbers (0.5% prevalence, ~87% sensitivity, ~89% specificity), what's the chance she actually has breast cancer?",
+    input:"number", unit:"%", placeholder:"e.g. 50", step:1, min:0, max:100,
+    setup:{selects:{mdPreset:"mammo"}},
+    passScore:70, noAutoRun:false,
+    predToSpark:null, // medical spark is a custom precision bar, not the shared 0-1 axis — no marker
+    answer:(m)=> (m&&m.s&&m.s.cts? m.s.cts.post*100 : 3.9),
+    grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*2.5);
+      return {score, verdict: err<=5?"Exactly — and this is why a positive screen isn't a diagnosis.":err<=15?"Close. It's even lower than most people guess.":"Much lower than it feels — that's the base-rate trap.",
+        detail:`Her real probability is about <b>${actual.toFixed(1)}%</b>. Among ~10,000 women, roughly 44 true cancers are dwarfed by ~1,094 false alarms, so a positive screen is usually <i>not</i> cancer — it means follow-up imaging, not panic. You guessed ${pred.predicted}%.`}; }
+  },
+  {
+    id:"simpsonflip", module:"simpson", mode:"paradox", modeLabel:"Paradox",
+    title:"Engineer the paradox",
+    short:"Drag the case-mix so B wins overall.",
+    question:"Treatment A beats B in <b>both</b> subgroups. Adjust the two case-mix sliders on the left so that <b>B wins overall</b> — then check your setup.",
+    input:"action",
+    actionHint:"Use the 'A severe share' and 'B severe share' sliders so A is loaded with severe cases. When B's overall rate passes A's, you've built the paradox.",
+    setup:{ranges:{spA:50,spB:50}},
+    passScore:100,
+    answer:(m)=>{ if(!m||!m.s)return false; const oa=m.overall(m.s.sevA,m.RA), ob=m.overall(m.s.sevB,m.RB); return ob>oa; },
+    grade(pred,actual,m){ const oa=m.overall(m.s.sevA,m.RA)*100, ob=m.overall(m.s.sevB,m.RB)*100;
+      return {score: actual?100:0, verdict: actual?"You built it — B wins overall despite losing both subgroups.":"Not yet — B still trails overall. Load A with more severe cases.",
+        detail:`Right now Overall A = <b>${oa.toFixed(1)}%</b>, Overall B = <b>${ob.toFixed(1)}%</b>. ${actual?"That reversal is Simpson's paradox: the case-mix outvotes the within-group truth.":"Push A's severe share up (and/or B's down) until B's bar overtakes A's."}`}; }
+  },
+  {
+    id:"petersburg25", module:"petersburg", mode:"paradox", modeLabel:"Paradox", week:3,
+    title:"Take it or leave it?",
+    short:"The casino wants $25 to play. Worth it?",
+    question:"The St. Petersburg game is offered to you for <b>$25</b> per play. Under a realistic <b>casino bankroll cap</b>, is that a good deal? Enter the fair value you'd actually pay (in dollars).",
+    input:"number", unit:"$", placeholder:"e.g. 20", step:1, min:0, max:200,
+    setup:{segments:{pgU:2}}, // 2 = casino cap mode
+    runVia:"pgRun", // batch of 200 so the running mean actually converges (single game = no convergence)
+    passScore:70,
+    predToSpark:p=>p, // dollars map directly onto the autoRange payout axis
+    answer:(m)=> (m&&m.EVCAP? m.EVCAP : 21),
+    grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*5);
+      const verdict = pred.predicted<=actual+1 ? "Smart — you'd pay at or below the real value." : "You'd overpay — $25 is above the fair value here.";
+      return {score, verdict,
+        detail:`With a finite casino bankroll the expected value is about <b>$${Math.round(actual)}</b>, so paying $25 is a slight <b>losing</b> bet. The infinite 'fair price' only holds for an infinitely rich casino. You'd pay $${pred.predicted}.`}; }
+  }
+];
+
+/* ===================== boot ===================== */
+(function(){
+  // apply saved theme as early as possible so the landing matches the chosen mode
+  try{ if(localStorage.getItem("paradox.theme")==="light")document.documentElement.setAttribute("data-theme","light"); }catch(e){}
+  // landing background: looping Monty-Hall-ish door breathing + drifting dots
+  const lc=$("#landingCanvas"),lx=hardenCtx(lc.getContext("2d"));
+  let lw,lh,seed=Math.random()*1000;
+  function lresize(){const d=Math.min(2,devicePixelRatio||1);lw=lc.clientWidth;lh=lc.clientHeight;lc.width=lw*d;lc.height=lh*d;lx.setTransform(d,0,0,d,0,0);}
+  lresize(); addEventListener("resize",lresize);
+  const N=70, pts=Array.from({length:N},()=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.0004,vy:(Math.random()-.5)*.0004,r:Math.random()*1.6+.4}));
+  let lraf;
+  function ldraw(t){
+    lx.clearRect(0,0,lw,lh);
+    // three breathing "doors"
+    const cx=lw/2,cy=lh/2, gap=Math.min(lw,lh)*0.07, dw=Math.min(lw*0.12,120), dh=Math.min(lh*0.34,260);
+    for(let i=0;i<3;i++){
+      const open=(Math.sin(t/1400 - i*2.1)*.5+.5);
+      const x=cx+(i-1)*(dw+gap)-dw/2, y=cy-dh/2;
+      lx.save();
+      lx.globalAlpha=.16+open*.10;
+      const grd=lx.createLinearGradient(x,y,x,y+dh);
+      grd.addColorStop(0,"rgba(245,158,11,"+(.5+open*.5)+")");grd.addColorStop(1,"rgba(167,139,250,.2)");
+      lx.fillStyle=grd; lx.fillRect(x,y,dw,dh*(1-open*.85));
+      lx.strokeStyle="rgba(148,163,184,.25)";lx.lineWidth=1;lx.strokeRect(x,y,dw,dh);
+      lx.restore();
+    }
+    for(const p of pts){
+      p.x+=p.vx;p.y+=p.vy; if(p.x<0||p.x>1)p.vx*=-1; if(p.y<0||p.y>1)p.vy*=-1;
+      const X=p.x*lw,Y=p.y*lh;
+      lx.beginPath();lx.arc(X,Y,p.r,0,7);
+      lx.fillStyle="rgba(148,163,184,.5)";lx.fill();
+    }
+    lraf=requestAnimationFrame(ldraw);
+  }
+  lraf=requestAnimationFrame(ldraw);
+
+  $("#enterBtn").onclick=()=>{
+    $("#landing").classList.add("gone");
+    const app=$("#app"); app.hidden=false;
+    requestAnimationFrame(()=>{ app.classList.add("live"); App.init(); App.fitUntilReady(); });
+    setTimeout(()=>{ cancelAnimationFrame(lraf); removeEventListener("resize",lresize); },900);
+  };
+})();
+</script>
+</body>
+</html>
