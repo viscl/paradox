@@ -864,8 +864,9 @@ const App={
     this.challengeLocked=false; this.unlockRun(ch);
     if(ch.input!=="action"){ const runId=ch.runVia||(this.byId[ch.module].keys&&this.byId[ch.module].keys.run); const b=runId?$("#"+runId):null; if(b&&!ch.noAutoRun)b.click(); }
     // persist best score + badge
-    const prev=this.progress.scores[ch.id]||0; if(res.score>prev)this.progress.scores[ch.id]=res.score;
-    if(res.score>=ch.passScore){ this.progress.badges[ch.id]=true; }
+    const score=Math.max(0,Math.min(100,Math.round(res.score)));
+    const prev=this.progress.scores[ch.id]||0; if(score>prev)this.progress.scores[ch.id]=score;
+    if(score>=ch.passScore){ this.progress.badges[ch.id]=true; }
     this.saveProgress(); this.renderChallengeBadge();
     // let the curve race the guess line before revealing the result (action challenges resolve instantly)
     const delay = ch.input==="action" ? 0 : (ch.resultDelay!=null?ch.resultDelay:3200);
@@ -995,11 +996,23 @@ const App={
   /* mount / switch */
   select(id,{ask=true}={}){
     const m=this.byId[id]; if(!m)return;
+    // guard: reselecting the SAME module while a challenge is active must not bypass the lock.
+    // (remounting would rebuild the controls with run buttons enabled, defeating "predict first".)
+    if(this.activeChallenge && this.current && this.current.id===id && this.challengeLocked){
+      this.lockRunForChallenge(this.activeChallenge);
+      return;
+    }
+    // guard: reselecting the SAME module while a result is pending (the 3.2s pill window) is a
+    // no-op — don't clear the timer, or the result would never appear.
+    if(this._resultPending && this.activeChallenge && this.current && this.current.id===id){
+      return;
+    }
     // ALWAYS kill any pending challenge-result timer before switching modules, so a stale
     // timer can't fire a "ghost" result over a different experiment (even if activeChallenge
     // was already cleared by an intervening modal close).
     if(this._resultTimer){ clearTimeout(this._resultTimer); this._resultTimer=null; this._resultPending=false; }
-    // if user navigates away mid-challenge (not via startChallenge), tear down the challenge UI
+    // navigating to a DIFFERENT module mid-challenge (or after lock released): tear down challenge UI.
+    // also handles the pending-result case: leaving the challenge's module cancels it cleanly.
     if(this.activeChallenge && this.activeChallenge.module!==id){ this.activeChallenge=null; this.challengeLocked=false; this.clearPrediction(); if(this._closeChPanel)this._closeChPanel(); }
     if(this.current){ this.stop(); if(this.current.unmount)this.current.unmount(); }
     this.current=m; this.setMode(m.mode);
@@ -1574,9 +1587,10 @@ Despite that positive result, there's still about an 83% chance you're healthy. 
   legend(c,w,h){ const s=this.s,ct=s.cts,y=h-44; const items=[["True positive",cssv('--accent'),ct.TP],["False positive",cssv("--lose"),ct.FP],["False negative",cssv("--role-fn-2"),ct.FN],["True negative",cssv("--role-tn-2"),ct.TN]];
     let x=10; c.textAlign="left";
     items.forEach(([lab,col,n])=>{ roundRect(c,x,y,11,11,3);c.fillStyle=col;c.fill(); c.fillStyle=cssv("--canvas-label");c.font='600 11px "IBM Plex Mono",monospace';c.fillText(fmtN(n),x+17,y+6); c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Hanken Grotesk",sans-serif';c.fillText(lab,x+17,y+19); x+=Math.max(118,c.measureText(lab).width+60); });
-    c.textAlign="right";c.fillStyle="rgba(148,163,184,.55)";c.font='11px "Source Serif 4",serif';
-    if(s.reveal>=1){ c.fillStyle=cssv('--accent2');c.font='600 13px "Source Serif 4",serif'; c.fillText("of every positive test, only "+(ct.post*100).toFixed(1)+"% is real disease",w-12,y+13); }
-    else { c.fillText("press Run the test to reveal results",w-12,y+13); }
+    // status / result line — on its OWN row above the legend so it never overlaps the legend counts
+    const sy=y-16; c.textAlign="right";
+    if(s.reveal>=1){ c.fillStyle=cssv('--accent2');c.font='600 13px "Source Serif 4",serif'; c.fillText("of every positive test, only "+(ct.post*100).toFixed(1)+"% is real disease",w-12,sy); }
+    else { c.fillStyle=cssv("--canvas-label-dim");c.font='12px "Source Serif 4",serif'; c.fillText("press Run the test to reveal results",w-12,sy); }
   },
   hlSet(k){ if(k==="sens")return new Set([0]); if(k==="spec")return new Set([3]); if(k==="prev")return new Set([0,1]); return new Set([0,1,2,3]); },
   pick(e){ const s=this.s; if(!s.cell){return;} const p=stagePos(e); const W=s.cols*s.cell,H=s.rows*s.cell,ox=s.px+(s.pw-W)/2,oy=s.py+(s.ph-H)/2;
@@ -1873,14 +1887,18 @@ The mathematical expected payout is literally infinite, which suggests no price 
   fcap:"expectation and reasonable behaviour part ways",
   EVCAP:(()=>{ const cap=Math.pow(2,20); let ev=0; for(let k=1;k<=60;k++)ev+=Math.pow(0.5,k)*Math.min(Math.pow(2,k),cap); return ev; })(),
   mount(){
-    const s=this.s={u:"lin",games:0,sum:0,max:0,hist:[],game:null,frame:0,idle:0};
-    $$("#pgU button").forEach(b=>b.onclick=()=>{ $$("#pgU button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); s.u=b.dataset.u; this.refreshUtil(); this.spark(); });
+    const s=this.s={u:"lin",games:0,sumRaw:0,sumCap:0,max:0,histRaw:[],histCap:[],hist:[],game:null,frame:0,idle:0};
+    $$("#pgU button").forEach(b=>b.onclick=()=>{ $$("#pgU button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); s.u=b.dataset.u; this.refreshUtil(); this.syncHist(); this.stats(); this.spark(); });
     $("#pgPlay").onclick=()=>{ if(!s.game)this.startGame(); };
     $("#pgRun").onclick=()=>this.batch(200);
-    $("#pgReset").onclick=()=>{ s.games=0;s.sum=0;s.max=0;s.hist=[];s.game=null; App.clearLog(); this.stats(); this.spark(); };
+    $("#pgReset").onclick=()=>{ s.games=0;s.sumRaw=0;s.sumCap=0;s.max=0;s.histRaw=[];s.histCap=[];s.hist=[];s.game=null; App.clearLog(); this.stats(); this.spark(); };
     this.refreshUtil(); this.stats(); this.spark();
     App.loop(t=>{ this.tick(); this.draw(t); });
   },
+  // mean payout under the CURRENT valuation mode (cap caps each payout; lin/log use raw dollars)
+  meanPayout(){ const s=this.s; if(!s.games)return 0; return (s.u==="cap"?s.sumCap:s.sumRaw)/s.games; },
+  // point the displayed history at the array matching the current mode (both are kept all-time correct)
+  syncHist(){ const s=this.s; s.hist=(s.u==="cap"?s.histCap:s.histRaw).slice(); },
   ce(){ const s=this.s; if(s.u==="lin")return Infinity; if(s.u==="log")return 4; return this.EVCAP; },
   refreshUtil(){ const s=this.s; const lines={lin:"a linear valuer should pay any price",log:"E[log₂ X] = Σ k·(½)ᵏ = 2 utils ⇒ price 2² = $4",cap:"with a $2²⁰ bankroll the sum is finite"};
     App.setText("pgUtilLine",lines[s.u]);
@@ -1888,8 +1906,13 @@ The mathematical expected payout is literally infinite, which suggests no price 
     const ce=this.ce(); App.setText("pgCE", ce===Infinity?"∞":"$"+fmtN(Math.round(ce*100)/100, ce<10?0:0));
   },
   drawPayout(){ let pot=2; while(Math.random()<0.5 && pot<0x4000000000000)pot*=2; return pot; }, // 2^k with prob (1/2)^k, k>=1; capped at 2^50 so a runaway streak can't break float-int precision
-  record(payout){ const s=this.s; const eff=s.u==="cap"?Math.min(payout,Math.pow(2,20)):payout; s.games++; s.sum+=eff; if(payout>s.max)s.max=payout;
-    if(s.games<=60||s.games%5===0){ s.hist.push(s.sum/s.games); if(s.hist.length>240)s.hist.shift(); } },
+  record(payout){ const s=this.s; const cap=Math.pow(2,20); s.games++; s.sumRaw+=payout; s.sumCap+=Math.min(payout,cap); if(payout>s.max)s.max=payout;
+    // keep both running-average histories all-time correct; the graph shows whichever matches the mode
+    if(s.games<=60||s.games%5===0){
+      s.histRaw.push(s.sumRaw/s.games); if(s.histRaw.length>240)s.histRaw.shift();
+      s.histCap.push(s.sumCap/s.games); if(s.histCap.length>240)s.histCap.shift();
+      s.hist=(s.u==="cap"?s.histCap:s.histRaw); }
+  },
   startGame(){ const s=this.s; const seq=[]; let pot=2; // build flip sequence: heads... then tails
     while(Math.random()<0.5){ seq.push("H"); pot*=2; } seq.push("T");
     s.game={seq,idx:0,pot:2,payout:pot,reveal:0,phase:"flipping",hold:0}; s.frame=0;
@@ -1905,14 +1928,14 @@ The mathematical expected payout is literally infinite, which suggests no price 
     }
     else if(g.phase==="pay"){ g.hold++; if(g.hold>40){ s.game=null; } }
   },
-  batch(B){ const s=this.s; for(let i=0;i<B;i++)this.record(this.drawPayout()); this.stats(); this.spark(); App.push(`+${B} games simulated`, "$"+fmtN(Math.round(s.sum/s.games))); },
-  stats(){ const s=this.s; App.setStat([{k:"Games",v:fmtN(s.games)},{k:"Mean payout",v:s.games?"$"+fmtN(Math.round((s.sum/s.games)*100)/100, (s.sum/s.games)<100?2:0):"—",acc:1},{k:"Biggest win",v:s.max?this.money(s.max):"—"}]); },
+  batch(B){ const s=this.s; for(let i=0;i<B;i++)this.record(this.drawPayout()); this.stats(); this.spark(); App.push(`+${B} games simulated`, "$"+fmtN(Math.round(this.meanPayout()))); },
+  stats(){ const s=this.s; const mp=this.meanPayout(); App.setStat([{k:"Games",v:fmtN(s.games)},{k:"Mean payout",v:s.games?"$"+fmtN(Math.round(mp*100)/100, mp<100?2:0):"—",acc:1},{k:"Biggest win",v:s.max?this.money(s.max):"—"}]); },
   money(v){ return v>=1e7 ? "$"+v.toExponential(1) : "$"+fmtN(Math.round(v)); },
   spark(){ const s=this.s; const ce=this.ce(); const opts={autoRange:true}; if(ce!==Infinity){ opts.target=ce; opts.targetLabel="price $"+fmtN(Math.round(ce*100)/100,ce<10?0:0); } App.spark(s.hist,opts); },
   draw(t){ const c=App.sctx,s=this.s,{w,h}=App.size; c.clearRect(0,0,w,h);
     const violet=cssv('--accent'),violetL=cssv('--accent2'),g=s.game;
     // ---- banner: the gap ----
-    const meanV=s.games?s.sum/s.games:0; const ce=this.ce();
+    const meanV=this.meanPayout(); const ce=this.ce();
     const bx=20,bw=w-40,by=12,bh=52;
     roundRect(c,bx,by,bw,bh,12);c.fillStyle="rgba(167,139,250,.07)";c.fill();c.strokeStyle="rgba(167,139,250,.18)";c.lineWidth=1;c.stroke();
     c.textAlign="left";c.textBaseline="alphabetic";
@@ -1949,7 +1972,7 @@ The mathematical expected payout is literally infinite, which suggests no price 
   resize(){},
   unmount(){},
   refreshFormula(){ if(this.s)this.refreshUtil(); },
-  writeup(){ const s=this.s; const ce=this.ce(); return {params:{"Valuation":s.u==="lin"?"Linear":s.u==="log"?"Logarithmic":"Casino bankroll cap ($2²⁰)","Games played":fmtN(s.games)},results:{"Theoretical EV":s.u==="cap"?"$"+fmtN(Math.round(this.EVCAP)):"∞ (divergent)","Empirical mean payout":s.games?"$"+fmtN(Math.round((s.sum/s.games)*100)/100,2):"—","Rational price":ce===Infinity?"unbounded":"$"+fmtN(Math.round(ce*100)/100,2),"Biggest single win":s.max?this.money(s.max):"—"},takeaway:`The expected payout is the sum of infinitely many terms each equal to 1, so it diverges. But the empirical average never stabilises (it is driven by ever-rarer jackpots), and bounded utility or a finite bankroll yields a modest fair price — explaining why no one pays infinity to play.`}; }
+  writeup(){ const s=this.s; const ce=this.ce(); return {params:{"Valuation":s.u==="lin"?"Linear":s.u==="log"?"Logarithmic":"Casino bankroll cap ($2²⁰)","Games played":fmtN(s.games)},results:{"Theoretical EV":s.u==="cap"?"$"+fmtN(Math.round(this.EVCAP)):"∞ (divergent)","Empirical mean payout":s.games?"$"+fmtN(Math.round(this.meanPayout()*100)/100,2):"—","Rational price":ce===Infinity?"unbounded":"$"+fmtN(Math.round(ce*100)/100,2),"Biggest single win":s.max?this.money(s.max):"—"},takeaway:`The expected payout is the sum of infinitely many terms each equal to 1, so it diverges. But the empirical average never stabilises (it is driven by ever-rarer jackpots), and bounded utility or a finite bankroll yields a modest fair price — explaining why no one pays infinity to play.`}; }
 });
 
 /* ===================== CHALLENGE DEFINITIONS ===================== */
@@ -2039,9 +2062,13 @@ App.challenges=[
     predToSpark:p=>p, // dollars map directly onto the autoRange payout axis
     answer:(m)=> (m&&m.EVCAP? m.EVCAP : 21),
     grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*5);
-      const verdict = pred.predicted<=actual+1 ? "Smart — you'd pay at or below the real value." : "You'd overpay — $25 is above the fair value here.";
+      const p=pred.predicted;
+      let verdict;
+      if(err<=5) verdict="Sharp — that's right around the real fair value.";
+      else if(p>actual) verdict="You'd overpay — that's above the fair value here.";
+      else verdict="Too conservative — the fair value is a bit higher than that.";
       return {score, verdict,
-        detail:`With a finite casino bankroll the expected value is about <b>$${Math.round(actual)}</b>, so paying $25 is a slight <b>losing</b> bet. The infinite 'fair price' only holds for an infinitely rich casino. You'd pay $${pred.predicted}.`}; }
+        detail:`With a finite casino bankroll the expected value is about <b>$${Math.round(actual)}</b>. Paying the casino's asking price of $25 would be a slight <b>losing</b> bet, since $25 is above that fair value. The infinite "fair price" only holds for an infinitely rich casino. You'd pay $${p}.`}; }
   }
 ];
 
