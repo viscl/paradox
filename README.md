@@ -1,8 +1,8 @@
 # Paradox — A Probability Sandbox
 
-An interactive playground for the most counterintuitive ideas in probability. Run the experiments yourself, watch the simulations converge on the theory in real time, and make predictions before the math reveals itself.
+An interactive playground for the most counterintuitive ideas in probability. Run the experiments yourself, watch the simulations converge on the theory in real time, and make predictions.
 
-Built as a single self-contained HTML file — no build step, no dependencies, no server. Open it and it works.
+Built as a single self-contained HTML file. Open it and it works.
 
 **[▶ Live demo](https://viscl.github.io/paradox/)**
 
@@ -15,7 +15,7 @@ Seven experiments across three chambers, each computing its answer live from the
 **I · Simulation Arena (Frequentist)**
 - **Birthday Problem** — In a room of *n* people, how likely is a shared birthday? Run rooms over and over and watch the rate climb past 50% at just 23 people.
 - **Monty Hall** — The door, the host, and the switch. Crank up the door count to feel why switching wins.
-- **Gambler's Ruin** — Bet one chip per round until you own everything or nothing. A tiny house edge bends the random walk toward ruin.
+- **Gambler's Ruin** — Bet one chip per round until you own everything or nothing.
 
 **II · Bayesian Studio**
 - **Medical Testing** — Ten thousand people, a rare disease, a near-perfect test. Watch the base-rate trap: a positive result can still mean you're probably fine.
@@ -39,11 +39,11 @@ Seven experiments across three chambers, each computing its answer live from the
 
 **Online:** just visit the live demo link above.
 
-**Locally:** download `index.html` and open it in any modern browser. That's the whole process — there is nothing to install.
+**Locally:** download `index.html` and open it in any modern browser.
 
 ## Tech
 
-Vanilla JavaScript and the HTML5 Canvas 2D API. No frameworks, no libraries, no build tooling. The entire app — markup, styles, logic, and seven experiments — lives in one file by design, so it stays portable and trivial to host or share.
+Vanilla JavaScript and the HTML5 Canvas 2D API. Entire app including markup, styles, logic, and seven experiments lives in one file by design, so it stays portable and trivial to host or share.
 
 ## License
 
@@ -51,4 +51,4 @@ MIT — see [LICENSE](LICENSE). Free to use, modify, and share.
 
 ## Acknowledgements
 
-Fonts: [Source Serif 4](https://fonts.google.com/specimen/Source+Serif+4), [Hanken Grotesk](https://fonts.google.com/specimen/Hanken+Grotesk), and [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono), all via Google Fonts.
+Fonts: [Fraunces](https://fonts.google.com/specimen/Fraunces), [Archivo](https://fonts.google.com/specimen/Archivo), and [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono), all via Google Fonts.
