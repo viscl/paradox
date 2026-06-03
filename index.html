@@ -112,11 +112,11 @@
   --glow:transparent;
   --glow-soft:rgba(74,158,138,.10);
 }
-/* per-mode accents — paper default (editorial ink tones on cream) */
+/* per-mode accents, paper default (editorial ink tones on cream) */
 [data-mode="frequentist"]{--accent:#1d5c4f;--accent2:#2a7c6b;--glow:rgba(29,92,79,.4);--glow-soft:rgba(29,92,79,.14);}
 [data-mode="bayesian"]{--accent:#2f6d8c;--accent2:#3f8fb0;--glow:rgba(47,109,140,.4);--glow-soft:rgba(47,109,140,.14);}
 [data-mode="paradox"]{--accent:#7a4a8c;--accent2:#9a63ad;--glow:rgba(122,74,140,.4);--glow-soft:rgba(122,74,140,.14);}
-/* per-mode accents — dark variant (brightened so they read on charcoal) */
+/* per-mode accents, dark variant (brightened so they read on charcoal) */
 [data-theme="light"][data-mode="frequentist"]{--accent:#4a9e8a;--accent2:#6bbfa8;--glow:transparent;--glow-soft:rgba(74,158,138,.10);}
 [data-theme="light"][data-mode="bayesian"]{--accent:#5aa8cc;--accent2:#7cc3e0;--glow:transparent;--glow-soft:rgba(90,168,204,.10);}
 [data-theme="light"][data-mode="paradox"]{--accent:#b07fc4;--accent2:#c8a0d8;--glow:transparent;--glow-soft:rgba(176,127,196,.10);}
@@ -418,7 +418,7 @@ kbd{display:inline-block;min-width:20px;text-align:center;font-family:var(--mono
 /* non-blocking prediction panel (stage stays visible behind it) */
 .chpanel{position:fixed;right:50%;top:50%;transform:translate(50%,-50%) scale(.97);width:min(540px,calc(100vw - 36px));background:var(--panel-solid);border:1px solid var(--accent2);border-radius:16px;padding:18px 20px;box-shadow:0 26px 70px rgba(0,0,0,.6),0 0 30px -10px var(--glow);z-index:60;opacity:0;transition:opacity .3s ease,transform .5s cubic-bezier(.55,.05,.2,1),width .5s cubic-bezier(.55,.05,.2,1),padding .4s ease,border-radius .4s ease;transform-origin:top right;}
 .chpanel.show{opacity:1;transform:translate(50%,-50%) scale(1);}
-/* docked pill state — slides to top-right via transform only (no left/right snap), graph stays clear */
+/* docked pill state, slides to top-right via transform only (no left/right snap), graph stays clear */
 .chpanel.docked{transform:translate(0,0) scale(1);top:74px;right:18px;width:auto;max-width:min(320px,calc(100vw - 36px));padding:7px 13px;border-radius:999px;border-width:.5px;border-color:var(--accent2);background:var(--panel-solid);box-shadow:0 10px 30px -8px rgba(0,0,0,.25);}
 .chpanel .ek{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent2);margin-bottom:7px;}
 .chpanel h3{font-family:var(--serif);font-weight:600;font-size:18px;margin:0 0 6px;line-height:1.25;}
@@ -488,7 +488,7 @@ kbd{display:inline-block;min-width:20px;text-align:center;font-family:var(--mono
       <label class="toggle"><span>Socratic</span><div class="switch" id="socraticSw"></div></label>
       <button class="tbtn" id="plainBtn" title="Swap the math for plain-English explanations"><svg viewBox="0 0 24 24"><path d="M4 5h16v10H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>Plain English</button>
       <button class="tbtn" id="writeBtn" title="Generate a Markdown lab write-up"><svg viewBox="0 0 24 24"><path d="M5 4h9l5 5v11H5z"/><path d="M14 4v5h5"/><path d="M8 13h7M8 16h7"/></svg>Write-Up</button>
-      <button class="tbtn primary-tbtn" id="challengeBtn" title="Challenge mode — predict, then prove it"><svg viewBox="0 0 24 24"><path d="M7 4h10v4a5 5 0 01-10 0z"/><path d="M9 13h6M8 20h8M10 13v3.5M14 13v3.5"/><path d="M17 5h2.5a2.5 2.5 0 01-2.5 2.5M7 5H4.5A2.5 2.5 0 007 7.5"/></svg>Challenge<span class="chcount" id="chCount" hidden>0</span></button>
+      <button class="tbtn primary-tbtn" id="challengeBtn" title="Challenge mode, predict, then prove it"><svg viewBox="0 0 24 24"><path d="M7 4h10v4a5 5 0 01-10 0z"/><path d="M9 13h6M8 20h8M10 13v3.5M14 13v3.5"/><path d="M17 5h2.5a2.5 2.5 0 01-2.5 2.5M7 5H4.5A2.5 2.5 0 007 7.5"/></svg>Challenge<span class="chcount" id="chCount" hidden>0</span></button>
       <button class="tbtn" id="kbdBtn" title="Keyboard shortcuts (press ?)" aria-label="Keyboard shortcuts"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h0M11 10h0M15 10h0M7 14h10"/></svg></button>
       <button class="tbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle light or dark mode" aria-pressed="false"><svg viewBox="0 0 24 24" id="themeIcon"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></svg></button>
     </div>
@@ -540,7 +540,7 @@ kbd{display:inline-block;min-width:20px;text-align:center;font-family:var(--mono
 <script>
 "use strict";
 /* ============================================================
-   PARADOX — shared shell, math + animation helpers
+   PARADOX, shared shell, math + animation helpers
    ============================================================ */
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -572,7 +572,7 @@ const CSS_FALLBACK={'--accent':'#1d5c4f','--accent2':'#2a7c6b','--ink':'#1f2421'
 // changes (the only times they can change), and the draw loops read from this plain object.
 let _cssCache=Object.create(null);
 let _cssCacheReady=false;
-// every custom prop the canvas/draw code reads via cssv — kept in sync with usage
+// every custom prop the canvas/draw code reads via cssv, kept in sync with usage
 const _CSS_KEYS=['--accent','--accent2','--glow','--glow-soft','--ink','--ink-dim','--ink-faint',
   '--canvas-bg','--canvas-ink','--scrim-veil','--win','--lose','--canvas-label','--canvas-label-dim',
   '--canvas-gray','--canvas-gray-2','--rose-soft','--halo-rose','--role-fn','--role-tn','--role-fn-2','--role-tn-2'];
@@ -717,7 +717,7 @@ const App={
     } else if(m){
       this.renderExplain(m);
     }
-    this.toast(this.plain?"Plain English on — the math panel now explains in words.":"Back to the formulas.");
+    this.toast(this.plain?"Plain English on, the math panel now explains in words.":"Back to the formulas.");
   },
 
   setTheme(theme,announce){
@@ -729,8 +729,8 @@ const App={
     // swap the header icon between sun (light active) and moon (dark active)
     const ic=$("#themeIcon");
     if(ic){ ic.innerHTML = light
-      ? '<path d="M20 14.5A7.5 7.5 0 019.5 4a7.5 7.5 0 100 16 7.5 7.5 0 0010.5-5.5z"/>'   /* moon: click to go dark */
-      : '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>'; /* sun: click to go light */
+      ? '<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/>'  /* dark active -> show sun (click for light) */
+      : '<path d="M20 14.5A7.5 7.5 0 019.5 4a7.5 7.5 0 100 16 7.5 7.5 0 0010.5-5.5z"/>'; /* light active -> show moon (click for dark) */
     }
     try{ localStorage.setItem("paradox.theme",light?"light":"dark"); }catch(e){ console.warn("theme save failed:",e); }
     const reduce=typeof matchMedia!=="undefined"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -745,14 +745,14 @@ const App={
       clearTimeout(this._revealTimer);
       this._revealTimer=setTimeout(()=>{ if(st)st.classList.remove("theme-reveal"); if(sp)sp.classList.remove("theme-reveal"); },480);
     }
-    if(announce)this.toast(light?"Light mode on.":"Dark mode on.");
+    if(announce)this.toast(light?"Dark mode on.":"Light mode on.");
   },
   toggleTheme(){
     const isLight=document.documentElement.getAttribute("data-theme")==="light";
     this.setTheme(isLight?"dark":"light",true);
   },
 
-  /* keyboard helpers — click the current module's declared run/reset buttons */
+  /* keyboard helpers, click the current module's declared run/reset buttons */
   kbRun(){ const m=this.current; if(!m||!m.keys||!m.keys.run)return; const b=$("#"+m.keys.run); if(b)b.click(); },
   kbReset(){ const m=this.current; if(!m||!m.keys||!m.keys.reset)return; const b=$("#"+m.keys.reset); if(b)b.click(); },
   showShortcuts(){
@@ -811,7 +811,7 @@ const App={
     this.select(ch.module,{ask:false});
     requestAnimationFrame(()=>requestAnimationFrame(()=>{
       this.applyChallengeSetup(ch.setup);
-      // setup may have triggered an auto-reveal (e.g. medical preset) — hide the answer until they predict
+      // setup may have triggered an auto-reveal (e.g. medical preset), hide the answer until they predict
       const m=this.current; if(m&&m.s){ if("revealing" in m.s)m.s.revealing=false; if("reveal" in m.s)m.s.reveal=0; }
       this.lockRunForChallenge(ch);
       this.showChallengePrompt(ch);
@@ -832,7 +832,7 @@ const App={
     const panel=$("#chPanel"); if(!panel)return;
     if(this._chPanelTimer){ clearTimeout(this._chPanelTimer); this._chPanelTimer=null; } // cancel a prior close so it can't blank this panel
     const inputHtml = ch.input==="number"
-      ? `<div class="chrow"><input type="number" id="chPred" class="chnum" placeholder="${ch.placeholder||"?"}" step="${ch.step||1}" min="${ch.min!=null?ch.min:0}" max="${ch.max!=null?ch.max:100}"> <span class="chunit">${ch.unit||""}</span><div class="chspacer"></div><button class="act" id="chCancel">Cancel</button><button class="act primary" id="chSubmit">Lock it in</button></div><div class="chhint">Type a guess — watch your line appear on the graph. Lock it in to run the experiment and see the curve race toward the truth.</div>`
+      ? `<div class="chrow"><input type="number" id="chPred" class="chnum" placeholder="${ch.placeholder||"?"}" step="${ch.step||1}" min="${ch.min!=null?ch.min:0}" max="${ch.max!=null?ch.max:100}"> <span class="chunit">${ch.unit||""}</span><div class="chspacer"></div><button class="act" id="chCancel">Cancel</button><button class="act primary" id="chSubmit">Lock it in</button></div><div class="chhint">Type a guess, watch your line appear on the graph. Lock it in to run the experiment and see the curve race toward the truth.</div>`
       : ch.input==="action"
         ? `<div class="chnote">${ch.actionHint||"Adjust the controls on the left, then check your setup."}</div><div class="chrow" style="margin-top:12px"><div class="chspacer"></div><button class="act" id="chCancel">Cancel</button><button class="act primary" id="chCheck">Check my setup</button></div>`
         : `<div class="chchoices">${(ch.choices||[]).map((c,i)=>`<button class="act chchoice" data-i="${i}">${c}</button>`).join("")}</div><div class="chrow" style="margin-top:10px"><div class="chspacer"></div><button class="act" id="chCancel">Cancel</button></div>`;
@@ -947,7 +947,7 @@ const App={
       <div class="btnrow" style="margin-top:10px;justify-content:flex-end"><button class="act primary" id="chBackMenu">Back</button></div>`;
     $("#modal").innerHTML=body; this.openScrim();
     $("#chCopyCode").onclick=()=>{ const t=$("#chCode"); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t.value).then(()=>this.toast("Progress code copied.")).catch(()=>this.toast("Select the text and copy manually.")); } else this.toast("Select the text and copy manually."); };
-    $("#chPasteCode").onclick=()=>{ const v=$("#chCode").value; if(this.importProgress(v)){ this.renderChallengeBadge(); this.toast("Progress restored."); this.showChallengeMenu(); } else this.toast("That code didn't parse — check it and try again."); };
+    $("#chPasteCode").onclick=()=>{ const v=$("#chCode").value; if(this.importProgress(v)){ this.renderChallengeBadge(); this.toast("Progress restored."); this.showChallengeMenu(); } else this.toast("That code didn't parse, check it and try again."); };
     $("#chBackMenu").onclick=()=>this.showChallengeMenu();
   },
   renderChallengeBadge(){
@@ -980,7 +980,7 @@ const App={
       c.fillStyle=ax2;c.font="10px "+'"IBM Plex Mono",monospace';c.textAlign="right";
       c.fillText(opts.targetLabel||(opts.autoRange?fmtN(opts.target,2):fmtPct(opts.target)),W-pad.r,Math.max(11,ty-4));
     }
-    // student prediction marker (challenge mode) — a line the real curve races toward
+    // student prediction marker (challenge mode), a line the real curve races toward
     if(this.prediction!=null && isFinite(this.prediction)){
       const py=Y(this.prediction);
       if(py>=pad.t-1 && py<=H-pad.b+1){
@@ -1025,7 +1025,7 @@ const App={
       return;
     }
     // guard: reselecting the SAME module while a result is pending (the 3.2s pill window) is a
-    // no-op — don't clear the timer, or the result would never appear.
+    // no-op, don't clear the timer, or the result would never appear.
     if(this._resultPending && this.activeChallenge && this.current && this.current.id===id){
       return;
     }
@@ -1069,7 +1069,7 @@ const App={
     $("#modal").innerHTML=`<button class="skip" id="skipS">×</button>
       <div class="ek">Guided Discovery</div>
       <h2>${s.q}</h2>
-      <p>Form a hypothesis before you run a single trial. Intuition is worth testing — that's the whole point.</p>
+      <p>Form a hypothesis before you run a single trial. Intuition is worth testing. That's the whole point.</p>
       <div class="guesses">${s.options.map((o,i)=>`<button class="guess" data-i="${i}">${o}</button>`).join("")}</div>`;
     this.openScrim();
     $("#skipS").onclick=()=>this.closeModal();
@@ -1110,7 +1110,7 @@ const App={
     // restore focus to whatever opened the dialog
     try{ if(this._lastFocus&&this._lastFocus.focus)this._lastFocus.focus(); }catch(e){}
     this._lastFocus=null;
-    // if the result is still pending (pill window), closing some OTHER modal shouldn't touch the challenge —
+    // if the result is still pending (pill window), closing some OTHER modal shouldn't touch the challenge.
     // leave activeChallenge + the timer intact so the race finishes normally.
     if(this._resultPending)return;
     // if a challenge result was dismissed via Esc/scrim (not Done/More), clean up its marker + state
@@ -1122,7 +1122,7 @@ const App={
   writeReport(){
     const m=this.current; const wu=m.writeup?m.writeup():{params:{},results:{}};
     const date=new Date().toISOString().slice(0,16).replace("T"," ");
-    let md=`# Paradox — Lab Write-Up\n\n**Experiment:** ${m.name}  \n**Chamber:** ${({frequentist:"I · Simulation Arena",bayesian:"II · Bayesian Studio",paradox:"III · Paradox Hall"})[m.mode]}  \n**Recorded:** ${date}\n\n## Question\n${m.about||m.sub||""}\n\n## Parameters\n`;
+    let md=`# Paradox: Lab Write-Up\n\n**Experiment:** ${m.name}  \n**Chamber:** ${({frequentist:"I · Simulation Arena",bayesian:"II · Bayesian Studio",paradox:"III · Paradox Hall"})[m.mode]}  \n**Recorded:** ${date}\n\n## Question\n${m.about||m.sub||""}\n\n## Parameters\n`;
     md+=Object.entries(wu.params).map(([k,v])=>`- **${k}:** ${v}`).join("\n")||"- (none)";
     md+=`\n\n## Results\n`+ (Object.entries(wu.results).map(([k,v])=>`- **${k}:** ${v}`).join("\n")||"- (run the experiment first)");
     if(wu.takeaway)md+=`\n\n## Takeaway\n${wu.takeaway}`;
@@ -1145,7 +1145,7 @@ const App={
       const pre=$("#mdpre");
       if(pre){ const r=document.createRange(); r.selectNodeContents(pre); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); const ok=document.execCommand&&document.execCommand("copy"); sel.removeAllRanges(); if(ok){ this.toast("Write-up copied to clipboard."); return; } }
     }catch(e){}
-    this.toast("Couldn't copy automatically — the text is selected, press Ctrl/Cmd+C.");
+    this.toast("Couldn't copy automatically, the text is selected, press Ctrl/Cmd+C.");
     try{ const pre=$("#mdpre"); if(pre){ const r=document.createRange(); r.selectNodeContents(pre); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } }catch(e){}
   },
 
@@ -1157,7 +1157,7 @@ const App={
     // tools
     const sw=$("#socraticSw");
     sw.onclick=()=>{ this.socratic=!this.socratic; sw.classList.toggle("on",this.socratic);
-      if(this.socratic){ this.toast("Socratic mode on — the sandbox will ask before it answers."); if(this.current&&this.current.socratic&&!this.asked[this.current.id])this.askSocratic(this.current); }
+      if(this.socratic){ this.toast("Socratic mode on, the sandbox will ask before it answers."); if(this.current&&this.current.socratic&&!this.asked[this.current.id])this.askSocratic(this.current); }
     };
     $("#writeBtn").onclick=()=>this.writeReport();
     $("#plainBtn").onclick=()=>this.togglePlain();
@@ -1181,7 +1181,7 @@ const App={
       else if(k==="?"||(k==="/"&&e.shiftKey)){ e.preventDefault(); this.showShortcuts(); }
     });
     window.addEventListener("hashchange",()=>{ const id=location.hash.slice(1); if(id&&this.byId[id]&&(!this.current||this.current.id!==id))this.select(id,{ask:false}); });
-    // launch — honor ?m=<id> (or #hash) to open a specific experiment, else first module
+    // launch, honor ?m=<id> (or #hash) to open a specific experiment, else first module
     const sp=new URLSearchParams(location.search);
     const shareM=sp.get("m");
     const start=(shareM&&this.byId[shareM])?shareM:(this.byId[location.hash.slice(1)]?location.hash.slice(1):this.modules[0].id);
@@ -1196,7 +1196,7 @@ function stagePos(e){
 }
 
 /* ============================================================
-   CHAMBER I — BIRTHDAY PROBLEM
+   CHAMBER I, BIRTHDAY PROBLEM
    ============================================================ */
 function birthdayTheory(n){ let p=1; for(let k=0;k<n;k++)p*=(1-k/365); return 1-p; }
 App.modules.push({
@@ -1273,7 +1273,7 @@ App.modules.push({
 });
 
 /* ============================================================
-   CHAMBER I — MONTY HALL  (generalized to N doors)
+   CHAMBER I, MONTY HALL  (generalized to N doors)
    ============================================================ */
 App.modules.push({
   id:"monty", name:"Monty Hall", mode:"frequentist", keys:{run:"mRun",reset:"mReset"}, runLock:["mRun","mPlay"],
@@ -1283,7 +1283,7 @@ App.modules.push({
 
 Did you know you're actually twice as likely to win if you switch doors? When you first pick, you have a 2 in 3 chance of being wrong. The host always opens a losing door, so switching basically means trading your probably-wrong pick for the probably-right remaining door.`,
   stats0:[{k:"Trials",v:"0"},{k:"Switch win",v:"—",acc:1},{k:"Stay win",v:"—"}],
-  socratic:{q:"With 100 doors — you pick one, the host opens 98 losers — does switching matter more or less than with 3 doors?",options:["Less — more doors dilute the effect","Exactly the same, 50/50","Much more — switching wins 99% of the time","Switching never helps"]},
+  socratic:{q:"With 100 doors, you pick one, the host opens 98 losers, does switching matter more or less than with 3 doors?",options:["Less, more doors dilute the effect","Exactly the same, 50/50","Much more, switching wins 99% of the time","Switching never helps"]},
   controls:`
     <div class="ctl">
       <label>Number of doors <span class="val" id="mNv">3</span></label>
@@ -1299,7 +1299,7 @@ Did you know you're actually twice as likely to win if you switch doors? When yo
       <button class="act" id="mReset">Reset</button>
     </div>
     <div class="divider"></div>
-    <div class="note">Your first pick is right with probability <b>1/N</b>. The host's reveal pours <em>all</em> the remaining probability onto the single other door — so switching wins with probability <b>(N−1)/N</b>. At N=100 that's a 99% door.</div>`,
+    <div class="note">Your first pick is right with probability <b>1/N</b>. The host's reveal pours <em>all</em> the remaining probability onto the single other door, so switching wins with probability <b>(N−1)/N</b>. At N=100 that's a 99% door.</div>`,
   formula:`<span class="eq">P(win │ <span class="t" data-hl="sw">switch</span>) <span class="op">=</span> <span class="frac"><span class="num"><span class="t" data-hl="n">N</span> − 1</span><span class="den"><span class="t" data-hl="n">N</span></span></span> <span class="op">=</span> <span class="res" id="mSwT">66.7%</span></span>
     <span class="eq" style="font-size:.9em;color:var(--ink-dim)">P(win │ <span class="t" data-hl="st">stay</span>) <span class="op">=</span> <span class="frac"><span class="num">1</span><span class="den">N</span></span> <span class="op">=</span> <span id="mStT">33.3%</span></span>`,
   fcap:"the host's knowledge is the hidden ingredient",
@@ -1370,7 +1370,7 @@ Did you know you're actually twice as likely to win if you switch doors? When yo
       if(s.N<=12){ c.fillStyle="rgba(148,163,184,.55)";c.font='11px "IBM Plex Mono",monospace'; c.fillText((i+1)+"",cx,d.y+d.h-12); }
     }
     if(s.reveal){ c.fillStyle=s.reveal.swWin?ax2:cssv("--lose"); c.font='600 15px "Fraunces",serif'; c.textAlign="center";c.textBaseline="alphabetic";
-      c.fillText(s.reveal.swWin?"★ behind the OTHER door — switching wins":"★ was your pick — staying wins this time",w/2,s.doorBox.top-10); }
+      c.fillText(s.reveal.swWin?"★ behind the OTHER door, switching wins":"★ was your pick, staying wins this time",w/2,s.doorBox.top+16); }
     // histogram
     const hy=s.doorBox.top+6, hh=h-hy-18, base=h-18, gw=Math.min(120,w*0.22), gap=w*0.10, cx=w/2;
     const targS=(s.N-1)/s.N, targT=1/s.N;
@@ -1389,11 +1389,11 @@ Did you know you're actually twice as likely to win if you switch doors? When yo
   highlight(k,on){},
   unmount(){ this.clearTimers(); $("#mN").oninput=null; },
   refreshFormula(){ const s=this.s; if(!s)return; App.setText("mSwT",fmtPct((s.N-1)/s.N)); App.setText("mStT",fmtPct(1/s.N)); },
-  writeup(){ const s=this.s; return {params:{"Doors (N)":s.N,"Trials":fmtN(s.trials)},results:{"Switch win rate":s.trials?fmtPct(s.sw/s.trials):"—","Stay win rate":s.trials?fmtPct(s.st/s.trials):"—","Theory (switch)":fmtPct((s.N-1)/s.N)},takeaway:`Switching wins (N−1)/N of the time. The effect grows with door count — at N=100 switching is a near-certainty.`}; }
+  writeup(){ const s=this.s; return {params:{"Doors (N)":s.N,"Trials":fmtN(s.trials)},results:{"Switch win rate":s.trials?fmtPct(s.sw/s.trials):"—","Stay win rate":s.trials?fmtPct(s.st/s.trials):"—","Theory (switch)":fmtPct((s.N-1)/s.N)},takeaway:`Switching wins (N−1)/N of the time. The effect grows with door count, at N=100 switching is a near-certainty.`}; }
 });
 
 /* ============================================================
-   CHAMBER I — GAMBLER'S RUIN
+   CHAMBER I, GAMBLER'S RUIN
    ============================================================ */
 function ruinProb(a,b,p){ const N=a+b; if(Math.abs(p-0.5)<1e-9) return b/N; const r=(1-p)/p;
   if(r>1){ const A=Math.pow(r,a-N),B=Math.pow(r,-N); return (A-1)/(B-1); }
@@ -1404,7 +1404,7 @@ App.modules.push({
   about:"Bet one chip per round until you own everything or nothing. Even a tiny house edge bends the walk toward ruin. Watch the path drift and the experimental ruin rate find the theory.",
   plainText:`Did you know that even in a perfectly fair game, you can still go broke? With a 50% chance to win each round and equal money on both sides, it's a coin flip who gets wiped out first. And the moment the odds tip even slightly against you, going broke becomes almost certain. It doesn't feel unfair in one round, but it adds up.`,
   stats0:[{k:"Games",v:"0"},{k:"Ruined",v:"0"},{k:"Ruin rate",v:"—",acc:1}],
-  socratic:{q:"You start with 10 chips against a house with 10, but each round you win only 48% of the time. Over many games, how often do you go broke?",options:["About 50% — nearly fair","About 58%","About 70%","Over 95%"]},
+  socratic:{q:"You start with 10 chips against a house with 10, but each round you win only 48% of the time. Over many games, how often do you go broke?",options:["About 50%, nearly fair","About 58%","About 70%","Over 95%"]},
   controls:`
     <div class="ctl"><label>Your chips <span class="val" id="rAv">10</span></label><input type="range" id="rA" min="1" max="40" value="10"></div>
     <div class="ctl"><label>House chips <span class="val" id="rBv">10</span></label><input type="range" id="rB" min="1" max="40" value="10"></div>
@@ -1413,7 +1413,7 @@ App.modules.push({
     <div class="divider"></div>
     <div class="btnrow"><button class="act primary" id="rRun">▶ Play games</button><button class="act" id="rReset">Reset</button></div>
     <div class="divider"></div>
-    <div class="note">A fair game (p=0.50) still ruins you with probability <b>b/(a+b)</b>. Below 0.50 the odds of ending broke rush toward certainty — the mathematics of why "the house always wins."</div>`,
+    <div class="note">A fair game (p=0.50) still ruins you with probability <b>b/(a+b)</b>. Below 0.50 the odds of ending broke rush toward certainty, the mathematics of why "the house always wins."</div>`,
   formula:`<span class="eq" style="font-size:.95em">P(ruin) <span class="op">=</span> <span class="frac"><span class="num">r<sup>a</sup> − r<sup>N</sup></span><span class="den">1 − r<sup>N</sup></span></span>, r = <span class="frac"><span class="num">1−<span class="t" data-hl="p">p</span></span><span class="den"><span class="t" data-hl="p">p</span></span></span></span>
     <span class="eq"><span class="op">=</span> <span class="res" id="rThy">50.0%</span></span>
     <span class="fcap" style="margin-top:6px">with <span class="t" data-hl="a">a</span> = your chips, N = a + b</span>`,
@@ -1467,7 +1467,7 @@ App.modules.push({
 });
 
 /* ============================================================
-   CHAMBER II — MEDICAL TESTING  (10,000 dots, baked layers)
+   CHAMBER II, MEDICAL TESTING  (10,000 dots, baked layers)
    ============================================================ */
 function medCounts(prev,sens,spec,N){
   const diseased=Math.round(prev*N), healthy=N-diseased;
@@ -1480,7 +1480,7 @@ App.modules.push({
   id:"medical", name:"Medical Testing", mode:"bayesian", keys:{run:"mdRun",reset:"mdReset"},
   sparkLabel:"Among Positive Tests",
   sub:"Bayesian · the base-rate trap",
-  about:"Ten thousand people. A rare disease, a near-perfect test. Run it and watch who lights up — the rose dots are healthy people the test flagged by mistake. The famous lesson: a positive result can still mean you're probably fine.",
+  about:"Ten thousand people. A rare disease, a near-perfect test. Run it and watch who lights up, the rose dots are healthy people the test flagged by mistake. The famous lesson: a positive result can still mean you're probably fine.",
   plainText:`Suppose a disease affects about 1 in 100 people. There's a test that correctly flags 99% of people who have it and correctly clears 95% of people who don't. You take the test, and it comes back positive.
 
 Despite that positive result, there's still about an 83% chance you're healthy. Because the disease is uncommon, the small number of true cases, roughly 99 out of 10,000, gets swamped by false alarms from the huge healthy majority, around 500 of them. Most positive results therefore come from healthy people the test got wrong, leaving your real chance of being sick closer to 1 in 6.`,
@@ -1499,9 +1499,9 @@ Despite that positive result, there's still about an 83% chance you're healthy. 
     <div class="ctl"><label>Prevalence <span class="val" id="mdPv">1.0%</span></label><input type="range" id="mdP" min="1" max="300" value="10">
       <div class="hint">How common the disease is in the population.</div></div>
     <div class="ctl"><label>Sensitivity <span class="val" id="mdSeV">99.0%</span></label><input type="range" id="mdSe" min="800" max="999" value="990">
-      <div class="hint">P(test positive │ actually sick) — true-positive rate.</div></div>
+      <div class="hint">P(test positive │ actually sick), true-positive rate.</div></div>
     <div class="ctl"><label>Specificity <span class="val" id="mdSpV">95.0%</span></label><input type="range" id="mdSp" min="800" max="999" value="950">
-      <div class="hint">P(test negative │ actually healthy) — true-negative rate.</div></div>
+      <div class="hint">P(test negative │ actually healthy), true-negative rate.</div></div>
     <div class="divider"></div>
     <div class="btnrow"><button class="act primary" id="mdRun">▶ Run the test</button><button class="act" id="mdReset">Reset view</button></div>
     <div class="divider"></div>
@@ -1522,8 +1522,8 @@ Despite that positive result, there's still about an 83% chance you're healthy. 
     const presetNotes={
       custom:"Pick a real screening test, or set the sliders yourself.",
       covid:"Symptomatic rapid antigen test: ~80% sensitivity, ~98% specificity (pooled meta-analysis). At 2% prevalence, even a positive is roughly a coin flip.",
-      mammo:"US screening benchmark (1.7M exams): ~87% sensitivity, ~89% specificity, ~5 cancers per 1,000. A positive screen is usually a false alarm — that's why recalls need follow-up imaging.",
-      hiv:"Established infection in a high-risk clinic: ~99% sensitivity and specificity, ~10% prevalence. Here a positive genuinely is meaningful — high prevalence flips the base-rate intuition."
+      mammo:"US screening benchmark (1.7M exams): ~87% sensitivity, ~89% specificity, ~5 cancers per 1,000. A positive screen is usually a false alarm, that's why recalls need follow-up imaging.",
+      hiv:"Established infection in a high-risk clinic: ~99% sensitivity and specificity, ~10% prevalence. Here a positive genuinely is meaningful, high prevalence flips the base-rate intuition."
     };
     const presetCites={
       custom:"",
@@ -1561,7 +1561,7 @@ Despite that positive result, there's still about an 83% chance you're healthy. 
     s.cols=cols; s.rows=rows; s.cell=Math.min(s.pw/cols,s.ph/rows);
   },
   bake(force){ const s=this.s; if(!App.size||App.size.w<2||App.size.h<80)return; this.layout();
-    if(!(s.cols>0)||!(s.rows>0)||!(s.cell>0))return; // geometry not valid yet (transition) — skip bake
+    if(!(s.cols>0)||!(s.rows>0)||!(s.cell>0))return; // geometry not valid yet (transition), skip bake
     const key=[s.cols,s.rows,Math.round(s.cell*4),s.cts.TP,s.cts.FP,s.cts.diseased].join("|");
     if(!force&&key===s.bakeKey&&s.dim&&s.lit)return; s.bakeKey=key;
     const dpr=App.dpr||1, W=s.cols*s.cell, H=s.rows*s.cell;
@@ -1645,17 +1645,17 @@ Despite that positive result, there's still about an 83% chance you're healthy. 
   highlight(k,on){ const s=this.s; if(on==="pin"){ s.hl=(s.hl===k?null:k); } else { s.hl=on?k:null; } },
   unmount(){ ["mdP","mdSe","mdSp"].forEach(id=>{const e=$("#"+id);if(e)e.oninput=null;}); const ps=$("#mdPreset");if(ps)ps.onchange=null; if(this.onMove){App.stage.removeEventListener("pointermove",this.onMove);App.stage.removeEventListener("pointerdown",this.onMove);App.stage.removeEventListener("pointerleave",this.onLeave);} },
   refreshFormula(){ if(this.s&&this.s.cts){ App.setText("mdPost",(this.s.cts.post*100).toFixed(1)+"%"); App.setText("fcap","of every positive test, only "+(this.s.cts.post*100).toFixed(1)+"% is the real disease"); } },
-  writeup(){ const s=this.s,ct=s.cts; return {params:{"Prevalence":(s.prev*100).toFixed(1)+"%","Sensitivity":(s.sens*100).toFixed(1)+"%","Specificity":(s.spec*100).toFixed(1)+"%","Population":fmtN(s.N)},results:{"True positives":fmtN(ct.TP),"False positives":fmtN(ct.FP),"P(disease │ positive)":(ct.post*100).toFixed(1)+"%"},takeaway:`With a rare disease, false positives from the large healthy majority can swamp true positives — so a positive test often means P(disease) is far below intuition. This is the base-rate fallacy.`}; }
+  writeup(){ const s=this.s,ct=s.cts; return {params:{"Prevalence":(s.prev*100).toFixed(1)+"%","Sensitivity":(s.sens*100).toFixed(1)+"%","Specificity":(s.spec*100).toFixed(1)+"%","Population":fmtN(s.N)},results:{"True positives":fmtN(ct.TP),"False positives":fmtN(ct.FP),"P(disease │ positive)":(ct.post*100).toFixed(1)+"%"},takeaway:`With a rare disease, false positives from the large healthy majority can swamp true positives, so a positive test often means P(disease) is far below intuition. This is the base-rate fallacy.`}; }
 });
 
 /* ============================================================
-   CHAMBER II — COIN BIAS INFERENCE  (morphing Beta posterior)
+   CHAMBER II, COIN BIAS INFERENCE  (morphing Beta posterior)
    ============================================================ */
 App.modules.push({
   id:"coin", name:"Coin Bias Inference", mode:"bayesian", keys:{run:"coAuto",reset:"coReset"}, runLock:["coAuto","coFlip"],
   sparkLabel:"Estimate vs. Truth",
   sub:"Bayesian · learning a hidden bias",
-  about:"This coin is loaded — but you don't know which way. Flip it and your belief, a Beta distribution, sharpens from a vague hump into a confident spike. The coin's rim glows brighter as your posterior tightens.",
+  about:"This coin is loaded, but you don't know which way. Flip it and your belief, a Beta distribution, sharpens from a vague hump into a confident spike. The coin's rim glows brighter as your posterior tightens.",
   plainText:`Did you know 7 heads out of 10 flips isn't "just luck"? The math shifts its best guess to about 70% heads.`,
   stats0:[{k:"Flips",v:"0"},{k:"Heads / Tails",v:"0 / 0"},{k:"Best estimate",v:"—",acc:1}],
   socratic:{q:"You start believing a coin is probably fair. After flipping it 8 times you get 7 heads. Roughly where does your belief about its bias settle?",options:["Still ≈ 0.50","Around 0.60","Around 0.70","Around 0.88 (just 7/8)"]},
@@ -1671,7 +1671,7 @@ App.modules.push({
     <div class="btnrow"><button class="act primary" id="coFlip">Flip once</button><button class="act" id="coAuto">⚡ Flip ×500</button></div>
     <div class="btnrow" style="margin-top:8px"><button class="act" id="coReset">New hidden coin</button></div>
     <div class="divider"></div>
-    <div class="note">Posterior = prior × likelihood. For a coin that's a <b>Beta(α₀+heads, β₀+tails)</b> — the data simply adds to the prior's counts. Watch a stubborn (skeptical) prior resist, then yield to evidence.</div>`,
+    <div class="note">Posterior = prior × likelihood. For a coin that's a <b>Beta(α₀+heads, β₀+tails)</b>, the data simply adds to the prior's counts. Watch a stubborn (skeptical) prior resist, then yield to evidence.</div>`,
   formula:`<span class="eq" style="font-size:.9em">P(θ│data) <span class="op">∝</span> θ<sup>α−1</sup>(1−θ)<sup>β−1</sup></span>
     <span class="eq" style="font-size:.92em">α = α₀ + <span class="t" data-hl="h">h</span>,&nbsp; β = β₀ + <span class="t" data-hl="t">t</span></span>
     <span class="eq">E[θ] <span class="op">=</span> <span class="frac"><span class="num">α</span><span class="den">α+β</span></span> <span class="op">=</span> <span class="res" id="coMean">—</span></span>
@@ -1696,7 +1696,7 @@ App.modules.push({
       }
       s.ta=s.a0+s.h; s.tb=s.b0+s.t;
       const n=s.h+s.t;
-      if(n<=12||s.pending===0){ App.push(`${s.last==="H"?"heads":"tails"} — now ${s.h}H / ${s.t}T`, s.last, s.last==="H"?"win":""); }
+      if(n<=12||s.pending===0){ App.push(`${s.last==="H"?"heads":"tails"}, now ${s.h}H / ${s.t}T`, s.last, s.last==="H"?"win":""); }
       if(s.pending===0){ this.stats(); App.spark(s.hist,{target:s.truth,targetLabel:"true "+s.truth.toFixed(2)}); }
       else if(n%25===0){ this.stats(); App.spark(s.hist,{target:s.truth,targetLabel:"true "+s.truth.toFixed(2)}); }
     }
@@ -1746,7 +1746,7 @@ App.modules.push({
     // true bias (faint)
     const tbx=pX+s.truth*pW; c.setLineDash([3,4]);c.strokeStyle=cssv("--canvas-label-dim");c.lineWidth=1;c.beginPath();c.moveTo(tbx,pY+2);c.lineTo(tbx,pY+pH);c.stroke();c.setLineDash([]);
     c.fillStyle=cssv("--canvas-label-dim");c.font='10px "Archivo",sans-serif';c.fillText("truth",tbx,pY+pH-4);
-    c.textAlign="left";c.fillStyle="rgba(148,163,184,.55)";c.font='12px "Fraunces",serif';c.fillText("belief about P(heads) — Beta("+s.ta.toFixed(0)+", "+s.tb.toFixed(0)+")",pX,pY+10);
+    c.textAlign="left";c.fillStyle="rgba(148,163,184,.55)";c.font='12px "Fraunces",serif';c.fillText("belief about P(heads), Beta("+s.ta.toFixed(0)+", "+s.tb.toFixed(0)+")",pX,pY+10);
   },
   highlight(k,on){ const s=this.s; if(on==="pin")s.hl=(s.hl===k?null:k); else s.hl=on?k:null; },
   resize(){},
@@ -1756,7 +1756,7 @@ App.modules.push({
 });
 
 /* ============================================================
-   CHAMBER III — SIMPSON'S PARADOX
+   CHAMBER III, SIMPSON'S PARADOX
    ============================================================ */
 App.modules.push({
   id:"simpson", name:"Simpson's Paradox", mode:"paradox", keys:{run:"spWtf",reset:"spDemo"},
@@ -1765,9 +1765,9 @@ App.modules.push({
   about:"Treatment A beats Treatment B for mild cases AND for severe cases. Yet pool the patients together and B can come out ahead. The trick is the hidden case-mix: A was given the hard cases. Drag the mix and watch the overall rate flip.",
   plainText:`Suppose two treatments, A and B, are compared on the same illness. Patients are split into mild cases and severe cases. Treatment A has a higher cure rate than B among the mild cases, and also a higher cure rate than B among the severe cases.
 
-Even though A wins in both groups, B comes out ahead overall — about 83% versus 78%. The reason is that A was given to far more of the hard severe cases, so combining the groups lets that lopsided mix outweigh A's per-group advantage. A weighted average can land below every one of one group's individual rates, which means the overall number can crown the opposite winner.`,
+Even though A wins in both groups, B comes out ahead overall, about 83% versus 78%. The reason is that A was given to far more of the hard severe cases, so combining the groups lets that lopsided mix outweigh A's per-group advantage. A weighted average can land below every one of one group's individual rates, which means the overall number can crown the opposite winner.`,
   stats0:[{k:"Overall A",v:"—"},{k:"Overall B",v:"—"},{k:"Paradox?",v:"—",acc:1}],
-  socratic:{q:"Treatment A cures more mild cases than B, and more severe cases than B. When you combine all patients, which treatment looks better overall?",options:["A, obviously","Still a tie","It depends — B can win","Impossible for B to win"]},
+  socratic:{q:"Treatment A cures more mild cases than B, and more severe cases than B. When you combine all patients, which treatment looks better overall?",options:["A, obviously","Still a tie","It depends, B can win","Impossible for B to win"]},
   controls:`
     <div class="ctl"><label>A's share of severe cases <span class="val" id="spAv">77%</span></label><input type="range" id="spA" min="0" max="100" value="77">
       <div class="hint">What fraction of Treatment A's patients had the hard (severe) cases.</div></div>
@@ -1776,7 +1776,7 @@ Even though A wins in both groups, B comes out ahead overall — about 83% versu
     <div class="divider"></div>
     <div class="btnrow"><button class="act primary" id="spWtf">WTF? Explain the trick</button><button class="act" id="spDemo">Reset to classic</button></div>
     <div class="divider"></div>
-    <div class="note">Within-group cure rates are <b>fixed</b>: A scores 93% mild / 73% severe, B scores 87% / 69%. A is better in <em>every</em> subgroup. Only the case-mix changes — and that alone can reverse the overall winner.</div>`,
+    <div class="note">Within-group cure rates are <b>fixed</b>: A scores 93% mild / 73% severe, B scores 87% / 69%. A is better in <em>every</em> subgroup. Only the case-mix changes, and that alone can reverse the overall winner.</div>`,
   formula:`<span class="eq" style="font-size:.9em">rate <span class="op">=</span> w<sub><span class="t" data-hl="mild">mild</span></sub>·r<sub>mild</sub> + w<sub><span class="t" data-hl="severe">severe</span></sub>·r<sub>severe</sub></span>
     <span class="eq" style="font-size:.85em;color:var(--ink-dim)">the <span class="t" data-hl="mix">weights</span> differ between A and B</span>
     <span class="eq">A <span class="op">=</span> <span class="res" id="spOA">—</span> &nbsp;·&nbsp; B <span class="op">=</span> <span id="spOB" style="color:var(--ink)">—</span></span>
@@ -1788,7 +1788,7 @@ Even though A wins in both groups, B comes out ahead overall — about 83% versu
     ["am","as","bm","bs","oa","ob"].forEach(k=>s.bars[k]=0);
     const read=()=>{ s.sevA=(+$("#spA").value)/100; s.sevB=(+$("#spB").value)/100; $("#spAv").textContent=Math.round(s.sevA*100)+"%"; $("#spBv").textContent=Math.round(s.sevB*100)+"%"; this.recompute(); };
     ["spA","spB"].forEach(id=>$("#"+id).oninput=read);
-    $("#spWtf").onclick=()=>{ s.explain=!s.explain; $("#spWtf").classList.toggle("primary",!s.explain); $("#spWtf").textContent=s.explain?"Hide the trick":"WTF? Explain the trick"; if(s.explain)App.toast("Look at the mix bars: Treatment A carried the severe cases — that's what drags its overall rate down."); };
+    $("#spWtf").onclick=()=>{ s.explain=!s.explain; $("#spWtf").classList.toggle("primary",!s.explain); $("#spWtf").textContent=s.explain?"Hide the trick":"WTF? Explain the trick"; if(s.explain)App.toast("Look at the mix bars: Treatment A carried the severe cases, that's what drags its overall rate down."); };
     $("#spDemo").onclick=()=>{ $("#spA").value=77;$("#spB").value=23; read(); };
     this.recompute();
     App.loop(t=>this.draw(t));
@@ -1799,7 +1799,7 @@ Even though A wins in both groups, B comes out ahead overall — about 83% versu
     const eoa=$("#spOA"), eob=$("#spOB");
     if(eoa)eoa.textContent=(oa*100).toFixed(1)+"%";
     if(eob){ eob.textContent=(ob*100).toFixed(1)+"%"; eob.style.color=flip?"var(--accent2)":"var(--ink)"; }
-    App.setStat([{k:"Overall A",v:(oa*100).toFixed(1)+"%"},{k:"Overall B",v:(ob*100).toFixed(1)+"%"},{k:"Paradox?",v:flip?"YES — B wins!":"no (A leads)",acc:1}]);
+    App.setStat([{k:"Overall A",v:(oa*100).toFixed(1)+"%"},{k:"Overall B",v:(ob*100).toFixed(1)+"%"},{k:"Paradox?",v:flip?"YES, B wins!":"no (A leads)",acc:1}]);
     App.push(`mix A:${Math.round(s.sevA*100)}% / B:${Math.round(s.sevB*100)}% severe`, flip?"flip":"normal", flip?"win":"");
     this.drawSpark();
   },
@@ -1855,7 +1855,7 @@ Even though A wins in both groups, B comes out ahead overall — about 83% versu
     // grid + y labels
     c.strokeStyle="rgba(148,163,184,.1)";c.lineWidth=1;c.fillStyle="rgba(148,163,184,.5)";c.font='9px "IBM Plex Mono",monospace';c.textAlign="right";
     [0.6,0.7,0.8,0.9].forEach(v=>{ const y=Y(v);c.beginPath();c.moveTo(x0,y);c.lineTo(x0+pw,y);c.stroke(); c.fillText((v*100).toFixed(0),x0-3,y+3); });
-    // B overall as function of B's mix — but we vary A's mix on x; show A line varying, B as its current constant
+    // B overall as function of B's mix, but we vary A's mix on x; show A line varying, B as its current constant
     const ob=this.overall(s.sevB,this.RB);
     c.setLineDash([4,3]);c.strokeStyle=gray;c.lineWidth=1.4;c.beginPath();c.moveTo(X(0),Y(ob));c.lineTo(X(1),Y(ob));c.stroke();c.setLineDash([]);
     c.fillStyle=gray;c.font='9px "IBM Plex Mono",monospace';c.textAlign="left";c.fillText("B "+(ob*100).toFixed(0)+"%",X(0)+2,Y(ob)-3);
@@ -1871,22 +1871,22 @@ Even though A wins in both groups, B comes out ahead overall — about 83% versu
   },
   unmount(){ ["spA","spB"].forEach(id=>{const e=$("#"+id);if(e)e.oninput=null;}); },
   refreshFormula(){ if(this.s)this.recompute(); },
-  writeup(){ const s=this.s; const oa=this.overall(s.sevA,this.RA),ob=this.overall(s.sevB,this.RB); return {params:{"A severe share":Math.round(s.sevA*100)+"%","B severe share":Math.round(s.sevB*100)+"%","A rates":"93% mild / 73% severe","B rates":"87% mild / 69% severe"},results:{"Overall A":(oa*100).toFixed(1)+"%","Overall B":(ob*100).toFixed(1)+"%","Paradox present":ob>oa?"YES — B wins overall despite losing both subgroups":"no"},takeaway:`Aggregating over a confounder (case severity) can reverse a comparison: A is superior within every subgroup, yet because A treated more severe cases, its pooled rate can fall below B's. Always check whether a lurking variable explains an aggregate.`}; }
+  writeup(){ const s=this.s; const oa=this.overall(s.sevA,this.RA),ob=this.overall(s.sevB,this.RB); return {params:{"A severe share":Math.round(s.sevA*100)+"%","B severe share":Math.round(s.sevB*100)+"%","A rates":"93% mild / 73% severe","B rates":"87% mild / 69% severe"},results:{"Overall A":(oa*100).toFixed(1)+"%","Overall B":(ob*100).toFixed(1)+"%","Paradox present":ob>oa?"YES, B wins overall despite losing both subgroups":"no"},takeaway:`Aggregating over a confounder (case severity) can reverse a comparison: A is superior within every subgroup, yet because A treated more severe cases, its pooled rate can fall below B's. Always check whether a lurking variable explains an aggregate.`}; }
 });
 
 /* ============================================================
-   CHAMBER III — ST. PETERSBURG PARADOX
+   CHAMBER III, ST. PETERSBURG PARADOX
    ============================================================ */
 App.modules.push({
   id:"petersburg", name:"St. Petersburg Paradox", mode:"paradox", keys:{run:"pgPlay",reset:null}, runLock:["pgPlay","pgRun"],
   sparkLabel:"Average payout per game",
   sub:"Paradox · infinite value, finite courage",
-  about:"A coin doubles the pot on every head and pays out on the first tails. The mathematical expected value is literally infinite — yet almost nobody would pay even $20 to play. Watch the running average refuse to settle while a rational price stays modest.",
+  about:"A coin doubles the pot on every head and pays out on the first tails. The mathematical expected value is literally infinite, yet almost nobody would pay even $20 to play. Watch the running average refuse to settle while a rational price stays modest.",
   plainText:`Suppose a casino offers this game: a coin is flipped until it lands tails. If tails comes on the first flip you win $2, on the second flip $4, on the third $8, and so on, the prize doubles with every flip.
 
 The mathematical expected payout is literally infinite, which suggests no price would be too high, yet almost no one would pay even $20. The average is dragged upward by enormous jackpots so rare they likely won't occur in a lifetime, while in practice you almost always win just $2 or $4. This is why "expected value" and a sensible price can diverge completely: switch to a logarithmic view of money's worth and a rational price drops to about $4; cap the casino's bankroll and it settles near $21.`,
   stats0:[{k:"Games",v:"0"},{k:"Mean payout",v:"—",acc:1},{k:"Biggest win",v:"—"}],
-  socratic:{q:"A coin doubles the pot each flip and pays out on the first tails. The expected payout is infinite. How much would you actually pay for one game?",options:["Infinite — it's a fair price","Hundreds of dollars","About $4–$20","A couple of dollars"]},
+  socratic:{q:"A coin doubles the pot each flip and pays out on the first tails. The expected payout is infinite. How much would you actually pay for one game?",options:["Infinite, it's a fair price","Hundreds of dollars","About $4–$20","A couple of dollars"]},
   controls:`
     <div class="ctl"><label>How you value money</label>
       <div class="segmented" id="pgU">
@@ -1899,7 +1899,7 @@ The mathematical expected payout is literally infinite, which suggests no price 
     <div class="btnrow"><button class="act primary" id="pgPlay">▶ Play one game</button><button class="act" id="pgRun">⚡ Run ×200</button></div>
     <div class="btnrow" style="margin-top:8px"><button class="act" id="pgReset">Reset</button></div>
     <div class="divider"></div>
-    <div class="note">Payout is <b>$2<sup>k</sup></b> when the first tails lands on flip <b>k</b>, which happens with probability <b>(½)<sup>k</sup></b>. Every term of the expected value equals exactly 1 — and there are infinitely many of them.</div>`,
+    <div class="note">Payout is <b>$2<sup>k</sup></b> when the first tails lands on flip <b>k</b>, which happens with probability <b>(½)<sup>k</sup></b>. Every term of the expected value equals exactly 1, and there are infinitely many of them.</div>`,
   formula:`<span class="eq" style="font-size:.92em">E[X] <span class="op">=</span> Σ <span class="t" data-hl="prob">(½)<sup>k</sup></span>·<span class="t" data-hl="payout">2<sup>k</sup></span> <span class="op">=</span> Σ 1 <span class="op">=</span> <span class="res" id="pgEV">∞</span></span>
     <span class="eq" style="font-size:.86em;color:var(--ink-dim)" id="pgUtilLine">a linear valuer should pay any price</span>
     <span class="fcap" style="margin-top:6px">rational price <span class="op">=</span> <span class="res" id="pgCE" style="font-size:1em">∞</span></span>`,
@@ -1979,7 +1979,7 @@ The mathematical expected payout is literally infinite, which suggests no price 
       if(g.phase==="pay")c.fillText("tails! payout "+this.money(g.payout),mx,coinsY+cr+18);
       else c.fillText("flipping…",mx,coinsY+cr+18);
     } else {
-      c.fillStyle="rgba(148,163,184,.45)";c.font='12px "Archivo",sans-serif';c.fillText(s.games?"press Play for another round":"press Play — the coin doubles the pot until it lands tails",mx,coinsY+4);
+      c.fillStyle="rgba(148,163,184,.45)";c.font='12px "Archivo",sans-serif';c.fillText(s.games?"press Play for another round":"press Play. The coin doubles the pot until it lands tails",mx,coinsY+4);
     }
     // mean readout
     if(s.games){ c.textAlign="center";c.fillStyle=cssv("--canvas-label-dim");c.font='11px "Archivo",sans-serif';
@@ -1991,7 +1991,7 @@ The mathematical expected payout is literally infinite, which suggests no price 
   resize(){},
   unmount(){},
   refreshFormula(){ if(this.s)this.refreshUtil(); },
-  writeup(){ const s=this.s; const ce=this.ce(); return {params:{"Valuation":s.u==="lin"?"Linear":s.u==="log"?"Logarithmic":"Casino bankroll cap ($2²⁰)","Games played":fmtN(s.games)},results:{"Theoretical EV":s.u==="cap"?"$"+fmtN(Math.round(this.EVCAP)):"∞ (divergent)","Empirical mean payout":s.games?"$"+fmtN(Math.round(this.meanPayout()*100)/100,2):"—","Rational price":ce===Infinity?"unbounded":"$"+fmtN(Math.round(ce*100)/100,2),"Biggest single win":s.max?this.money(s.max):"—"},takeaway:`The expected payout is the sum of infinitely many terms each equal to 1, so it diverges. But the empirical average never stabilises (it is driven by ever-rarer jackpots), and bounded utility or a finite bankroll yields a modest fair price — explaining why no one pays infinity to play.`}; }
+  writeup(){ const s=this.s; const ce=this.ce(); return {params:{"Valuation":s.u==="lin"?"Linear":s.u==="log"?"Logarithmic":"Casino bankroll cap ($2²⁰)","Games played":fmtN(s.games)},results:{"Theoretical EV":s.u==="cap"?"$"+fmtN(Math.round(this.EVCAP)):"∞ (divergent)","Empirical mean payout":s.games?"$"+fmtN(Math.round(this.meanPayout()*100)/100,2):"—","Rational price":ce===Infinity?"unbounded":"$"+fmtN(Math.round(ce*100)/100,2),"Biggest single win":s.max?this.money(s.max):"—"},takeaway:`The expected payout is the sum of infinitely many terms each equal to 1, so it diverges. But the empirical average never stabilises (it is driven by ever-rarer jackpots), and bounded utility or a finite bankroll yields a modest fair price, explaining why no one pays infinity to play.`}; }
 });
 
 /* ===================== CHALLENGE DEFINITIONS ===================== */
@@ -2009,7 +2009,7 @@ App.challenges=[
     predToSpark:p=>p/100,
     answer:()=> birthdayTheory(30)*100, // ≈70.6%
     grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*4);
-      return {score, verdict: err<=5?"Spot on — within 5 points.":err<=12?"Close, but the curve is steeper than it feels.":"Way off — this is the famous birthday surprise.",
+      return {score, verdict: err<=5?"Spot on, within 5 points.":err<=12?"Close, but the curve is steeper than it feels.":"Way off, this is the famous birthday surprise.",
         detail:`The true probability is <b>${actual.toFixed(1)}%</b>. With 30 people there are 435 possible pairs, so a shared birthday is already very likely. You guessed ${pred.predicted}%.`}; }
   },
   {
@@ -2023,7 +2023,7 @@ App.challenges=[
     predToSpark:p=>p/100,
     answer:()=> 99, // (N-1)/N at N=100
     grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*3);
-      return {score, verdict: err<=3?"Exactly — switching is almost a sure thing.":err<=15?"Right direction, but switching is even stronger than that.":"Switching is far better than staying here.",
+      return {score, verdict: err<=3?"Exactly, switching is almost a sure thing.":err<=15?"Right direction, but switching is even stronger than that.":"Switching is far better than staying here.",
         detail:`Switching wins <b>${actual}%</b> of the time: your first pick had a 1-in-100 chance, and the host sweeps the other 99% onto the one remaining door. You guessed ${pred.predicted}%.`}; }
   },
   {
@@ -2038,35 +2038,35 @@ App.challenges=[
     predToSpark:p=>p/100,
     answer:()=> ruinProb(20,20,0.47)*100, // ≈ 92.4%
     grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*2.5);
-      return {score, verdict: err<=5?"Sharp — a tiny edge is brutal over a full game.":err<=15?"Close. The compounding is stronger than intuition.":"A 3-point disadvantage is far deadlier than it looks.",
+      return {score, verdict: err<=5?"Sharp, a tiny edge is brutal over a full game.":err<=15?"Close. The compounding is stronger than intuition.":"A 3-point disadvantage is far deadlier than it looks.",
         detail:`Your eventual ruin probability is <b>${actual.toFixed(1)}%</b>. A 47% per-round chance with equal stacks compounds into near-certain ruin. You guessed ${pred.predicted}%. (Note: this is the probability of <i>eventual</i> ruin, not a per-game countdown.)`}; }
   },
   {
     id:"mammopanic", module:"medical", mode:"bayesian", modeLabel:"Bayesian", week:2,
     title:"Should she panic?",
-    short:"A positive mammogram — what's the real risk?",
+    short:"A positive mammogram, what's the real risk?",
     question:"Your aunt gets a <b>positive screening mammogram</b>. Using realistic numbers (0.5% prevalence, ~87% sensitivity, ~89% specificity), what's the chance she actually has breast cancer?",
     input:"number", unit:"%", placeholder:"e.g. 50", step:1, min:0, max:100,
     setup:{selects:{mdPreset:"mammo"}},
     passScore:70, noAutoRun:false,
-    predToSpark:null, // medical spark is a custom precision bar, not the shared 0-1 axis — no marker
+    predToSpark:null, // medical spark is a custom precision bar, not the shared 0-1 axis, no marker
     answer:(m)=> (m&&m.s&&m.s.cts? m.s.cts.post*100 : 3.9),
     grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*2.5);
-      return {score, verdict: err<=5?"Exactly — and this is why a positive screen isn't a diagnosis.":err<=15?"Close. It's even lower than most people guess.":"Much lower than it feels — that's the base-rate trap.",
-        detail:`Her real probability is about <b>${actual.toFixed(1)}%</b>. Among ~10,000 women, roughly 44 true cancers are dwarfed by ~1,094 false alarms, so a positive screen is usually <i>not</i> cancer — it means follow-up imaging, not panic. You guessed ${pred.predicted}%.`}; }
+      return {score, verdict: err<=5?"Exactly, and this is why a positive screen isn't a diagnosis.":err<=15?"Close. It's even lower than most people guess.":"Much lower than it feels, that's the base-rate trap.",
+        detail:`Her real probability is about <b>${actual.toFixed(1)}%</b>. Among ~10,000 women, roughly 44 true cancers are dwarfed by ~1,094 false alarms, so a positive screen is usually <i>not</i> cancer, it means follow-up imaging, not panic. You guessed ${pred.predicted}%.`}; }
   },
   {
     id:"simpsonflip", module:"simpson", mode:"paradox", modeLabel:"Paradox",
     title:"Engineer the paradox",
     short:"Drag the case-mix so B wins overall.",
-    question:"Treatment A beats B in <b>both</b> subgroups. Adjust the two case-mix sliders on the left so that <b>B wins overall</b> — then check your setup.",
+    question:"Treatment A beats B in <b>both</b> subgroups. Adjust the two case-mix sliders on the left so that <b>B wins overall</b>, then check your setup.",
     input:"action",
     actionHint:"Use the 'A severe share' and 'B severe share' sliders so A is loaded with severe cases. When B's overall rate passes A's, you've built the paradox.",
     setup:{ranges:{spA:50,spB:50}},
     passScore:100,
     answer:(m)=>{ if(!m||!m.s)return false; const oa=m.overall(m.s.sevA,m.RA), ob=m.overall(m.s.sevB,m.RB); return ob>oa; },
     grade(pred,actual,m){ const oa=m.overall(m.s.sevA,m.RA)*100, ob=m.overall(m.s.sevB,m.RB)*100;
-      return {score: actual?100:0, verdict: actual?"You built it — B wins overall despite losing both subgroups.":"Not yet — B still trails overall. Load A with more severe cases.",
+      return {score: actual?100:0, verdict: actual?"You built it, B wins overall despite losing both subgroups.":"Not yet, B still trails overall. Load A with more severe cases.",
         detail:`Right now Overall A = <b>${oa.toFixed(1)}%</b>, Overall B = <b>${ob.toFixed(1)}%</b>. ${actual?"That reversal is Simpson's paradox: the case-mix outvotes the within-group truth.":"Push A's severe share up (and/or B's down) until B's bar overtakes A's."}`}; }
   },
   {
@@ -2083,9 +2083,9 @@ App.challenges=[
     grade(pred,actual){ const err=Math.abs(pred.predicted-actual); const score=Math.max(0,100-err*5);
       const p=pred.predicted;
       let verdict;
-      if(err<=5) verdict="Sharp — that's right around the real fair value.";
-      else if(p>actual) verdict="You'd overpay — that's above the fair value here.";
-      else verdict="Too conservative — the fair value is a bit higher than that.";
+      if(err<=5) verdict="Sharp, that's right around the real fair value.";
+      else if(p>actual) verdict="You'd overpay, that's above the fair value here.";
+      else verdict="Too conservative, the fair value is a bit higher than that.";
       return {score, verdict,
         detail:`With a finite casino bankroll the expected value is about <b>$${Math.round(actual)}</b>. Paying the casino's asking price of $25 would be a slight <b>losing</b> bet, since $25 is above that fair value. The infinite "fair price" only holds for an infinitely rich casino. You'd pay $${p}.`}; }
   }
